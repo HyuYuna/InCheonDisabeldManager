@@ -16,19 +16,20 @@
         <span class="legend mycustom-p">P</span><span>출석</span>
         <span class="legend mycustom-n">N</span><span>휴교</span>
       </v-toolbar>
-      <p>
-        날짜의 값(T, E, U, P, N) 수정 시 동적으로 합계가 변경됩니다.
-      </p>
+      <p>날짜의 값(T, E, U, P, N) 수정 시 동적으로 합계가 변경됩니다.</p>
       <v-layout>
         <v-flex xs12>
           <v-btn dark @click="addRow()">학생 추가</v-btn>
           <v-btn dark @click="removeRow()">선택 삭제</v-btn>
           <v-btn dark @click="restoreSoftRow()">삭제 취소</v-btn>
-          <v-btn dark @click="removeSoftRows()">삭제 처리된 행들 완전 삭제</v-btn>
+          <v-btn dark @click="removeSoftRows()"
+            >삭제 처리된 행들 완전 삭제</v-btn
+          >
         </v-flex>
       </v-layout>
       <p>
-        (삭제 시 softRemoveRowMode = true 설정으로 바로 그리드에서 제거하지 않음.)
+        (삭제 시 softRemoveRowMode = true 설정으로 바로 그리드에서 제거하지
+        않음.)
       </p>
     </div>
     <!-- AUIGrid 컴포넌트 설정 -->
@@ -54,7 +55,7 @@ import "../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -70,51 +71,51 @@ export default {
       fixedColumnCount: 1,
       softRemovePolicy: "exceptNew",
       skipReadonlyColumns: true,
-      enterKeyColumnBase: true
+      enterKeyColumnBase: true,
     },
     // 푸터 데이터
     footerObject: [
       {
         labelText: "합 계",
-        positionField: "name"
+        positionField: "name",
       },
       {
         dataField: "ct",
         operation: "SUM",
-        positionField: "ct"
+        positionField: "ct",
       },
       {
         dataField: "ce",
         operation: "SUM",
-        positionField: "ce"
+        positionField: "ce",
       },
       {
         dataField: "cu",
         operation: "SUM",
-        positionField: "cu"
+        positionField: "cu",
       },
       {
         dataField: "cp",
         operation: "SUM",
-        positionField: "cp"
+        positionField: "cp",
       },
       {
         dataField: "ceu",
         operation: "SUM",
-        positionField: "ceu"
-      }
+        positionField: "ceu",
+      },
     ],
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -138,9 +139,9 @@ export default {
           headerText: "학생이름",
           filter: {
             showIcon: true,
-            useExMenu: true
-          }
-        }
+            useExMenu: true,
+          },
+        },
       ];
 
       let obj = {
@@ -156,8 +157,8 @@ export default {
             dataType: "numeric",
             headerTooltip: {
               show: true,
-              tooltipHtml: "지각"
-            }
+              tooltipHtml: "지각",
+            },
           },
           {
             dataField: "ce",
@@ -169,8 +170,8 @@ export default {
             dataType: "numeric",
             headerTooltip: {
               show: true,
-              tooltipHtml: "사정 상 결석"
-            }
+              tooltipHtml: "사정 상 결석",
+            },
           },
           {
             dataField: "cu",
@@ -182,8 +183,8 @@ export default {
             dataType: "numeric",
             headerTooltip: {
               show: true,
-              tooltipHtml: "무단 결석"
-            }
+              tooltipHtml: "무단 결석",
+            },
           },
           {
             dataField: "cp",
@@ -195,8 +196,8 @@ export default {
             dataType: "numeric",
             headerTooltip: {
               show: true,
-              tooltipHtml: "출석"
-            }
+              tooltipHtml: "출석",
+            },
           },
           {
             dataField: "ceu",
@@ -208,10 +209,10 @@ export default {
             renderer: {
               type: "BarRenderer",
               max: 10,
-              style: "showcase1-custmom-bar"
-            }
-          }
-        ]
+              style: "showcase1-custmom-bar",
+            },
+          },
+        ],
       };
       columnLayout.push(obj);
 
@@ -224,8 +225,8 @@ export default {
             dataField: "d" + i,
             headerText: i,
             width: 40,
-            styleFunction: this.cellStyleFunction
-          }
+            styleFunction: this.cellStyleFunction,
+          },
         ];
         columnLayout.push(obj);
       }
@@ -239,7 +240,7 @@ export default {
       grid.showAjaxLoader();
       // axios 모듈을 통하여 요청합니다.
       const REQ_URL = "./data/student_present.json";
-      this.$http.get(REQ_URL).then(result => {
+      this.$http.get(REQ_URL).then((result) => {
         this.gridData = result.data;
         grid.removeAjaxLoader();
       });
@@ -301,7 +302,9 @@ export default {
     cellEditEndBeforeHandler(event) {
       // 이름은 어떤것을 입력해도 허용함.
       if (event.dataField == "name") {
-        console.log("oldValue : " + event.oldValue + ", new Value : " + event.value);
+        console.log(
+          "oldValue : " + event.oldValue + ", new Value : " + event.value
+        );
         return event.value;
       }
 
@@ -320,7 +323,13 @@ export default {
         return oldValue;
       }
 
-      console.log("oldValue : " + oldValue + ", new Value : " + value + ", (대문자로 변경됨)");
+      console.log(
+        "oldValue : " +
+          oldValue +
+          ", new Value : " +
+          value +
+          ", (대문자로 변경됨)"
+      );
 
       return value;
     },
@@ -333,7 +342,7 @@ export default {
         if (event.item.name == "") {
           // removeRow 메소드는 에디팅이 현재 열린 경우 취소를 시키게 됨.
           // 이 때 다시 취소 이벤트가 발생하여 무한으로 빠지는 것을 방지
-          setTimeout(function() {
+          setTimeout(function () {
             grid.removeRow(event.rowIndex);
           }, 16);
         }
@@ -414,7 +423,7 @@ export default {
       let grid = this.$refs.myGrid;
       // 내보내기 실행
       grid.exportToXlsx({
-        progressBar: true
+        progressBar: true,
       });
     },
 
@@ -424,17 +433,19 @@ export default {
 
       // 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
       if (!grid.isAvailabePdf()) {
-        alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
+        alert(
+          "PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)"
+        );
         return;
       }
 
       // 내보내기 실행
       grid.exportToPdf({
         // 폰트 경로 지정
-        fontPath: "./fonts/jejugothic-regular.ttf"
+        fontPath: "./fonts/jejugothic-regular.ttf",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

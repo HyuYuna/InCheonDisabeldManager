@@ -7,10 +7,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=800">
 <meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="http://www.auisoft.net/">
+<meta name="og:url" content="https://www.auisoft.net/">
 <meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
 <title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-<link href="http://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
@@ -140,13 +140,15 @@ var footerLayout = [ {
 function createAUIGrid(columnLayout) {
 	
 	var auiGridProps = {
-			editable : true,
+			//editable : true,
 			
 			// 그룹핑 필드에 해당하는 셀의 수정 가능 여부를 지정합니다.(기본값 : false)
 			// 데모 상의 country, product 칼럼 수정 가능 여부 지정
 			editableOnGroupFields : true,
 			
 			selectionMode : "multipleCells",
+			
+			showRowCheckColumn : true,
 			
 			// 셀 병합 실행
 			enableCellMerge : true,
@@ -155,8 +157,8 @@ function createAUIGrid(columnLayout) {
 			// 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
 			cellMergeRowSpan : false,
 			
-			// 그룹핑을 할 때 원래 데이터의 순서대로 출력시킬지 여부를 지정
-			keepOrderingOnGrouping : true,
+			// 그룹핑을 할 때 필드 값들이 오름 차순 대로 출력시킬지 여부를 지정
+			orderAscOnGrouping : true,
 			
 			showBranchOnGrouping : false,
 			
@@ -177,6 +179,18 @@ function createAUIGrid(columnLayout) {
 					
 					// "country", "product" 순으로 그룹핑을 했을 때 해당 항목 아래에 출력되는 텍스트 지정
 					labelTexts : ["총 합계", "부분 합계" ]
+			},
+			
+			// 전체 체크박스 표시 안함.
+			showRowAllCheckBox : false,
+			
+			independentAllCheckBox : true,
+			
+			rowCheckVisibleFunction : function(rowIndex, isChecked, item) {
+			   if(item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
+				   return false; // false 를 반환하면 체크박스가 숨기기 상태(hidden) 됩니다.
+			   }
+			   return true;
 			},
 			
 			rowStyleFunction : function(rowIndex, item) {
@@ -220,6 +234,11 @@ function addRow() {
 	AUIGrid.addRow(myGridID, item, "last");
 };
 
+//체크된 행들 제거
+function removeRow() {
+	if(confirm("체크된 행들 제거하시겠습니까?"))
+		AUIGrid.removeCheckedRows(myGridID);
+};
 </script>
 
 </head>
@@ -237,6 +256,7 @@ function addRow() {
 		<div>
 			<input type="button" class="btn" onclick="updateGrouping()" value="그룹핑 갱신하기(updateGrouping)">
 			<input type="button" class="btn" onclick="addRow()" value="행 추가하기">
+			<input type="button" class="btn" onclick="removeRow()" value="체크된 행 삭제하기">
 		</div>
 		
 	</div>
@@ -250,7 +270,7 @@ function addRow() {
 </div>
 <div id="footer">
      <div class="copyright">
-        <p>Copyright © 2014-2019 AUISoft </p>
+        <p>Copyright ©2021 AUISoft </p>
     </div>
 </div>
 

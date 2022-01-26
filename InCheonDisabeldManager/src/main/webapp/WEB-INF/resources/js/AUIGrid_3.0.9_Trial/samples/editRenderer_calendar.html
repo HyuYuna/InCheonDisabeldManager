@@ -7,10 +7,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=800">
 <meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="http://www.auisoft.net/">
+<meta name="og:url" content="https://www.auisoft.net/">
 <meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
 <title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-<link href="http://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
@@ -85,17 +85,21 @@ var columnLayout = [{
 		showExtraDays : false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
 		onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 		defaultFormat : "yyyy/mm/dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
-		validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
-				var date, isValid = true;
-				if(isNaN(Number(newValue)) ) { //20190201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-					if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-						isValid = false;
-					} else {
-						isValid = true;
-					}
-				}
-				// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-				return { "validate" : isValid, "message"  : "2019/02/01 형식으로 입력해주세요." };
+		showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
+		validator : function(oldValue, newValue, item) { // 에디팅 유효성 검사
+			var m,d;
+			var isValid = true;
+			m = parseInt(newValue.substring(5,7));
+			d = parseInt(newValue.substring(8,10));
+			if(isNaN(m) || isNaN(d) || m > 12 || d > 31) { // 월은 12월, 일은 31일을 넘지 않게.
+				isValid = false;
+			} else 	if(isNaN(Date.parse(newValue))) { // JS Date 로 파싱할 수 있는 형식인지 조사
+				isValid = false;
+			} else {
+				isValid = true;
+			}
+			// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+			return { "validate" : isValid, "message"  : "유효한 날짜 형식으로 입력해주세요." };
 		}
 	}
 }, {
@@ -150,6 +154,7 @@ var columnLayout = [{
 	editRenderer : {
 		type : "CalendarRenderer",
 		defaultFormat : "yyyy/mm", // 달력 선택 시 데이터에 적용되는 날짜 형식
+		showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
 		showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
 		onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 		onlyMonthMode : true // 일 단위 달력이 아닌 월 단위 달력 출력
@@ -164,6 +169,7 @@ var columnLayout = [{
 	editRenderer : {
 		type : "CalendarRenderer",
 		defaultFormat : "yyyy/mm/dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+		showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
 		openDirectly : true, // 에디팅 진입 시 바로 달력 열기
 		onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 		showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
@@ -259,7 +265,7 @@ var gridData = [{"field0":"2019/12/22","field1":"2019/12/22","field2":"2019/12/2
 </div>
 <div id="footer">
      <div class="copyright">
-        <p>Copyright © 2014-2019 AUISoft </p>
+        <p>Copyright ©2021 AUISoft </p>
     </div>
 </div>
 

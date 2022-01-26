@@ -1,25 +1,23 @@
 <template>
   <div>
     <div class="desc">
+      <p>실시간 주식 현황(나의 관심 종목)을 구현한 데모입니다.</p>
       <p>
-        실시간 주식 현황(나의 관심 종목)을 구현한 데모입니다.
+        주식은 가상의 주식으로 랜덤하게 로컬에서 0.3초 마다 거래가 이루어진
+        종목만 갱신하도록 설정한 모습입니다.
       </p>
       <p>
-        주식은 가상의 주식으로 랜덤하게 로컬에서 0.3초 마다 거래가 이루어진 종목만 갱신하도록 설정한
-        모습입니다.
+        처음 데이터를 그리드에 삽입 한 후 그리드에 특정 행의 셀 값(현재가,
+        대비가, 거래량)만 갱신하는 모습입니다.
       </p>
       <p>
-        처음 데이터를 그리드에 삽입 한 후 그리드에 특정 행의 셀 값(현재가, 대비가, 거래량)만
-        갱신하는 모습입니다.
+        참고 : AUIGrid 가 서버와 통신하는 방법 및 속도까지 커버하지 않습니다.
+        AUIGrid 는 단순히 출력해 주는 역할만 할 뿐입니다. 이 데모와 같이 빠른
+        속도로 주식 정보를 갱신하는 것은 일반 Ajax 통신으론 불가능합니다.
       </p>
       <p>
-        참고 : AUIGrid 가 서버와 통신하는 방법 및 속도까지 커버하지 않습니다. AUIGrid 는 단순히
-        출력해 주는 역할만 할 뿐입니다. 이 데모와 같이 빠른 속도로 주식 정보를 갱신하는 것은 일반
-        Ajax 통신으론 불가능합니다.
-      </p>
-      <p>
-        만약, 웹 상에서 주식 정보를 실시간으로 빠르게 갱신하고자 한다면 웹소켓(Web Socket)으로
-        구성하는 것이 최선일 것입니다.
+        만약, 웹 상에서 주식 정보를 실시간으로 빠르게 갱신하고자 한다면
+        웹소켓(Web Socket)으로 구성하는 것이 최선일 것입니다.
       </p>
     </div>
     <!-- AUIGrid 컴포넌트 설정 -->
@@ -33,7 +31,7 @@ import AUIGrid from "../static/AUIGrid-Vue.js/AUIGrid.vue";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -49,20 +47,20 @@ export default {
     // 그리드 속성 정의
     auigridProps: {
       // row 를 구별짓는 유니크한 값을 갖는 필드 설정 ( 대용량인 경우 반드시 설정해야 함 )
-      rowIdField: "id"
+      rowIdField: "id",
     },
 
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -80,7 +78,7 @@ export default {
         {
           dataField: "name",
           headerText: "종목명",
-          width: 200
+          width: 200,
         },
         {
           dataField: "price",
@@ -88,7 +86,7 @@ export default {
           width: 120,
           dataType: "numeric",
           style: "my-right-style",
-          formatString: "#,##0"
+          formatString: "#,##0",
         },
         {
           dataField: "gap",
@@ -102,17 +100,23 @@ export default {
             iconPosition: "aisle",
             iconWidth: 7, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
             iconHeight: 6,
-            iconFunction: function(rowIndex, columnIndex, value, item) {
+            iconFunction: function (rowIndex, columnIndex, value, item) {
               if (item.gap < 0) return "./assets/ico_down.gif";
               else if (item.gap > 0) return "./assets/ico_up.gif";
               return "./assets/ico_flat.gif";
-            }
+            },
           },
-          styleFunction: function(rowIndex, columnIndex, value, headerText, item) {
+          styleFunction: function (
+            rowIndex,
+            columnIndex,
+            value,
+            headerText,
+            item
+          ) {
             if (item.gap < 0) return "my-custom-down";
             else if (item.gap > 0) return "my-custom-up";
             return "my-custom-normal";
-          }
+          },
         },
         {
           dataField: "rate",
@@ -122,7 +126,7 @@ export default {
           postfix: " %",
           style: "my-right-style",
           width: 120,
-          expFunction: function(rowIndex, columnIndex, item) {
+          expFunction: function (rowIndex, columnIndex, item) {
             // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
             // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
             let oldPrice = item.price - item.gap;
@@ -134,13 +138,13 @@ export default {
             if (item.gap < 0) return "my-custom-down";
             else if (item.gap > 0) return "my-custom-up";
             return "my-custom-normal";
-          }
+          },
         },
         {
           dataField: "rateGraph",
           headerText: "등락율 그래프",
           width: 120,
-          expFunction: function(rowIndex, columnIndex, item) {
+          expFunction: function (rowIndex, columnIndex, item) {
             // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
             return item.rate;
           },
@@ -149,8 +153,8 @@ export default {
             showLabel: false,
             min: -30,
             max: 30,
-            offset: 30
-          }
+            offset: 30,
+          },
         },
         {
           dataField: "volume",
@@ -158,7 +162,7 @@ export default {
           dataType: "numeric",
           formatString: "#,##0",
           style: "my-right-style",
-          width: 120
+          width: 120,
         },
         {
           dataField: "open",
@@ -166,7 +170,7 @@ export default {
           dataType: "numeric",
           formatString: "#,##0",
           style: "my-right-style",
-          width: 120
+          width: 120,
         },
         {
           dataField: "high",
@@ -174,11 +178,11 @@ export default {
           dataType: "numeric",
           formatString: "#,##0",
           style: "my-custom-up",
-          expFunction: function(rowIndex, columnIndex, item) {
+          expFunction: function (rowIndex, columnIndex, item) {
             // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
             return Math.max(item.high, item.price);
           },
-          width: 120
+          width: 120,
         },
         {
           dataField: "low",
@@ -186,11 +190,11 @@ export default {
           dataType: "numeric",
           formatString: "#,##0",
           style: "my-custom-down",
-          expFunction: function(rowIndex, columnIndex, item) {
+          expFunction: function (rowIndex, columnIndex, item) {
             // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
             return Math.min(item.price, item.low);
-          }
-        }
+          },
+        },
       ];
     },
 
@@ -208,7 +212,7 @@ export default {
           high: this.prices[i],
           low: this.prices[i],
           gap: 0,
-          volume: 0
+          volume: 0,
         });
       }
 
@@ -273,15 +277,15 @@ export default {
           id: codes[i], // rowIdField 로 설정한 id(중요)
           price: price, // 현재가
           gap: gap, // 대비가
-          volume: this.volumes[index] // 거래량
+          volume: this.volumes[index], // 거래량
         });
       }
 
       // AUIGrid 에 갱신할 행들 삽입
       // refreshRows 사용하기 전에 반드시 rowIdField 속성을 선행으로 설정해야합니다.
       if (grid) grid.refreshRows(rows, "my-refresh-row-flash-style", 200);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

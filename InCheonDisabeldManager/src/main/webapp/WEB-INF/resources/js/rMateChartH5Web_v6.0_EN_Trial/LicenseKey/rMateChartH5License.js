@@ -2,11 +2,10 @@
 // rMate Chart H5 License Key 
 //
 // Product Name : rMate Chart for HTML5 v6.0
-// License Type : Enterprise License
-// Product No : 90DB-25A4-797C-8ED1
-// Customer : 인천광역시청/ 장애인복지 통합 플랫폼 구축
-// Authenticated server Info : the number of server= 1, server's IP= 152.99.40.60, Access Domain= webjangbok.incheon.go.kr
-// Expiration date : unlimited
+// License Type : Enterprise Trial License
+// Product No : 8F6A-D9F2-08F6-E81D
+// Authenticated server Info : undefined
+// Expiration date : 2022/03/31
 //
-var rMateChartH5License = "ad0f047f782ad824a62e5f194563620db364c38378575920245d9dc2a016487a:3500610b344134352d32372d3942374443302d39383a454c4420312a203a504542203a72486b442e4f6f20674c2e566e3a6f32652e683063206e5069562e3a6b436f35622d67456e4e612d6a36622e653077202c45304c363a2e66302034432e3a393239302e323231353031313a314835";
+var rMateChartH5License = "5d25ba6b6457cc91ece2c8bb2dc70d158e09c759c83bc75e40e7b66bc00560b9:3900660b3248443a4f4220504c2056443a3132382e45302d2036504656383a30432d35322d4645394e442d2d36412e3630462d38453a564c41204c312033452f4c333a30742f203243323a303232303a32453120312a323a324839";
 // -----------------------------------------------------------------------------

@@ -23,7 +23,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -195,6 +195,48 @@
  <p>Return : (Array) 생성된 그리드의 부모 Div의 id 가 담긴 배열을 반환합니다.(즉, 생성할 때 파라메터로 넣은 pid 반환)</p>
  </td>
 </tr>
+<tr id="makeValueMasked">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">makeValueMasked</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Function &nbsp; <span class="label">Version: </span>3.0.11<br>
+ <p>주어진 값을 마스킹 적용 시켜 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>mask : (String) 마스크 설정</li>
+ <li>value : (String) 마스크 적용 시킬 값</li>
+ </ul>
+ <pre>
+ var masked = AUIGrid.makeValueMasked("99:99:99", "123456");
+ console.log(masked); // 출력값 : 12:34:56
+ 
+ var masked = AUIGrid.makeValueMasked("(999) 999-999-999", "123456789123");
+ console.log(masked); // 출력값 : (123) 456-789-123 </pre>
+ <p>Return : (String) 마스킹 적용된 값. 주어진 값이 마스킹 유효 값이 아닌 경우 null 반환</p>
+ </td>
+</tr>
+<tr id="makeValueUnmasked">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">makeValueUnmasked</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Function &nbsp; <span class="label">Version: </span>3.0.11<br>
+ <p>마스킹 적용된 값을 해제 시켜 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>mask : (String) 마스크 설정</li>
+ <li>value : (String) 마스크 적용된 값</li>
+ </ul>
+ <pre>
+ var masked = AUIGrid.makeValueUnmasked("99:99:99", "12:34:56");
+ console.log(masked); // 출력값 : 123456
+ 
+ var masked = AUIGrid.makeValueUnmasked("(999) 999-999-999", "(123) 456-789-123");
+ console.log(masked); // 출력값 : 123456789123 </pre>
+ <p>Return : (String) 마스킹 해제시킨 값. 주어진 값이 마스킹 유효 값이 아닌 경우 null 반환</p>
+ </td>
+</tr>
 <tr id="releaseDate">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -223,8 +265,8 @@
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->

@@ -23,7 +23,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -97,8 +97,9 @@
 <span class="signatureLink">autoEditCompleteOnResize</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.4<br>
- <p>그리드 셀을 수정 중일 때 Global Resize 이벤트가 발생한 경우  수정을 종료 시킬지 여부를 지정합니다.</p>
- <p>Global Resize 이벤트는 일반적으로 최상위 계층인 window 창의 크기가 변경된 경우를 말합니다.</p>
+ <p>그리드 셀을 수정 중일 때 global resize 이벤트가 발생한 경우  수정을 종료 시킬지 여부를 지정합니다.</p>
+ <p>global resize 이벤트는 일반적으로 최상위 계층인 window 창의 크기가 변경된 경우를 의미 합니다.</p>
+ <p>터치 디바이스의 경우 소프트 키보드의 유무에 의해 global resize 이벤트가 발생하기 때문에 이 속성은 false 로 처리됩니다.</p> 
   기본값(default) : <code>true</code>.</td>
 </tr>
 <tr id="autoGridHeight">
@@ -111,6 +112,7 @@
  <p>데이터를 삽입하기 전(또는 데이터 없는 경우)에는 최초 지정된 높이로 그리드가 출력되며 데이터를 삽입하거나 행을 추가하면 유동적으로 그리드의 높이는 맞게 변경됩니다.</p>
  <p>이 속성을 true 로 설정하면 resize 메소드를 통해 사용자가 높이를 지정할 수 없습니다.</p>
  <p>wordWrap 을 true 로 설정한 경우 이 속성은 무시됩니다. (단, usePaging=true, wordWrap=true 인 경우 autoGridHeight 은 사용 가능)</p>
+ <p>그리드의 세로 스크롤이 없이 데이터를 모두 출력하므로 많은 양의 데이터를 초기에 넣지 마십시오. 퍼포먼스에 악영향을 미칩니다.</p>
  <p>Also See : <a href="#wordWrap">wordWrap</a>, <a href="#usePaging">usePaging</a> | <a href="../../samples/auto_grid_height.html?r_fm&theme=default" target="_blank">관련 데모 보기</a></p>
   기본값(default) : <code>false</code>.</td>
 </tr>
@@ -177,7 +179,8 @@
 <span class="signatureLink">cellMergePolicy</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.12<br>
- <p>셀 병합인 경우 (enableCellMerge=true) 널 데이터(null, undefined, "")에 대한 병합 정책을 결정합니다.</p>
+ <p>셀 병합인 경우 (enableCellMerge=true) 널 데이터(null, undefined, "")에 대한 세로 병합 정책을 결정합니다.</p>
+ <p>세로 병합에 한해 널 데이터의 병합 정책을 결정 짓습니다. 이와 무관하게 가로 병합은 온전히 값이 같아야 병합됩니다.</p>
  <p>유효 값은 "default", "withNull", "valueWithNull" 입니다.</p>
  <ul>
  <li>default : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.</li>
@@ -311,6 +314,15 @@
  <p>Also See : <a href="#treeLazyMode">treeLazyMode</a>
  기본값(default) : <code>false</code>.</td>
 </tr>
+<tr id="dragKnobColumnWidth">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dragKnobColumnWidth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.10.0<br>
+ <p>행 드래그&amp;드랍을 도와주는 엑스트라 칼럼의 넓이를 지정합니다.</p>
+  기본값(default) : <code>32</code>.</td>
+</tr>
 <tr id="dragRowsText">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -403,6 +415,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>칼럼 셀 병합(cell merge) 가능 여부를 지정합니다.</p>
+<p>셀 병합은 가로 병합, 세로 병합 중 한가지만 가능합니다. 가로 병합과 세로 병합을 같이 사용하여 혼합된 병합으로 출력은 불가능합니다. </p>
  기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="enableClipboard">
@@ -423,7 +436,7 @@
 <p>칼럼 리사이징 가능 여부를 지정합니다.</p>
 <p>칼럼 리사시징은 헤더와 헤더의 경계선을 마우스 드래그&amp;드랍을 통해 가능합니다.</p>
 <p>만약 헤더의 경계선을 더블 클릭한 경우 모든 행들의 셀 값 중 가장 길이(length)가 큰 텍스트로 사이즈가 결정됩니다.</p>
-<p>주의 : 더블 클릭으로 자동 결정되는 크기는 UI의 크기가 아닌 실제 셀 값의 길이(length) 입니다. 따라서 renderer 를 통해 단순 텍스트가 아닌 값을 표현 한 경우 오차가 발생할 수 있습니다.</P>
+<p>헤더에 HTML 을 표현한 경우 무시됩니다.</p>
 <p>또한 TempleteRenderer 를 사용하는 경우 더블클릭을 통한 리사이징은 무시합니다.</p>
  기본값(default) : <code>true</code>.</td>
 </tr>
@@ -528,6 +541,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.4<br>
  p>다수의 행을 한번에 드래깅 가능 여부를 지정합니다.</p>
  <p>selectionMode 를 "multipleCells" 또는 "multipleRows" 인 경우 유효합니다. 또한 속성 enableDrag=true 설정이 선행되어야 합니다.</p>
+ <p>만약 계층형 그리드(TreeGrid)인 경우 계층형 그리드는 기본적으로 다수 행 드래깅을 지원하지 않으므로 이 속성은 false 처리 됩니다.</p> 
  <p>Also See : <a href="#selectionMode">selectionMode</a>, <a href="#enableDrag">enableDrag</a> | <a href="../../samples/dragdrop_rows_to_grid.html?ddgrid&theme=default" target="_blank">관련 데모 보기</a></p>
   기본값(default) : <code>true</code>.</td>
 </tr>
@@ -630,6 +644,24 @@
 <p>해당 서버단 파일은 PHP, JSP 등이 될 수 있습니다. 제공된 샘플의 server_script 폴더에 샘플 JSP, PHP, ASP 가 있습니다.</p>
 <p>해당 파일을 WAS 에 업로드 할 해당 주소를 지정해 주십시오.</p>
  기본값(default) : <code>null</code>.</td>
+</tr>
+<tr id="extraColumnOrders">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">extraColumnOrders</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Array &nbsp; <span class="label">Version: </span>3.0.11.0<br>
+ <p>엑스트라 렌더러의 출력 순서를 결정합니다.</p>
+ <p>엑스트라 렌더러는 드래깅 손잡이(showDragKnobColumn), 행 번호(showRowNumColumn), 행 상태(showStateColumn), 행 체크박스(showRowCheckColumn) 4가지가 존재합니다.</p>
+ <p>엑스트라 렌더러 활성화 속성 이름을 배열에 지정하면 해당 순서에 맞게 출력 시킵니다.</p>
+ <p>예로 작성하면 다음과 같습니다.</p>
+ <pre>
+ // 엑스트라 체크박스 칼럼을 맨 앞으로, 나머지 칼럼은 기본 순서 유지 (나머지 칼럼 유지는 배열에 지정하지 않으면 유지 시킴)
+ extraColumnOrders = ["showDragKnobColumn"];
+ 
+ // 엑스트라 체크박스, 행 번호, 상태, 드래깅 손잡이 순으로 순서 지정하기
+ extraColumnOrders = ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"];</pre>
+  기본값(default) : <code>["showDragKnobColumn", "showRowNumColumn", "showStateColumn", "showRowCheckColumn"]</code>.</td>
 </tr>
 <tr id="fillColumnSizeMode">
 <td class="summaryTableSignatureCol">
@@ -864,6 +896,18 @@ var gridPros = {
 <p>푸터와 메인 그리드 사이의 간격, 공백을 지정합니다.</p>
  기본값(default) : <code>4</code>.</td>
 </tr>
+<tr id="forceTreeView">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">forceTreeView</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.10.0<br>
+ <p>그리드에 삽입하는 데이터와 무관하게 계층형 그리드(트리 그리드)로 출력시킬지 여부를 지정합니다.</p>
+ <p>계층형 그리드(트리 그리드)는 삽입하는 데이터가 계층형인 경우 트리 그리드로 출력을 시키는게 기본입니다.</p>
+ <p>그러나 forceTreeView = true 설정하면 데이터와 무관하게 계층형(트리 그리드)로 출력 시킵니다.</p>
+ <a href="../../samples/dragdrop_tree_to_grid_copy.html?ddtreegridcp&theme=default&s=7000" target="_blank">관련 데모 보기</a></p>
+  기본값(default) : <code>false</code>.</td>
+</tr>
 <tr id="groupingFields">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -1041,6 +1085,18 @@ var gridPros = {
  <p>전체 선택/해제를 원하는 방식으로 사용자 정의하고자 한다면 independentAllCheckBox 를 true 설정하여 rowAllCheckClick 이벤트를 바인딩하여 제어하십시오.</p>
   기본값(default) : <code>false</code>.</td>
 </tr>
+<tr id="inlineFilterDelay">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">inlineFilterDelay</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.11.0<br>
+ <p>인라인 필터에서 필터 값 입력 시 반응 딜레이를 설정합니다.</p>
+ <p>예로 500 설정 시 사용자가 입력 종료 500ms 시간이 지난 이후 필터링을 실행합니다.</p>
+ <p>0을 설정하면 매 입력마다 필터링을 실행합니다.</p>
+ <p>많은 수의 데이터나 사용자의 매 입력의 불필요한 필터링을 원치 않으면 300~500 설정을 권합니다.</p>
+  기본값(default) : <code>300</code>.</td>
+</tr>
 <tr id="isColumnOriented">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -1092,8 +1148,9 @@ var gridPros = {
 <span class="signatureLink">keepEditing</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
-<p> 편집 가능 상태(editable = true)일 때 F2 또는 클릭(더블클릭)으로 수정 모드로 들어간 경우,  탭키나 엔터키로 수정을 완료 한다면 다음 셀을 수정 가능 상태로 만들지 여부를 나타냅니다.</p>
-<p> 만약 keepEditing = true 로 설정한 경우, 다음 셀이 바로 수정 가능한 상태로 입력 창이 열리게 됩니다.</p>
+<p>편집 가능 상태(editable = true)일 때 F2 또는 클릭(더블클릭)으로 수정 모드로 들어간 경우,  탭키나 엔터키로 수정을 완료 한다면 다음 셀을 수정 가능 상태로 만들지 여부를 나타냅니다.</p>
+<p>만약 keepEditing = true 로 설정한 경우, 다음 셀이 바로 수정 가능한 상태로 입력 창이 열리게 됩니다.</p>
+<p>터치 기반의 모바일 디바이스에서는 무시됩니다.</p>
  기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="keepOrderingOnGrouping">
@@ -1203,6 +1260,17 @@ var gridPros = {
   <p>트리 그리드(계층형 데이터 그리드)에서 정렬을 할 때 최하단의 Depth 에 해당되는 행(rows)만 정렬을 실행할지 여부를 지정합니다.</p>
    기본값(default) : <code>false</code>.</td>
 </tr>
+<tr id="orderAscOnGrouping">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">orderAscOnGrouping</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11.2<br>
+ <p>그룹핑을 할 때 데이터의 순서를 그룹핑 필드의 값 오름차순으로 출력 시킬지 여부를 지정합니다.</p>
+ <p>이 속성을 true 설정하면 그룹핑 필드 설정된 칼럼의 데이터 순서는 오름차순으로 출력됩니다.</p>
+ <p>실제 그리드 정렬(sorting)과는 무관한 단순 출력 방식 지정 입니다.</p>
+  기본값(default) : <code>false</code>.</td>
+</tr>
 <tr id="pageRowCount">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -1224,6 +1292,16 @@ var gridPros = {
  <p>반드시 정수형의 배열을 설정해야 합니다.</p>
  <p>Also See : <a href="./Events.html#showPageRowSelect">showPageRowSelect</a> | <a href="/demo/paging_rowcount_select_demo.html?pg_rc&theme=default" target="_blank">관련 데모 보기</a></p>
   기본값(default) : <code>[10, 20, 30, 40, 50]</code>.</td>
+</tr>
+<tr id="pagingBottomGap">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">pagingBottomGap</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.10.0<br>
+ <p>페이징 모드(usePaging=true)인 경우 세로 스크롤 최하단의 여백을 추가로 지정합니다.</p>
+ <p>예로 속성의 값을 10으로 설정하면 10 픽셀만큼 추가로 세로 스크롤을 통해  더 내릴 수 있습니다.</p>
+  기본값(default) : <code>1</code>.</td>
 </tr>
 <tr id="pagingInfoLabelFunction">
 <td class="summaryTableSignatureCol">
@@ -1254,9 +1332,10 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <div class="summarySignature">
 <span class="signatureLink">pagingMode</span>
 </div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
- <p>페이징을 사용하는 경우 페이징의 방식을 지정합니다. 유효값은 "default", "simple" 입니다.</p>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.11<br>
+ <p>페이징을 사용하는 경우 페이징의 방식을 지정합니다. 유효값은 "default", "simple", "button" 입니다.</p>
  <p>"simple" 로 설정한 경우 이전, 다음 버턴과 현재페이지/전체페이지 만 출력됩니다.</p>
+ <p>"button" 로 설정한 경우 페이징 패널 없이 그리드 하단에 오버레이되어 이전, 다음 버턴만 출력됩니다.</p>
   기본값(default) : <code>"default"</code>.</td>
 </tr>
 <tr id="pagingPanelHeight">
@@ -1478,11 +1557,12 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <span class="signatureLink">rowIdField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
-<p>개별 행 아이템의 고유 값을 갖는 Key 필드에 해당되는 필드를 지정합니다.</p>
+<p>개별 행 아이템의 고유 값을 갖는 키(key)필드에 해당되는 필드를 지정합니다.</p>
 <p>DB 의 Record 에 비유하면 Primary Key 입니다.</p>
-<p>그리드의 개별 행 아이템에 접근하고 제어하기 위해서는 반드시 지정할 필요가 있습니다.</p>
-<p>이 필드에 속하는 데이터 value 는 고유값이여야 합니다. 즉, 중복된 값이 없어야 합니다.</p>
-<p>이 필드를 지정하면 그리드가 빨리 생성됩니다. 10만 로우 이상에선 반드시 설정하십시오.</p>
+<p>그리드의 개별 행 아이템에 쉽게 접근하고 제어하기 위해서 지정할 필요가 있습니다.</p>
+<p>이 필드에 속하는 데이터 필드 값(value)는 고유값이여야 합니다. 즉, 중복된 값이 없어야 합니다.</p>
+<p>예로 rowIdField 를 "id" 로 설정한 경우 모든 데이터의 개별 행에 id 필드가 존재해야 하며 그 값들은 모두 고유값이여야 합니다.</p>
+<p>이 필드를 지정하면 그리드가 빨리 생성됩니다. 10만 행(rows) 데이터 이상에서는 빠른 렌더링을 위해 설정을 추천합니다.</p>
 <p>편집 모드(editable=true)에서 rowIdField 로 지정된 필드는 수정이 불가능해집니다.</p>
  기본값(default) : <code>"_$uid"</code>.</td>
 </tr>
@@ -1527,6 +1607,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>현재 행(row) 의 위치를 나타냅니다.</p>
 <p>rowPosition 이 곧 현재 화면에 보이는 그리드의 최상단 행의 인덱스와 같습니다.</P>
+<p>페이징 모드인 경우는 현재 페이지의 최상단 행의 인덱스와 같습니다.</p>
  기본값(default) : <code>0</code>.</td>
 </tr>
 <tr id="rowSelectionWithMerge">
@@ -1632,8 +1713,9 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <div class="summarySignature">
 <span class="signatureLink">separatedSelectionOnMerge</span>
 </div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.6<br>
- <p>다수의 셀이 하나로 병합된 상태에서 해당 셀을 클릭할 때 병합과 관계없이 고유의 셀 자체로 구별되어 선택되어질지 여부를 지정합니다.</p>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.9.0<br>
+ <p>세로 병합된 셀을 선택했을 때 병합된 셀의 첫번째 셀 선택이 아닌 직접적으로 선택된 셀을 구분해서 선택할지 여부를 지정합니다.</p>
+ <p>예로 3개의 셀이 세로 병합된 경우 가운데 셀을 클릭하면 병합되었기 때문에 첫번째 셀이 선택됩니다. 이 속성을 false 처리하면 가운데 셀만 선택시킵니다.</p>
   기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="showAutoNoDataMessage">
@@ -1656,6 +1738,16 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>그룹핑을 지정하면 계층 구조로 데이터가 변하게 됩니다.(TreeGrid 형태) 이 때 그룹핑의 브랜치에 해당되는 행이 동적으로 생성되면서 마치 빈행이 보이는 것처럼 느껴질 때가 있습니다.</p>
   <p>이 속성을 false 로 지정하면 그룹핑 시 브랜치 행이 표시되지 않습니다.(enableCellMerge = true 인 경우만 유효)</p>
    기본값(default) : <code>true</code>.</td>
+</tr>
+<tr id="showDragKnobColumn">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDragKnobColumn</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.10.0<br>
+ <p>행 드래그&amp;드랍을 도와주는 엑스트라 칼럼을 최좌측에 생성합니다.</p>
+ <p>생성된 엑스트라 칼럼의 셀을 드래깅하여 행을 이동 시킬 수 있습니다.</p>
+  기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="showEditedCellMarker">
 <td class="summaryTableSignatureCol">
@@ -1694,6 +1786,16 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <p>헤더 출력 여부를 지정합니다.</p>
  기본값(default) : <code>true</code>.</td>
 </tr>
+<tr id="showInlineFilter">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showInlineFilter</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11.0<br>
+ <p>그리드 헤더 하단에 필터값을 바로 입력할 수 있는 입력 행을 출력 시킬지 여부를 지정합니다.</p>
+ <p>인라인 필터 행에 값을 입력하면 매 입력마다 필터링이 됩니다.(선행 속성 enableFilter = true 설정)</p>
+  기본값(default) : <code>false</code>.</td>
+</tr>
 <tr id="showPageButtonCount">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -1722,6 +1824,15 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>엑스트라 행 체크박스(showRowCheckColumn=true)를 설정한 경우, 헤더 부분에 전체 선택 체크박스를 표시할지 여부를 지정합니다.</p>
    기본값(default) : <code>true</code>.</td>
+</tr>
+<tr id="showRowBgStyles">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showRowBgStyles</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.10.9<br>
+ <p>그리드 홀수 행, 짝수 행에 각각의 지정된 배경색 스타일이 적용될지 여부를 지정합니다.</p>
+  기본값(default) : <code>true</code>.</td>
 </tr>
 <tr id="showRowCheckColumn">
 <td class="summaryTableSignatureCol">
@@ -1847,7 +1958,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <span class="signatureLink">summaryMergePolicy</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0<br>
- <p><a href="#enableSummaryMerge">enableSummaryMerge</a> 를 true 로 설정한 경우, 셀 병합 정책을 결정합니다.</p>
+ <p><a href="#enableSummaryMerge">enableSummaryMerge</a> 를 true 로 설정한 경우 즉, 그룹핑 소계 셀 병합 정책을 결정합니다.</p>
  <p>유효값은 다음과 같습니다.</p>
  <ul>
  <li>"default" : 그룹핑 필드 자신의 이전에서만 가로 병합 실행</li>
@@ -2052,13 +2163,23 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>즉, 의존적 칼럼 관계로 생성된 데이터를 그룹핑 합계 필드에 활용하고자 하는 경우 이 속성을 true 설정하십시오.</p>
    기본값(default) : <code>false</code>.</td>
 </tr>
+<tr id="wheelDefaultOnLast">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">wheelDefaultOnLast</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11<br>
+<p>마우스 휠을 움직일 때 그리드의 스크롤이 최하단 또는 최상단으로 간 경우 그리드 밖의 스크롤에 영향을 줄지 여부를 결정합니다.</p>
+<p>이 속성을 true 로 설정하면, 최하단 또는 최상단으로 간 경우 그리드 밖의 스크롤이 휠에 반응합니다.</p>
+ 기본값(default) : <code>true</code>.</td>
+</tr>
 <tr id="wheelSensitivity">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <span class="signatureLink">wheelSensitivity</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
-<p>마우스 휠(wheel)에 의한 수직 스크롤의 반응도를 결정합니다.</p>
+<p>페이징 모드가 아닌 일반 그리드에서 마우스 휠(wheel)에 의한 수직 스크롤의 반응도를 결정합니다.</p>
 <p>예를 들어 이 속성의 값을 2로 주면 마우스 휠로 반응하는 행의 개수가 2로 변경됩니다.</p>
  기본값(default) : <code>3</code>.</td>
 </tr>
@@ -2070,6 +2191,16 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>그리드의 가로 사이즈를 픽셀 단위로 지정합니다. 이 가로 사이즈를 지정하지 않으면 부모 DIV 의 width 만큼 할당됩니다.(즉, 부모 width의 100%)</p>
   기본값(default) : <code>NaN</code>.</td>
+</tr>
+<tr id="widthFitGap">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">widthFitGap</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.11.2<br>
+ <p>칼럼의 최적의 사이즈를 구할 때 적용되는 추가 픽셀을 지정합니다.</p>
+ <p>예로 칼럼과 칼럼의 경계를 더블 클릭하여 크기(width)를 내용물에 맞출 때 추가로 적용 시킬 픽셀 사이즈를 적용 시킵니다.</p>
+  기본값(default) : <code>1</code>.</td>
 </tr>
 <tr id="wordWrap">
 <td class="summaryTableSignatureCol">
@@ -2107,8 +2238,8 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->

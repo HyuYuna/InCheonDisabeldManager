@@ -1,18 +1,19 @@
 <template>
   <div>
     <div class="desc">
+      <p>달력에 개별 날짜마다 목표치 달성률을 표시한 데모입니다.</p>
       <p>
-        달력에 개별 날짜마다 목표치 달성률을 표시한 데모입니다.
-      </p>
-      <p>
-        그리드에 출력되는 셀은 사용자 정의 렌더러(CustomRenderer)를 사용하였습니다.
+        그리드에 출력되는 셀은 사용자 정의 렌더러(CustomRenderer)를
+        사용하였습니다.
       </p>
       <p>
         이와 같이 사용자가 원하는 셀 형식을 자바스크립트로 작성할 수 있습니다.
       </p>
       <div class="text-xs-center">
         <v-btn dark @click="changeData(-1)">이전 달</v-btn>
-        <span v-if="formatOriginDate !== null" class="pl-3 pr-3">{{ formatOriginDate }}</span>
+        <span v-if="formatOriginDate !== null" class="pl-3 pr-3">{{
+          formatOriginDate
+        }}</span>
         <v-btn dark @click="changeData(1)">다음 달</v-btn>
       </div>
     </div>
@@ -30,7 +31,7 @@ import "../static/AUIGrid/renderers/AUIGrid.MyCalendarRenderer";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
   data: () => ({
     // 오늘 날짜
@@ -47,48 +48,48 @@ export default {
         headerStyle: "my-sunday-style",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "1",
         headerText: "월",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "2",
         headerText: "화",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "3",
         headerText: "수",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "4",
         headerText: "목",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "5",
         headerText: "금",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
       },
       {
         dataField: "6",
@@ -97,9 +98,9 @@ export default {
         headerStyle: "my-saturday-style",
         renderer: {
           type: "CustomRenderer",
-          jsClass: window.AUIGrid.MyCalendarRenderer
-        }
-      }
+          jsClass: window.AUIGrid.MyCalendarRenderer,
+        },
+      },
     ],
 
     // 그리드 속성 정의
@@ -109,20 +110,20 @@ export default {
       showRowNumColumn: false,
       enableColumnResize: false,
       //rowHeight 80으로 설정
-      rowHeight: 80
+      rowHeight: 80,
     },
 
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -159,7 +160,7 @@ export default {
         }
         weekArray.push({
           date: i,
-          value: Math.floor(Math.random() * 100)
+          value: Math.floor(Math.random() * 100),
         });
       }
 
@@ -176,13 +177,17 @@ export default {
     changeData(direction) {
       if (Number(direction) > 0) {
         // 다음 달
-        this.gridData = this.genGridData(this.originDate.setMonth(this.originDate.getMonth() + 1));
+        this.gridData = this.genGridData(
+          this.originDate.setMonth(this.originDate.getMonth() + 1)
+        );
       } else {
         // 이전 달
-        this.gridData = this.genGridData(this.originDate.setMonth(this.originDate.getMonth() - 1));
+        this.gridData = this.genGridData(
+          this.originDate.setMonth(this.originDate.getMonth() - 1)
+        );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

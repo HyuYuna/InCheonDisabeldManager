@@ -2,12 +2,12 @@
   <div>
     <div class="desc">
       <div>
-        클라이언트에서 SQL 을 작성하면 해당 쿼리 그대로를 그리드에 출력하는 DB 그리드를 작성한
-        모습입니다.
+        클라이언트에서 SQL 을 작성하면 해당 쿼리 그대로를 그리드에 출력하는 DB
+        그리드를 작성한 모습입니다.
       </div>
       <div>
-        쿼리를 임의로 작성하거나 아래 SQL 예문을 복사하여 붙여 넣고 "Query 실행"을 하면 해당 쿼리
-        결과 대로 출력됩니다.
+        쿼리를 임의로 작성하거나 아래 SQL 예문을 복사하여 붙여 넣고 "Query
+        실행"을 하면 해당 쿼리 결과 대로 출력됩니다.
       </div>
       <div>
         이런 기능으로 BI 솔루션이나 웹 DB 관련 솔루션 제작을 할 수 있습니다.
@@ -24,38 +24,40 @@
         <v-btn color="success" @click="runQuery">Query 실행</v-btn>
       </v-toolbar>
       <div>
-        <span>■ SQL 예문 1 : </span>select id, name, email, birth, type, position, enter_date, sex
-        from grid_sample_src_list order by id
+        <span>■ SQL 예문 1 : </span>select id, name, email, birth, type,
+        position, enter_date, sex from grid_sample_src_list order by id
       </div>
       <div>
-        <span>■ SQL 예문 2 : </span>select * from grid_sample_src_list where position='인턴'
+        <span>■ SQL 예문 2 : </span>select * from grid_sample_src_list where
+        position='인턴'
       </div>
       <div>
-        <span>■ SQL 예문 3 : </span>select id as "ID", position as "직급", name as "이름" from
-        grid_sample_src_list where position='인턴'
+        <span>■ SQL 예문 3 : </span>select id as "ID", position as "직급", name
+        as "이름" from grid_sample_src_list where position='인턴'
       </div>
-      <p style="margin-top:20px;">
+      <p style="margin-top: 20px">
         출력된 그리드에서 바로 수정을 하면 DB에 UPDATE 하도록 설정하였습니다.
       </p>
       <div>
-        보통 그리드에서 수정, 삭제, 추가를 하면 그리드 상에서만 적용되고, 마지막에 "저장" 과 같은
-        버턴을 누르면 한번에 적용시키도록 구성되어 있습니다.
+        보통 그리드에서 수정, 삭제, 추가를 하면 그리드 상에서만 적용되고,
+        마지막에 "저장" 과 같은 버턴을 누르면 한번에 적용시키도록 구성되어
+        있습니다.
       </div>
       <div>
-        그러나 이 데모는 수정 완료가 된 시점(cellEditEnd 이벤트 발생 시점)에 바로 UPDATE 하도록
-        구성되었습니다.
+        그러나 이 데모는 수정 완료가 된 시점(cellEditEnd 이벤트 발생 시점)에
+        바로 UPDATE 하도록 구성되었습니다.
       </div>
       <div>
-        Select 후 출력된 그리드에서 셀의 데이터를 수정하면 바로 DB UPDATE 로 적용됩니다.
+        Select 후 출력된 그리드에서 셀의 데이터를 수정하면 바로 DB UPDATE 로
+        적용됩니다.
       </div>
       <div>
         Request INFO :
-        <span id="requestDesc" style="color:#b02;"></span>
+        <span id="requestDesc" style="color: #b02"></span>
       </div>
 
       <v-checkbox
         class="shrink mr-2"
-        v-model="checkbox1"
         :label="`수정 완료 후 업데이트 성공 시 그리드에 수정된 내역 바로 지우기`"
       ></v-checkbox>
     </div>
@@ -78,7 +80,7 @@ import AUIGrid from "../static/AUIGrid-Vue.js/AUIGrid.vue";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
   data: () => ({
     // eslint-disable-next-line
@@ -130,7 +132,7 @@ export default {
         onlyEnterKeyEditEnd: true,
         showStateColumn: true,
         enableUndoRedo: false,
-        enableRestore: false
+        enableRestore: false,
       };
 
       // rowIdField 를 PrimaryKey 와 일치 시킴
@@ -176,7 +178,7 @@ export default {
           /// 10번이라면 "date" 임
           column.dataType = "date";
           column.editRenderer = {
-            type: "CalendarRenderer"
+            type: "CalendarRenderer",
           };
         }
 
@@ -185,7 +187,7 @@ export default {
           column.editRenderer = {
             type: "InputEditRenderer",
             // 에디팅 유효성 검사
-            validator: function(oldValue, newValue) {
+            validator: function (oldValue, newValue) {
               let isValid = false;
               // eslint-disable-next-line
               let email_matcher = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/; // 이메일 체크 정규식
@@ -195,16 +197,16 @@ export default {
               // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
               return {
                 validate: isValid,
-                message: "정확한 이메일 주소가 아닙니다. 다시 확인해 주세요."
+                message: "정확한 이메일 주소가 아닙니다. 다시 확인해 주세요.",
               };
-            }
+            },
           };
         }
         columnLayout.push(column);
       }
       return {
         rowIdField: pkField,
-        columnLayout: columnLayout
+        columnLayout: columnLayout,
       };
     },
 
@@ -214,8 +216,8 @@ export default {
 
     auiCellEditingHandler(event) {
       console.log(event.type);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

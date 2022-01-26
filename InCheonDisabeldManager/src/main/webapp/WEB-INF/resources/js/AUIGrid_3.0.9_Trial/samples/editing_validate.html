@@ -7,10 +7,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=800">
 <meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="http://www.auisoft.net/">
+<meta name="og:url" content="https://www.auisoft.net/">
 <meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
 <title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-<link href="http://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
@@ -239,10 +239,11 @@ function auiCellEditingHandler(event) {
 	<div class="desc">
 		<p>그리드 데이터 수정 시 유효성 검사(validating)에 맞지 않는다면 수정 완료를 못하도록 설정할 수 있습니다.</p>
 		<p>이 유효성 검사는 다음 editRenderer 에서만 가능합니다.</p>
-		<p style="margin-left:20px">■ 기본 편집 렌더러(InputEditRenderer)</p>
-		<p style="margin-left:20px">■ 달력 편집 렌더러(CalendarRenderer)</p>
-		<p style="margin-left:20px">■ 콤보박스 편집 렌더러(ComboBoxRenderer)</p>
-		<p>위 3개 외 다른 편집 렌더러는 미리 예약된 값 중 선택이므로 유효성 검사 불필요함.</p>
+		<p style="margin-left:20px">■ 기본 입력 렌더러(InputEditRenderer)</p>
+		<p style="margin-left:20px">■ 마스크 입력 렌더러(MaskEditRenderer)</p>
+		<p style="margin-left:20px">■ 달력 입력 렌더러(CalendarRenderer)</p>
+		<p style="margin-left:20px">■ 콤보박스 입력 렌더러(ComboBoxRenderer)</p>
+		<p>위 4개 외 다른 편집 렌더러는 미리 예약된 값 중 선택이므로 유효성 검사 불필요함.</p>
 		<p>유효한 값이 아니라면 지정된 메세지를 출력합니다.</p>
 	</div>
 	
@@ -257,7 +258,7 @@ function auiCellEditingHandler(event) {
 </div>
 <div id="footer">
      <div class="copyright">
-        <p>Copyright © 2014-2019 AUISoft </p>
+        <p>Copyright ©2021 AUISoft </p>
     </div>
 </div>
 

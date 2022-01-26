@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=800">
 <meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="http://www.auisoft.net/">
+<meta name="og:url" content="https://www.auisoft.net/">
 <meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
 <title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <style type="text/css">
@@ -26,7 +26,7 @@ function changeLocation(href) {
 </script>
 </head>
 <body>
-<h1>AUIGrid 3.0.9 Samples</h1>
+<h1>AUIGrid 3.0.11 Samples</h1>
 
 	<p>■ 테마는 CSS 파일 교체만으로 가능합니다.<br/>
 	예를 들어 다크 테마로 바꾸고 싶다면 해당 소스에서 AUIGrid_style.css 파일 대신 AUIGrid_dark_style.css 로 수정해 주세요</p>
@@ -38,7 +38,7 @@ function changeLocation(href) {
 	
 	<p>■ 실제 AUIGrid 의 수정, 삭제, 추가 된 행 정보를 얻어 서버로 보내 처리(예:DB 저장) 하는 예제 및 샘플이 마련되어 있습니다.</p>
 	<p>스프링프레임워크(전자정부프레임워크), JSP, PHP, ASP.NET C# 기준의 예제 및 샘플이 있으니 참고하여 작성하십시오.</p>
-	<p>예제 및 샘플 URL : http://www.auisoft.net/demo/auigrid/editing_post_to_server.html?post</p>
+	<p>예제 및 샘플 URL : https://www.auisoft.net/demo/auigrid/editing_post_to_server.html?post</p>
 	
 	<p>■ 쇼케이스 "사원 관리"와 "DB 그리드"의 서버 사이드 스크립트(실 DB Select, Update, Delete 하는 PHP 소스)는 포함되지 않았습니다.</p>
 	<p>필요하신 분은 aui@auisoft.net 으로 연락주시면 보내드리겠습니다.</p>
@@ -121,6 +121,7 @@ function changeLocation(href) {
 									<li id="hrenChk"><a href="javascript:changeLocation('./samples/header_renderer_checkbox.html?hrenChk')">헤더 체크박스</a></li>
 									<li id="hrenBtn"><a href="javascript:changeLocation('./samples/header_renderer_button.html?hrenBtn')">헤더 버튼</a></li>
 									<li id="headerhtml"><a href="javascript:changeLocation('./samples/header_text_html.html?headerhtml')">이미지 및 그 외 헤더에 출력하기</a></li>
+									<li id="grpRen"><a href="javascript:changeLocation('./samples/header_renderer_group.html?grpRen')">그룹형 헤더에 렌더러 출력하기<span class="new"></span></a></li>
 								</ul></li>
 							<!-- <li id="happ"><a href="javascript:changeLocation('./samples/header-grouping-folder.html?happ')">헤더에 열/닫기 버턴 넣기(응용)</a></li>  -->
 						</ul>
@@ -209,6 +210,7 @@ function changeLocation(href) {
 							<li id="ft_usr2"><a href="javascript:changeLocation('./samples/filter_user2.html?ft_usr2')">사용자 정의 필터2</a></li>
 							<li id="ft_menu"><a href="javascript:changeLocation('./samples/filter_custom_menu.html?ft_menu')">사용자 정의 필터 메뉴 작성하기</a></li>
 							<li id="ft_lb"><a href="javascript:changeLocation('./samples/filter_label_demo.html?ft_lb')">포매팅된 값으로 필터 메뉴 구성하기</a></li>
+							<li id="ft_in"><a href="javascript:changeLocation('./samples/filter_inline_demo.html?ft_in')">인라인 필터 행 표시하기<span class="new"></span></a></li>
 							<li id="ft_ex"><a href="javascript:changeLocation('./samples/filter_menu_external_demo.html?ft_ex')">외부에서 필터 메뉴 열기/닫기</a></li>
 						</ul>
 					</li>
@@ -219,7 +221,7 @@ function changeLocation(href) {
 						<ul class="root-nav-widgets">
 							<li id="sr_base"><a href="javascript:changeLocation('./samples/search_demo.html?sr_base')">기본 그리드 검색</a></li>
 							<li id="sr_blk"><a href="javascript:changeLocation('./samples/search_block_demo.html?sr_blk')">블럭(block) 선택 된 상태에서 검색</a></li>
-							<li id="sr_ft"><a href="javascript:changeLocation('./samples/search_format_demo.html?sr_ft')">포매팅된 값으로 그리드 검색<span class="new"></span></a></li>
+							<li id="sr_ft"><a href="javascript:changeLocation('./samples/search_format_demo.html?sr_ft')">포매팅된 값으로 그리드 검색</a></li>
 							<li id="sr_hd"><a href="javascript:changeLocation('./samples/search_treegrid.html?sr_hd')">트리 그리드 검색</a></li>
 							<li id="sr_ui"><a href="javascript:changeLocation('./samples/search_ui_demo.html?sr_ui')">그리드 검색 Ctrl+F UI</a></li>
 						</ul>
@@ -232,6 +234,7 @@ function changeLocation(href) {
 							<li id="pg_base"><a href="javascript:changeLocation('./samples/paging_demo.html?pg_base')">기본 그리드 페이징</a></li>
 							<li id="pg_base2"><a href="javascript:changeLocation('./samples/paging_demo2.html?pg_base2')">페이징 설정 화면</a></li>
 							<li id="pg_simple"><a href="javascript:changeLocation('./samples/paging_simple.html?pg_simple')">심플 모드 페이징</a></li>
+							<li id="pg_simbun"><a href="javascript:changeLocation('./samples/paging_simple_button.html?pg_simbun')">심플 버튼 모드 페이징<span class="new"></span></a></li>
 							<li id="pg_ww"><a href="javascript:changeLocation('./samples/paging_word_wrap.html?pg_ww')">워드랩(wordWrap)-자동 행 높이</a></li>
 							<li id="pg_mrf"><a href="javascript:changeLocation('./samples/paging_merge_row_ref.html?pg_mrf')">페이징 셀 세로 병합(row merge)</a></li>
 							<li id="pg_ah"><a href="javascript:changeLocation('./samples/paging_auto_height.html?pg_ah')">세로 스크롤 없는 페이징</a></li>
@@ -283,6 +286,7 @@ function changeLocation(href) {
 						<ul class="root-nav-widgets">
 							<li id="erdft"><a href="javascript:changeLocation('./samples/editRenderer_default.html?erdft')">인풋 렌더러(기본)</a></li>
 							<li id="erdi"><a href="javascript:changeLocation('./samples/editRenderer_input_btn.html?erdi')">인풋 렌더러 - editorBtn 수정 팝업</a></li>
+							<li id="ermsk"><a href="javascript:changeLocation('./samples/editRenderer_mask.html?ermsk')">마스크 편집 렌더러<span class="new"></span></a></li>
 							<li id="ercal"><a href="javascript:changeLocation('./samples/editRenderer_calendar.html?ercal')">달력 렌더러</a></li>
 							<li id="ercalb"><a href="javascript:changeLocation('./samples/editRenderer_calendar_big.html?ercalb')">달력 렌더러 - 큰 달력 출력</a></li>
 							<li id="ercaljq"><a href="javascript:changeLocation('./samples/editRenderer_calendar_jquery.html?ercaljq')">달력 렌더러 - jQuery UI 달력</a></li>
@@ -314,6 +318,7 @@ function changeLocation(href) {
 					<li>
 						<span class="category">14. 엑스트라 렌더러</span>
 						<ul class="root-nav-widgets">
+							<li id="erord"><a href="javascript:changeLocation('./samples/extra_renderer_orders.html?erord')">엑스트라 렌더러의 종류와 순서<span class="new"></span></a></li>
 							<li id="ernum"><a href="javascript:changeLocation('./samples/extra_renderer_rownum.html?ernum')">행 번호(RowNum) </a></li>
 							<li id="estcol"><a href="javascript:changeLocation('./samples/extra_renderer_state_column.html?estcol')">행 상태 칼럼</a></li>
 							<li id="erchk"><a href="javascript:changeLocation('./samples/extra_renderer_checkbox.html?erchk')">엑스트라 체크박스</a></li>
@@ -321,6 +326,7 @@ function changeLocation(href) {
 							<li id="erchkt"><a href="javascript:changeLocation('./samples/extra_renderer_checkbox_tree.html?erchkt')">엑스트라 체크박스 - 트리 그리드</a></li>
 							<li id="erchkta"><a href="javascript:changeLocation('./samples/extra_renderer_checkbox_all.html?erchkta')">엑스트라 체크박스 - 전체 체크 제어</a></li>
 							<li id="erdio"><a href="javascript:changeLocation('./samples/extra_renderer_radio.html?erdio')">엑스트라 라디오버튼</a></li>
+							<li id="ddrextra"><a href="javascript:changeLocation('./samples/dragdrop_rows_with_extra.html?ddrextra')">엑스트라 행 드래그&amp;드랍</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -333,7 +339,7 @@ function changeLocation(href) {
 							<li id="ren_cus_1"><a href="javascript:changeLocation('./samples/renderer_custom_1.html?ren_cus_1')">사용자 정의 렌더러 샘플 1</a></li>
 							<li id="ren_cus_2"><a href="javascript:changeLocation('./samples/renderer_custom_2.html?ren_cus_2')">사용자 정의 렌더러 샘플 2</a></li>
 							<li id="ren_cus_3"><a href="javascript:changeLocation('./samples/renderer_custom_3.html?ren_cus_3')">사용자 정의 렌더러 샘플 3</a></li>
-							<li id="ren_cus_3"><a href="javascript:changeLocation('./samples/renderer_custom_4.html?ren_cus_4')">사용자 정의 렌더러 - 구글 차트<span class="new"></span></a></li>
+							<li id="ren_cus_4"><a href="javascript:changeLocation('./samples/renderer_custom_4.html?ren_cus_4')">사용자 정의 렌더러 - 구글 차트</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -382,7 +388,8 @@ function changeLocation(href) {
 							<li id="post"><a href="javascript:changeLocation('./samples/editing_post_to_server.html?post')">추가, 삽입, 삭제된 행 서버로 전송하기</a></li>
 							<li id="tran_st"><a href="javascript:changeLocation('./samples/transaction_state.html?tran_st')">DB 트랜잭션 응답 처리</a></li>
 							<li id="ersm"><a href="javascript:changeLocation('./samples/editing_remove_new_rows.html?ersm')">소프트제거모드 새 행(newRow) 정책</a></li>
-							<li><a href="./samples/editing_touch_device.html" target="_blank">스마트-모바일 기기 최적화 편집</a></li>
+							<li><a href="./samples/editing_touch_device.html" target="_blank">터치 모바일 기기 최적화 편집</a></li>
+							<li><a href="./editing_touch_vkey.html" target="_blank">터치 모바일 기기 가상 키보드 적용<span class="new"></span></a></li>
 						</ul>
 					</li>
 				</ul>
@@ -412,7 +419,10 @@ function changeLocation(href) {
 							<li id="ddrowstxt"><a href="javascript:changeLocation('./samples/dragdrop_rows_text.html?ddrowstxt')">행, 드래그&amp;드랍 - 드래깅 텍스트 사용자 정의</a></li>
 							<li id="ddgrid"><a href="javascript:changeLocation('./samples/dragdrop_rows_to_grid.html?ddgrid')">행, 드래그&amp;드랍 - 2개의 그리드 간 행 이동</a></li>
 							<li id="ddgrid3"><a href="javascript:changeLocation('./samples/dragdrop_rows_to_grid3.html?ddgrid3')">행, 드래그&amp;드랍 - 다수의 그리드 간 행 이동</a></li>
-							<li id="ddgridcp"><a href="javascript:changeLocation('./samples/dragdrop_rows_to_grid_copy.html?ddgridcp')">행, 드래그&amp;드랍- 다수의 그리드 간 행 복사</a></li>
+							<li id="ddgridcp"><a href="javascript:changeLocation('./samples/dragdrop_rows_to_grid_copy.html?ddgridcp')">행, 드래그&amp;드랍 - 다수의 그리드 간 행 복사</a></li>
+							<li id="ddtree"><a href="javascript:changeLocation('./samples/dragdrop_tree.html?ddtree')">트리그리드 - 단일 그리드 내 행 이동</a></li>
+							<li id="ddtreegrid"><a href="javascript:changeLocation('./samples/dragdrop_tree_to_grid.html?ddtreegrid')">트리그리드 - 2개의 그리드 간 행 이동</a></li>
+							<li id="ddtreegridcp"><a href="javascript:changeLocation('./samples/dragdrop_tree_to_grid_copy.html?ddtreegridcp')">트리그리드 - 2개의 그리드 간 행 복사</a></li>
 							<li id="dcIdxi"><a href="javascript:changeLocation('./samples/change_columnIdx_api.html?dcIdxi')">열, API - 열 위치 바꾸기</a></li>
 							<li id="dcIdx2"><a href="javascript:changeLocation('./samples/change_columnIdx.html?dcIdx2')">열, 드래그&amp;드랍 - 열 위치 바꾸기</a></li>
 						</ul>
@@ -434,9 +444,9 @@ function changeLocation(href) {
 							<li id="exp_prg"><a href="javascript:changeLocation('./samples/export_progress.html?exp_prg')">진행바(progressBar) 표시(엑셀, CSV)</a></li>
 							<li id="exp_multi"><a href="javascript:changeLocation('./samples/export_xlsx_multi.html?exp_multi')">다수의 그리드 1개의 엑셀로 내보내기</a></li>
 							<li id="exp_num"><a href="javascript:changeLocation('./samples/export_xlsx_numeric.html?exp_num')">엑셀에서 숫자 원래의 값으로 내보내기</a></li>
-							<li id="exp_h"><a href="javascript:changeLocation('./samples/export_xlsx_size.html?exp_size')">엑셀에서 칼럼 넓이 변경시켜 내보내기</a></li>
+							<li id="exp_size"><a href="javascript:changeLocation('./samples/export_xlsx_size.html?exp_size')">엑셀에서 칼럼 넓이 변경시켜 내보내기</a></li>
 							<li id="exp_ls"><a href="javascript:changeLocation('./samples/export_local_server.html?exp_ls')">Export 로컬 or 서버 다운로드</a></li>
-							
+							<li id="exp_cl"><a href="javascript:changeLocation('./samples/export_control_local.html?exp_cl')">엑셀 서식 Blob 데이터 얻어오기</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -472,7 +482,7 @@ function changeLocation(href) {
 					<li>
 						<span class="category">22. 연동 및 통합(Integration)</span>
 						<ul class="root-nav-widgets">
-							<li id="inte_mdl"><a href="http://www.auisoft.net/demo/auigrid-vue/">Vue.js 프레임워크에서 사용하기</a></li>
+							<li id="inte_mdl"><a href="https://www.auisoft.net/demo/auigrid-vue/">Vue.js 프레임워크에서 사용하기</a></li>
 							<li id="inte_accs"><a href="javascript:changeLocation('./samples/integration_jqueryui_accor.html?inte_accs')">jQueryUI Accordion 에서 작성하기</a></li>
 							<li id="inte_tabs"><a href="javascript:changeLocation('./samples/integration_jqueryui.html?inte_tabs')">jQueryUI Tab 에서 동적 작성하기</a></li>
 							<li id="inte_dlg"><a href="javascript:changeLocation('./samples/integration_jqueryui_dial.html?inte_dlg')">jQueryUI Dialog 에서 작성하기</a></li>

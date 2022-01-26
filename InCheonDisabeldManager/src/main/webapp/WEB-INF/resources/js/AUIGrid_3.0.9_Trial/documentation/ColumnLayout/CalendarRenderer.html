@@ -23,7 +23,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -119,6 +119,28 @@ var columnLayout = [ {
  <p>연(years) 단위 달력의 연 포맷 스트링을 지정합니다.</p>
   기본값(default) : <code>"yyyy년"</code>.</td>
 </tr>
+<tr id="inputMode">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">inputMode</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.11<br>
+ <p>가상 키보드를 제공하는 디바이스(일반적으로 안드로이드, iOS 와 같은 모바일 디바이스)에서 출력 시킬 가상 키보드(소프트 키보드)의 형식을 지정합니다.</p>
+ <p>가상 키보드는 전적으로 해당 디바이스에서 제공하는 형태 그래도 출력 시킵니다. 즉, 기기에서 지원해야 사용 가능합니다.</p>
+ <p>기기마다 표시되는 가상 키보드는 상이 할 수 있습니다. 전적으로 기기에 의존하는 키보드입니다.</p>
+ <p>유효값은 다음과 같습니다.</p>
+ <ul>
+ <li>text : 사용자의 현재 로케일에 맞는 표준 키보드를 제공합니다.</li>
+ <li>decimal : 사용자의 로케일에 맞는 숫자형 키보드를 제공합니다. 기기에 따라 음의 부호(-)는 제공할 수도, 제공하지 않을 수도 있습니다.</li>
+ <li>numeric : 숫자형 키보드를 제공합니다.</li>
+ <li>tel :전화번호 키보드를 제공합니다.</li>
+ <li>search : 검색 입력 칸에 최적화한 가상 키보드를 제공합니다.</li>
+ <li>email : 이메일 입력에 최적화한 가상 키보드를 제공합니다.</li>
+ <li>url : URL 입력에 최적화한 가상 키보드를 제공합니다.</li>
+ <li>none : 가상 키보드를 출력하지 않습니다.</li>
+ </ul>
+  기본값(default) : <code>"text"</code>.</td>
+</tr>
 <tr id="maxlength">
 <td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -196,6 +218,15 @@ var columnLayout = [ {
 <p>달력 출력 시 이전 달, 다음 달의 여분의 날짜를 출력 할지 여부를 나타냅니다.</p>
 <p>이 값이 true 이면 달력에 앞뒤로 여분의 날짜가 출력됩니다.</p>
  기본값(default) : <code>false</code>.</td>
+</tr>
+<tr id="showPlaceholder">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showPlaceholder</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11<br>
+ <p>속성 defaultFormat 설정된 값으로 인푸터(inputer)에 플레이스홀더(placeholder) 를 출력 시킵니다.</p>
+  기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="showTodayBtn">
 <td class="summaryTableSignatureCol">
@@ -292,8 +323,8 @@ var columnLayout = [ {
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->

@@ -5,9 +5,9 @@
 /* eslint-disable */
 
 /** 
- * AUIGrid-Vue.js v0.9
- * AUIGrid v3.0.7.20190722 for Vue.js
- * Copyright © 2014-2019 AUISoft Co., Ltd. 
+ * AUIGrid-Vue.js v0.9.20211227
+ * AUIGrid v3.0.11.20220121 for Vue.js
+ * Copyright © 2022 AUISoft Co., Ltd. 
  * www.auisoft.net
  */
     // 프로젝트 경로에 맞게 바꾸세요
@@ -57,7 +57,7 @@
                 const that = this;
                 const events = ["addColumn", "addRow", "addRowFinish", "addTreeColumn", 
                 "cellClick", "cellDoubleClick", "cellEditCancel", "cellEditEnd",
-                 "cellLongTap", "columnStateChange", "dropCancel", "dropEnd", "filtering", 
+                 "cellLongTap", "columnStateChange", "copyEnd", "dropCancel", "dropEnd", "filtering", 
                  "footerClick", "footerDoubleClick", "grouping", "hScrollChange", "notFound", 
                  "pageChange", "pageRowCountChange", "pasteEnd", "removeColumn", "removeRow",
                  "removeSoftRows", "rowAllChkClick", "rowCheckClick", "selectionChange", "ready",
@@ -65,7 +65,7 @@
                  "vScrollChange"];
                 const invokers = ["beforeInsertRow", "beforeRemoveColumn", 
                 "beforeRemoveRow", "beforeRemoveSoftRows", "cellEditBegin",
-                "cellEditEndBefore", "contextMenu", "dragBegin", "dropEndBefore",
+                "cellEditEndBefore", "contextMenu", "copyBegin", "dragBegin", "dropEndBefore",
                 "headerClick", "keyDown", "pasteBegin", "rowNumCellClick",
                 "rowStateCellClick", "selectionConstraint"];
                 
@@ -92,19 +92,15 @@
             },
             __setupGlobalReisze() {
                 if(!this.autoResize) return;
-                if(typeof window.orientation !== "undefined") {
-                    window.addEventListener("orientationchange", this.__globalResizeHandler);
-                } else {
-                    window.addEventListener("resize", this.__globalResizeHandler); 
-                }
+                //if(typeof window.orientation !== "undefined")
+                //    window.addEventListener("orientationchange", this.__globalResizeHandler);
+                window.addEventListener("resize", this.__globalResizeHandler); 
             },
             __resetGlobalReisze() {
                 if(!this.autoResize) return;
-                if(typeof window.orientation !== "undefined") {
-                    window.removeEventListener("orientationchange", this.__globalResizeHandler);
-                } else {
-                    window.removeEventListener("resize", this.__globalResizeHandler);                    
-                }
+                //if(typeof window.orientation !== "undefined")
+                //    window.removeEventListener("orientationchange", this.__globalResizeHandler);
+                window.removeEventListener("resize", this.__globalResizeHandler);                    
             },
             __globalResizeHandler() {
                 let that = this;
@@ -123,6 +119,7 @@
             addRow(items, rowIndex) {return _self.addRow.call(_self,this.pid,arguments[0],arguments[1]);},
             addTreeColumn(cItems, parentDataField, position) {return _self.addTreeColumn.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
             addTreeRow(item, parentRowId, position) {return _self.addTreeRow.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
+            addTreeRowByIndex(items, rowIndex) {_self.addTreeRowByIndex.call(_self,this.pid,arguments[0],arguments[1]);},
             addUncheckedRowsByIds(ids) {return _self.addUncheckedRowsByIds.call(_self,this.pid,arguments[0]);},
             addUncheckedRowsByValue(dataField, value) {return _self.addUncheckedRowsByValue.call(_self,this.pid,arguments[0],arguments[1]);},
             appendData(items) {return _self.appendData.call(_self,this.pid,arguments[0]);},
@@ -162,6 +159,7 @@
             getAddedColumnFields() {return _self.getAddedColumnFields.call(_self,this.pid);},
             getAddedRowItems() {return _self.getAddedRowItems.call(_self,this.pid);},
             getAscendantsByRowId(rowId) {return _self.getAscendantsByRowId.call(_self,this.pid,arguments[0]);},
+            getCellElementByIndex(rowIndex, columnIndex) {return _self.getCellElementByIndex.call(_self,this.pid,arguments[0],arguments[1]);},
             getCellFormatValue(rowIndex, dataField) {return _self.getCellFormatValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getCellFormattedValue(rowIndex, dataField) {return _self.getCellFormattedValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getCellValue(rowIndex, dataField) {return _self.getCellValue.call(_self,this.pid,arguments[0],arguments[1]);},
@@ -175,11 +173,13 @@
             getColumnLayout() {return _self.getColumnLayout.call(_self,this.pid);},
             getColumnValues(dataField, total) {return _self.getColumnValues.call(_self,this.pid,arguments[0],arguments[1]);},
             getCreatedGridAll() {return _self.getCreatedGridAll.call(_self,this.pid);},
+            getCurrentPageData() {return _self.getCurrentPageData.call(_self,this.pid);},
             getDataFieldByColumnIndex(idx) {return _self.getDataFieldByColumnIndex.call(_self,this.pid,arguments[0]);},
             getDepthByRowId(rowId) {return _self.getDepthByRowId.call(_self,this.pid,arguments[0]);},
             getDescendantsByRowId(rowId) {return _self.getDescendantsByRowId.call(_self,this.pid,arguments[0]);},
             getEditedRowColumnItems() {return _self.getEditedRowColumnItems.call(_self,this.pid);},
             getEditedRowItems() {return _self.getEditedRowItems.call(_self,this.pid);},
+            getFilterCache() {return _self.getFilterCache.call(_self,this.pid);},
             getFitColumnSizeList(fitToGrid) {return _self.getFitColumnSizeList.call(_self,this.pid,arguments[0]);},
             getFooterData() {return _self.getFooterData.call(_self,this.pid);},
             getFooterFormatValueByDataField(posField) {return _self.getFooterFormatValueByDataField.call(_self,this.pid,arguments[0]);},
@@ -188,16 +188,19 @@
             getGridData() {return _self.getGridData.call(_self,this.pid);},
             getHiddenColumnDataFields() {return _self.getHiddenColumnDataFields.call(_self,this.pid);},
             getHiddenColumnIndexes() {return _self.getHiddenColumnIndexes.call(_self,this.pid);},
+            getIndexesByEvent(event) {return _self.getIndexesByEvent.call(_self,this.pid,arguments[0]);},
             getInitCellValue(rowId, dataField) {return _self.getInitCellValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getInitValueItem(rowId) {return _self.getInitValueItem.call(_self,this.pid,arguments[0]);},
             getItemByRowId(rowIdValue) {return _self.getItemByRowId.call(_self,this.pid,arguments[0]);},
             getItemByRowIndex(rowIndex) {return _self.getItemByRowIndex.call(_self,this.pid,arguments[0]);},
             getItemsByValue(dataField, value) {return _self.getItemsByValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getMergeEndRowIndex(rowIndex, columnIndex) {return _self.getMergeEndRowIndex.call(_self,this.pid,arguments[0],arguments[1]);},
+            getMergeItems(rowIndex, columnIndex) {return _self.getMergeItems.call(_self,this.pid,arguments[0],arguments[1]);},
             getMergeStartRowIndex(rowIndex, columnIndex) {return _self.getMergeStartRowIndex.call(_self,this.pid,arguments[0],arguments[1]);},
             getOrgCellValue(uid, dataField) {return _self.getOrgCellValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getOrgGridData() {return _self.getOrgGridData.call(_self,this.pid);},
             getOrgValueItem(uids) {return _self.getOrgValueItem.call(_self,this.pid,arguments[0]);},
+            getParentColumnByDataField(dataField) {return _self.getParentColumnByDataField.call(_self,this.pid,arguments[0]);},
             getParentItemByRowId(rowId) {return _self.getParentItemByRowId.call(_self,this.pid,arguments[0]);},
             getProp(name) {return _self.getProp.call(_self,this.pid,arguments[0]);},
             getProperty(name) {return _self.getProperty.call(_self,this.pid,arguments[0]);},
@@ -208,14 +211,20 @@
             getRowIndexesByValue(dataField, values) {return _self.getRowIndexesByValue.call(_self,this.pid,arguments[0],arguments[1]);},
             getRowPosition() {return _self.getRowPosition.call(_self,this.pid);},
             getRowsByValue(dataField, values) {return _self.getRowsByValue.call(_self,this.pid,arguments[0],arguments[1]);},
+            getScaleFactor() {return _self.getScaleFactor.call(_self,this.pid);},
+            getSelectedColIndexes() {return _self.getSelectedColIndexes.call(_self,this.pid);},
             getSelectedIndex() {return _self.getSelectedIndex.call(_self,this.pid);},
             getSelectedItems() {return _self.getSelectedItems.call(_self,this.pid);},
             getSelectedRows() {return _self.getSelectedRows.call(_self,this.pid);},
-            getSelectedText() {return _self.getSelectedText.call(_self,this.pid);},
+            getSelectedText(exceptHidden) {return _self.getSelectedText.call(_self,this.pid,arguments[0]);},
+            getSortingFields() {return _self.getSortingFields.call(_self,this.pid);},
+            getStateCache() {return _self.getStateCache.call(_self,this.pid);},
+            getTreeFilteredFlatData() {return _self.getTreeFilteredFlatData.call(_self,this.pid);},
             getTreeFlatData() {return _self.getTreeFlatData.call(_self,this.pid);},
             getTreeGridData() {return _self.getTreeGridData.call(_self,this.pid);},
             getTreeTotalDepth() {return _self.getTreeTotalDepth.call(_self,this.pid);},
             hideColumnByDataField(dataField) {return _self.hideColumnByDataField.call(_self,this.pid,arguments[0]);},
+            hideColumnGroup(dataField) {return _self.hideColumnGroup.call(_self,this.pid,arguments[0]);},
             indentTreeDepth() {_self.indentTreeDepth.call(_self,this.pid);},
             indexToRowId(rowIndex) {return _self.indexToRowId.call(_self,this.pid,arguments[0]);},
             isAddedById(uid) {return _self.isAddedById.call(_self,this.pid,arguments[0]);},
@@ -235,6 +244,8 @@
             isSortedGrid() {return _self.isSortedGrid.call(_self,this.pid);},
             isTreeGrid() {return _self.isTreeGrid.call(_self,this.pid);},
             isUniqueValue(dataField, value) {return _self.isUniqueValue.call(_self,this.pid,arguments[0],arguments[1]);},
+            makeValueMasked(mask, value) {return _self.makeValueMasked.call(_self,this.pid,arguments[0]);},
+            makeValueUnmasked(mask, value) {return _self.makeValueUnmasked.call(_self,this.pid,arguments[0]);},
             movePageTo(pageNum, maintainVScroll, maintainHScroll) {return _self.movePageTo.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
             moveRows2Down() {return _self.moveRows2Down.call(_self,this.pid);},
             moveRows2Up() {return _self.moveRows2Up.call(_self,this.pid);},
@@ -255,7 +266,7 @@
             removeRowByRowId(rowIds) {return _self.removeRowByRowId.call(_self,this.pid,arguments[0]);},
             removeSoftRows(ids) {return _self.removeSoftRows.call(_self,this.pid,arguments[0]);},
             removeToastMessage() {_self.removeToastMessage.call(_self,this.pid);},
-            resetUpdatedColumns(opts) {_self.resetUpdatedColumns.call(_self,this.pid);},
+            resetUpdatedColumns(opts) {_self.resetUpdatedColumns.call(_self,this.pid,arguments[0]);},
             resetUpdatedItemById(rowId, flag) {_self.resetUpdatedItemById.call(_self,this.pid,arguments[0],arguments[1]);},
             resetUpdatedItems(flag) {_self.resetUpdatedItems.call(_self,this.pid,arguments[0]);},
             resize(w, h) {_self.resize.call(_self,this.pid,arguments[0],arguments[1]);},
@@ -295,6 +306,7 @@
             setProperty(obj, value) {return _self.setProperty.call(_self,this.pid,arguments[0],arguments[1]);},
             setRendererProp(columnIndex, obj) {_self.setRendererProp.call(_self,this.pid,arguments[0],arguments[1]);},
             setRowPosition(rowPosition) {return _self.setRowPosition.call(_self,this.pid,arguments[0]);},
+            setScaleFactor(value) {_self.setScaleFactor.call(_self,this.pid,arguments[0]);},
             setSelectionAll() {_self.setSelectionAll.call(_self,this.pid);},
             setSelectionBlock(sr, er, sc, ec) {_self.setSelectionBlock.call(_self,this.pid,arguments[0],arguments[1],arguments[2],arguments[3]);},
             setSelectionByIndex(rowIndex, columnIndex) {return _self.setSelectionByIndex.call(_self,this.pid,arguments[0],arguments[1]);},
@@ -305,9 +317,11 @@
             showAjaxLoader() {_self.showAjaxLoader.call(_self,this.pid);},
             showAllColumns() {_self.showAllColumns.call(_self,this.pid);},
             showColumnByDataField(dataField) {return _self.showColumnByDataField.call(_self,this.pid,arguments[0]);},
+            showColumnGroup(dataField) {return _self.showColumnGroup.call(_self,this.pid,arguments[0]);},
             showInfoMessage(msgHTML) {_self.showInfoMessage.call(_self,this.pid,arguments[0]);},
             showItemsOnDepth(depth) {return _self.showItemsOnDepth.call(_self,this.pid,arguments[0]);},
             showToastMessage(rowIndex, columnIndex, msg) {return _self.showToastMessage.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
+            syncGridData(gridData, stateCache) {_self.syncGridData.call(_self,this.pid,arguments[0],arguments[1]);},
             unbind(name, func) {return _self.unbind.call(_self,this.pid,arguments[0],arguments[1]);},
             undo() {_self.undo.call(_self,this.pid);},
             undoable() {return _self.undoable.call(_self,this.pid);},
@@ -316,9 +330,11 @@
             updateGrouping() {_self.updateGrouping.call(_self,this.pid);},
             updateRow(item, rowIndex, isMarkEdited) {return _self.updateRow.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
             updateRowBlockToValue(start, end, dataField, value) {_self.updateRowBlockToValue.call(_self,this.pid,arguments[0],arguments[1],arguments[2],arguments[3]);},
+            updateRows(items, rowIndexes, isMarkEdited) {return _self.updateRows.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);},
             updateRowsById(items, isMarkEdited) {return _self.updateRowsById.call(_self,this.pid,arguments[0],arguments[1]);},
             validateChangedGridData(dataFields, msg) {return _self.validateChangedGridData.call(_self,this.pid,arguments[0],arguments[1]);},
-            validateGridData(fields, msg) {return _self.validateGridData.call(_self,this.pid,arguments[0],arguments[1]);}
+            validateGridData(fields, msg) {return _self.validateGridData.call(_self,this.pid,arguments[0],arguments[1]);},
+            validateGridDataByFunc(fields, validFunc, msg) {return _self.validateGridDataByFunc.call(_self,this.pid,arguments[0],arguments[1],arguments[2]);}
         }
     }
 </script>

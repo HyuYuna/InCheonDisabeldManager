@@ -23,7 +23,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -95,7 +95,7 @@ var columnLayout = [ {
       dataField : "f3",
  ...
  </pre>
- <p>참고 : cellColMerge 를 설정한 경우 칼럼 감추기 메소드(hideColumnByDataField)는 무시 무시됩니다.</p>
+ <p>참고 : cellColMerge 를 설정한 경우 칼럼 감추기 메소드(hideColumnByDataField)는 무시됩니다.</p>
   기본값(default) : <code>false</code>.</td>
 </tr>
 <tr id="cellColSpan">
@@ -106,6 +106,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0<br>
  <p>그리드 데이터 영역에서 칼럼 간의 가로 병합(colSpan)을 지시합니다.</p>
  <p>칼럼 간의 가로 병합은 cellColMerge 을 true 인 경우 같은 값일 때 가로 병합이 됩니다.</p>
+ <p>그리드가 그룹핑된 상태 또는 트리 그리드로 표현된 상태인 경우에는 가로 병합을 하지 않습니다. 즉, 계층 상태가 아닌 일반 그리드여야 가능합니다.</p>
  <p>예를 들어 다음처럼 "f1" 칼럼에 cellColSpan 을 3으로 설정한 경우, "f1" 칼럼 기준 다음 3개의 셀에 출력되는 값이 같은 경우 가로로 3개를 병합니다.</p>
  <p>그리드의 속성인  enableCellMerge 를 선행적으로 true 설정한 경우 유효합니다.</p>
  <p>가로 병합할 때 가로 병합의 대상이 되는 셀들의 visible=false 설정은 무시됩니다.</p>
@@ -122,7 +123,8 @@ var columnLayout = [ {
       dataField : "f3",
  ...
  </pre>
-  기본값(default) : <code>NaN &lt;p&gt;참고 : cellColMerge 를 설정한 경우 칼럼 감추기 메소드(hideColumnByDataField)는 무시됩니다.&lt;/p&gt;</code>.</td>
+ <p>참고 : cellColMerge 를 설정한 경우 칼럼 감추기 메소드(hideColumnByDataField)는 무시됩니다.</p>
+  기본값(default) : <code>NaN</code>.</td>
 </tr>
 <tr id="cellMerge">
 <td class="summaryTableSignatureCol">
@@ -189,8 +191,10 @@ var columnLayout = [ {
 <span class="signatureLink">dataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
-<p>그리드의 Row 데이터에서 해당 칼럼이 표시할 데이터의 KeyField 를 설정합니다.</p>
+<p>그리드의 Row 데이터에서 해당 칼럼이 표시할 데이터의 Key Field 를 설정합니다.</p>
 <p>특정 칼럼에 해당 데이터 필드 값을 출력하기 때문에 이 속성은 <strong>필수</strong>로 설정해야 합니다.</p>
+<p>해당 칼럼의 고유 key 에 해당되기 때문에 다른 칼럼의 dataField 와 동일한 값을 설정하지 마십시오.</p>
+<p>즉, 작성된 전체 칼럼들 중 중복된 dataField 의 값이 존재해서는 안됩니다.</p>
  기본값(default) : <code>null</code>.</td>
 </tr>
 <tr id="dataType">
@@ -268,7 +272,7 @@ var columnLayout = [ {
 <span class="signatureLink">editRenderer</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Object<br>
-<p>편집 수정 모드로 진입했을 때 셀의 수정 방식을 지정합니다. 즉, 셀의 값을 어떤 형태로 사용자에게 수정시킬지에 대한 방식을 결정합니다.</p>
+<p>편집 수정 모드로 진입했을 때 <strong>셀의 수정 방식</strong>을 지정합니다. 즉, 셀의 값을 어떤 형태로 사용자에게 수정시킬지에 대한 방식을 결정합니다.</p>
 <p>기본적으로 일반 텍스트입력(InputEditRenderer) 형태이며 달력이나 드랍다운리스트 등의 여러 형태가 될 수 있습니다.</p>
 <p>이 속성을 지정하지 않으면 일반 텍스트입력(InputEditRenderer) 형태가 출력됩니다.</p>
 <p>editRenderer 는 Object 형태로 지정되며 사용 형태는 다음과 같습니다.</p>
@@ -355,6 +359,8 @@ filter : {
  </li>
  <li> useExMenu (v3.0.3) : 확장 필터 메뉴 사용 여부를 지정합니다. 확장 필터 메뉴는 "텍스트 필터" 와 "숫자 필터"가 있습니다.
  dataType 에 맞게 텍스트 와 숫자 필터가 결정됩니다.(기본값 : false)</li>
+ <li> inline (v3.0.11) : 그리드 속성 showInlineFilter = true 설정했을 때 인라인 필터 출력 여부를 지정합니다.(기본값 : true)</li>
+ <li> inlineClear (v3.0.11) : 인라인 필터를 위해 입력한 스트링을 바로 지울 수 있는 버턴을 오른쪽에 생성할지 여부를 지정합니다.(기본값 : true)</li>
  </ul>
   기본값(default) : <code>null</code>.</td>
 </tr>
@@ -418,6 +424,7 @@ filter : {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Object &nbsp; <span class="label">Version: </span>3.0.4<br>
 <p>칼럼 헤더의 표현 방식을 지정합니다.</p>
+<p>칼럼 헤더는 실질적인 데이터 출력 헤더에만 가능합니다. 즉, 그룹형으로 헤더 작성한 경우 그룹 헤더(브랜치 헤더)에는 출력 시킬 수 없습니다.</p>
 <p>예로 헤더에 텍스트를 출력할지, 체크박스를 출력할지를 지정합니다.</p>
 <p>headerRenderer 는 Object 형태로 지정되며 사용 형태는 다음과 같습니다.</p>
 <pre>
@@ -439,7 +446,7 @@ headerRenderer : {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>해당 칼럼의 헤더 스타일을 지정합니다.</p>
 <p>칼럼 헤더에 스타일을 CSS Class 선택자로 설정하십시오.</p>
-<p>예를 들어 CSS 에서 <code>.my-custom { color:red; }</code> 로 클래스 CSS 를 정의했을 때 이 클래스를 사용하고자 하는 경우 style 에 CSS 명을 설정하십시오.</p>
+<p>예를 들어 CSS 에서 <code>.my-custom { color:#ff0000; }</code> 로 클래스 CSS 를 정의했을 때 이 클래스를 사용하고자 하는 경우 style 에 CSS 명을 설정하십시오.</p>
 <p> 설정 예는 <code>headerStyle : "my-custom"</code> 과 같습니다. 점(.) 은 생략하고 지정하십시오.</p>
 <p>다중의 CSS 클래스는 지원하지 않습니다. 예를 들어 "right-style bold-style font12-style" 과 같은 구조는 지원하지 않습니다.</p>
 <p>엑셀 내보내기 시에는 해당 스타일의 글자색, 배경색, 볼드체, 이탤릭체만 적용됩니다.</p>
@@ -514,7 +521,7 @@ labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataFie
 <span class="signatureLink">mergePolicy</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
- <p>셀 병합을 설정한 경우(cellMerge : true) 이전 칼럼의 셀 병합 여부를 보고 판단할지를 지정합니다.</p>
+ <p>셀 세로 병합을 설정한 경우(cellMerge : true) 이전 칼럼의 셀 병합 여부를 보고 판단할지를 지정합니다.</p>
  <p>만약 두 개의 칼럼(대분류, 소분류)을 위, 아래로 병합한다고 가정할 때 대분류는 단순히 값이 같다면 병합해도 문제가 없습니다.</p>
  <p>그러나 소분류의 값은 값이 같다고 해도 대분류의 값까지 고려해야 할 필요가 있습니다. 이런 경우 소분류에 해당되는 칼럼에 mergePolicy 를 설정하고 "restrict" 값을 설정하십시오.</p>
  <p>"restrict" 를 설정하면 막연히 위, 아래 값이 같다고 병합을 실행하지 않고, 이전 칼럼(즉, 대분류) 의 값을 고려하여 셀 병합을 실행합니다.</p> 
@@ -527,7 +534,7 @@ labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataFie
 <span class="signatureLink">mergeRef</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
- <p>셀 병합을 실행할 때 mergePolicy 를 "restrict" 로 설정한 경우, 먼저 고려할 칼럼의 dataField 를 지정합니다.</p>
+ <p>셀 세로 병합을 실행할 때 mergePolicy 를 "restrict" 로 설정한 경우, 먼저 고려할 칼럼의 dataField 를 지정합니다.</p>
  <p>mergeRef 를 설정하지 않으면 바로 이전 칼럼의 dataField 를 기본값으로 갖습니다.</p>
   기본값(default) : <code>null</code>.</td>
 </tr>
@@ -539,6 +546,8 @@ labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataFie
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
 <p>해당 칼럼이 최소로 작아질 수 있는 넓이 값(픽셀 단위)을 설정합니다.</p>
 <p>minWidth 는 명시적으로 픽셀 단위인 Number 형 만을 설정해야 합니다.</p>
+<p>width 의 설정 값이 퍼센티지(%)인 경우 해당 퍼센티지의 값이 minWidth 보다 작아지면 minWidth 값의 넓이로 출력 시킵니다.</p>
+<p>또한 사용자가 칼럼과 칼럼 사이 드래깅을 통하여 넓이 조절을 할 때 minWidth 보다 작게 조절 할 수 없습니다.</p>
  기본값(default) : <code>NaN</code>.</td>
 </tr>
 <tr id="postfix">
@@ -567,7 +576,7 @@ labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataFie
 <span class="signatureLink">renderer</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Object<br>
-<p>칼럼이 출력시킬 셀의 표현 방식을 지정합니다. 즉, 셀의 값을 어떤 형태로 출력시킬지를 결정합니다.</p>
+<p>칼럼이 출력시킬 <strong>셀의 표현 방식</strong>을 지정합니다. 즉, 셀의 값을 어떤 형태로 출력시킬지를 결정합니다.</p>
 <p>칼럼에는 여러 형태로 출력이 될 수 있습니다. 예로 이미지, 아이콘, 버턴, 바 게이지 등이 될 수 있습니다.</p>
 <p>renderer 는 Object 형태로 지정되며 사용 형태는 다음과 같습니다.</p>
 <pre>
@@ -637,7 +646,7 @@ renderer : {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>해당 칼럼 전체 스타일을 지정합니다.</p>
 <p>칼럼 전체의 스타일을 CSS Class 선택자로 설정하십시오.</p>
-<p>예를 들어 CSS 에서 <code>.my-custom { color:red; }</code> 로 클래스 CSS 를 정의했을 때 이 클래스를 사용하고자 하는 경우 style 에 CSS 명을 설정하십시오.</p>
+<p>예를 들어 CSS 에서 <code>.my-custom { color:#ff0000; }</code> 로 클래스 CSS 를 정의했을 때 이 클래스를 사용하고자 하는 경우 style 에 CSS 명을 설정하십시오.</p>
 <p> 설정 예는 style : "my-custom" 과 같습니다. 점(.) 은 생략하고 지정하십시오.</p>
 <p>다중의 CSS 클래스는 지원하지 않습니다. 예를 들어 "right-style bold-style font12-style" 과 같은 구조는 지원하지 않습니다.</p>
 <p>엑셀 내보내기 시에는 해당 스타일의 글자색, 배경색, 볼드체, 이탤릭체만 적용됩니다.</p>
@@ -781,8 +790,8 @@ tooltip : {
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->

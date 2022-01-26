@@ -24,7 +24,7 @@ import "../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -36,106 +36,107 @@ export default {
         cellMerge: true,
         style: "showcase6-my-column-strong",
         filter: {
-          showIcon: true
-        }
+          showIcon: true,
+        },
       },
       {
         dataField: "type",
         headerText: "유형",
-        width: 120
+        width: 120,
       },
       {
-        dataField: "p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312",
+        dataField:
+          "p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312",
         headerText: "월별 추이",
         width: 120,
         renderer: {
-          type: "SparkColumnRenderer"
-        }
+          type: "SparkColumnRenderer",
+        },
       },
       {
         dataField: "p131",
         headerText: "'13 1월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p132",
         headerText: "'13 2월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p133",
         headerText: "'13 3월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p134",
         headerText: "'13 4월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p135",
         headerText: "'13 5월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p136",
         headerText: "'13 6월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p137",
         headerText: "'13 7월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p138",
         headerText: "'13 8월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p139",
         headerText: "'13 9월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p1310",
         headerText: "'13 10월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p1311",
         headerText: "'13 11월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
+        formatString: "#,##0",
       },
       {
         dataField: "p1312",
         headerText: "'13 12월",
         style: "showcase6-my-column-text-right",
         dataType: "numeric",
-        formatString: "#,##0"
-      }
+        formatString: "#,##0",
+      },
     ],
 
     // 그리드 속성 정의
@@ -149,24 +150,24 @@ export default {
       showRowNumColumn: false,
       // 체크박스 표시 렌더러 출력 안함
       showRowCheckColumn: false,
-      rowStyleFunction: function(rowIndex, item) {
+      rowStyleFunction: function (rowIndex, item) {
         if (item._mySum || item._mySum == "true") {
           return "aui-grid-row-depth2-style";
         }
-      }
+      },
     },
 
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -185,7 +186,7 @@ export default {
       grid.showAjaxLoader();
       // axios 모듈을 통하여 요청합니다.
       const REQ_URL = "./data/profit.json";
-      this.$http.get(REQ_URL).then(result => {
+      this.$http.get(REQ_URL).then((result) => {
         this.gridData = result.data;
         grid.removeAjaxLoader();
       });
@@ -204,17 +205,19 @@ export default {
 
       // 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
       if (!grid.isAvailabePdf()) {
-        alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
+        alert(
+          "PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)"
+        );
         return;
       }
 
       // 내보내기 실행
       grid.exportToPdf({
         // 폰트 경로 지정
-        fontPath: "./fonts/jejugothic-regular.ttf"
+        fontPath: "./fonts/jejugothic-regular.ttf",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

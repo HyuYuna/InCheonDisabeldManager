@@ -7,10 +7,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=800">
 <meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="http://www.auisoft.net/">
+<meta name="og:url" content="https://www.auisoft.net/">
 <meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
 <title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-<link href="http://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
@@ -33,24 +33,37 @@
 
 /* 커스텀 칼럼 헤더 스타일 정의 */
 .aui-grid-user-custom-header {
-	color:#ffffff;
-	text-align: center;
-	font-weight: bold;
-	font-size: 13px;
-	background: #000000;
-	background: -webkit-gradient(linear, left top, left bottom, from(#999999),to(#000000));
-	background: -webkit-linear-gradient(top, #999999, #000000);
-	background: -moz-linear-gradient(top, #999999, #000000);
-	background: -ms-linear-gradient(top, #999999, #000000);
-	background: -o-linear-gradient(top, #999999, #000000);
-	background: linear-gradient(top, #999999, #000000);
-}
-
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-column {
 	background:#ffffee;
 	font-weight: bold;
+	color:#000000;
+	position:relative;
 }
+.aui-grid-user-custom-header:after {
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-image: linear-gradient(-135deg,#ff0000 5px,transparent 0);
+}
+
+.aui-grid-user-custom-header2 {
+	background:#ffffee;
+	font-weight: bold;
+	color:#000000;
+	position:relative;
+}
+.aui-grid-user-custom-header2:after {
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-image: linear-gradient(135deg,#0000ff 5px,transparent 0);
+}
+
 </style>
 
 <script type="text/javascript">
@@ -100,10 +113,12 @@ var columnLayout = [{
         children: [{
                 dataField: "p1204",
                 headerText: "4월",
+                headerStyle : "aui-grid-user-custom-header2",
 				dataType : "numeric"
             }, {
                 dataField: "p1205",
                 headerText: "5월",
+                headerStyle : "aui-grid-user-custom-header2",
 				dataType : "numeric"
             }, {
                 dataField: "p1206",
@@ -120,6 +135,7 @@ var columnLayout = [{
             }, {
                 dataField: "p1208",
                 headerText: "8월",
+                headerStyle : "aui-grid-user-custom-header2",
 				dataType : "numeric"
             }, {
                 dataField: "p1209",
@@ -262,7 +278,7 @@ var columnLayout = [{
 </div>
 <div id="footer">
      <div class="copyright">
-        <p>Copyright © 2014-2019 AUISoft </p>
+        <p>Copyright ©2021 AUISoft </p>
     </div>
 </div>
 

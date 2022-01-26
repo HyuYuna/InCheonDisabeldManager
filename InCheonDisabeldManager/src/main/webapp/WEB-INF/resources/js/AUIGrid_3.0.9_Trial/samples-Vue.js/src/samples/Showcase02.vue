@@ -34,7 +34,7 @@ import "../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -45,16 +45,16 @@ export default {
     listItems: [
       {
         text: "계층 1 Depth 만 보이기",
-        value: 1
+        value: 1,
       },
       {
         text: "계층 2 Depth 만 보이기",
-        value: 2
+        value: 2,
       },
       {
         text: "계층 3 Depth 만 보이기",
-        value: 3
-      }
+        value: 3,
+      },
     ],
 
     // 그리드 속성 정의
@@ -69,20 +69,20 @@ export default {
       displayTreeOpen: true,
       // 체크박스 사용 안함
       showRowCheckColumn: false,
-      showRowNumColumn: false
+      showRowNumColumn: false,
     },
 
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -101,13 +101,13 @@ export default {
         {
           dataField: "id",
           headerText: "ID",
-          width: 50
+          width: 50,
         },
         {
           dataField: "name",
           headerText: "Task Name",
           filter: {
-            showIcon: true
+            showIcon: true,
           },
           headerTooltip: {
             show: true,
@@ -115,13 +115,13 @@ export default {
               '<div style="width:180px;"><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>' // eslint-disable-line
           },
           style: "showcase2-my-left-text",
-          width: 400
+          width: 400,
         },
         {
           dataField: "charge",
           headerText: "Charge",
           filter: {
-            showIcon: true
+            showIcon: true,
           },
           headerTooltip: {
             show: true,
@@ -133,17 +133,18 @@ export default {
             type: "IconRenderer",
             iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
             iconHeight: 20,
-            iconFunction: function(rowIndex, columnIndex, value) {
-              if (value && value.substr(0, 1) == "A") return "./assets/office_female.png";
+            iconFunction: function (rowIndex, columnIndex, value) {
+              if (value && value.substr(0, 1) == "A")
+                return "./assets/office_female.png";
               return "./assets/office_man.png";
-            }
+            },
           },
           editRenderer: {
             type: "ComboBoxRenderer",
             showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
             historyMode: true, // 콤보 리스트 외에 사용자가 다른 값을 입력하면 해당 값이 기존 list 에 추가되어 출력됨
-            listAlign: "left"
-          }
+            listAlign: "left",
+          },
         },
         {
           dataField: "complete",
@@ -153,18 +154,18 @@ export default {
           renderer: {
             type: "BarRenderer",
             min: 0,
-            max: 100
+            max: 100,
           },
           editRenderer: {
             type: "NumberStepRenderer",
             min: 0,
             max: 100,
-            step: 1
+            step: 1,
           },
-          styleFunction: function(rowIndex, columnIndex, value) {
+          styleFunction: function (rowIndex, columnIndex, value) {
             if (value == 100) return "showcase2-complete-red";
             return "";
-          }
+          },
         },
         {
           dataField: "start",
@@ -179,9 +180,9 @@ export default {
             iconPosition: "aisleRight",
             iconTableRef: {
               // icon 값 참조할 테이블 레퍼런스
-              default: "./assets/calendar-icon.png" // default
+              default: "./assets/calendar-icon.png", // default
             },
-            onClick: this.calIconClick
+            onClick: this.calIconClick,
           },
           editRenderer: {
             type: "CalendarRenderer",
@@ -193,8 +194,8 @@ export default {
             formatYearString: "yyyy",
             showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
             showTodayBtn: true, // 오늘 날짜 선택 버턴 출력
-            todayText: "Today" // 오늘 날짜 버턴 텍스트
-          }
+            todayText: "Today", // 오늘 날짜 버턴 텍스트
+          },
         },
         {
           dataField: "end",
@@ -209,9 +210,9 @@ export default {
             iconPosition: "aisleRight",
             iconTableRef: {
               // icon 값 참조할 테이블 레퍼런스
-              default: "./assets/calendar-icon.png" // default
+              default: "./assets/calendar-icon.png", // default
             },
-            onClick: this.calIconClick
+            onClick: this.calIconClick,
           },
           editRenderer: {
             type: "CalendarRenderer",
@@ -223,14 +224,14 @@ export default {
             formatYearString: "yyyy",
             showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
             showTodayBtn: true, // 오늘 날짜 선택 버턴 출력
-            todayText: "Today" // 오늘 날짜 버턴 텍스트
-          }
+            todayText: "Today", // 오늘 날짜 버턴 텍스트
+          },
         },
         {
           dataField: "issue",
           headerText: "Issues",
-          style: "showcase2-my-left-text "
-        }
+          style: "showcase2-my-left-text ",
+        },
       ];
     },
     // 데이터 요청 메소드
@@ -239,7 +240,7 @@ export default {
       grid.showAjaxLoader();
       // axios 모듈을 통하여 요청합니다.
       const REQ_URL = "./data/schedule_tree.json";
-      this.$http.get(REQ_URL).then(result => {
+      this.$http.get(REQ_URL).then((result) => {
         this.gridData = result.data;
         grid.removeAjaxLoader();
       });
@@ -283,17 +284,19 @@ export default {
 
       // 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
       if (!grid.isAvailabePdf()) {
-        alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
+        alert(
+          "PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)"
+        );
         return;
       }
 
       // 내보내기 실행
       grid.exportToPdf({
         // 폰트 경로 지정
-        fontPath: "./fonts/jejugothic-regular.ttf"
+        fontPath: "./fonts/jejugothic-regular.ttf",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

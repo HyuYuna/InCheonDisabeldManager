@@ -22,7 +22,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="MainContent">
 <p><div class="classDescContent">
@@ -120,27 +120,35 @@
 <p>일반적으로 하나의 칼럼에는 동일한 에디터가 출력됩니다.</td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="CustomRenderer.html">CustomRenderer</a></td><td class="summaryTableLastCol">
+<p>커스텀 렌더러는 그리드에서 제공되는 기본 렌더러가 아닌 사용자(개발자)가 직접 출력하고자 하는 내용을 작성할 수 있는 칼럼 렌더러입니다.</p>
+<p>커스텀 렌더러는 칼럼 렌더러에 "CustomRenderer" 를 type으로 지정하고, 실제 사용자가 작성한 js 파일을 jsClass 값으로 설정합니다.</p>
+<p>커스텀 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+<p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
+</td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="DropDownListRenderer.html">DropDownListRenderer</a></td><td class="summaryTableLastCol">
 <p>드랍다운 리스트 렌더러는 특정 칼럼의 셀에 여러 항목 중 하나를 선택할 수 있도록 출력하는 칼럼 렌더러입니다.</p>
 <p>드랍다운 리스트 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer, editRenderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
 <p><strong>칼럼의 editRenderer 와 renderer 속성의 type 모두 설정 가능합니다.</strong></p>
 </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="IconRenderer.html">IconRenderer</a></td><td class="summaryTableLastCol">
 <p>아이콘 렌더러는 특정 칼럼의 셀에 아이콘이 포함되도록 출력하는 칼럼 렌더러입니다.</p>
 <p>아이콘 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="ImageRenderer.html">ImageRenderer</a></td><td class="summaryTableLastCol">
 <p>이미지 렌더러는 특정 칼럼의 셀에 이미지가 출력되는 칼럼 렌더러입니다.</p>
 <p>이미지 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="InputEditRenderer.html">InputEditRenderer</a></td><td class="summaryTableLastCol">
 <p>입력 편집 렌더러(InputEditRenderer)는 editable = true 인 경우 기본(defalut) 편집 렌더러입니다.(input[type="text"])</p>
 <p>이 렌더러는 사용자가 수정한 값의 유효성 검사(validating) 을 할 수 있으며, 숫자만 입력 가능토록 설정이 가능합니다.</p>
@@ -148,7 +156,7 @@
 <p><strong>칼럼의 editRenderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="JQCalendarRenderer.html">JQCalendarRenderer</a></td><td class="summaryTableLastCol">
 <p>jQuery UI-datepicker 달력 렌더러를 출력할 수 있게 정의된 편집 렌더러입니다.</p>
 <p>editRenderer 속성으로 편집 시 jQuery UI-datepicker 달력을 출력하여 날짜를 선택할 수 있게 합니다.</p>
@@ -156,11 +164,21 @@
 <p><strong>칼럼의 editRenderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="LinkRenderer.html">LinkRenderer</a></td><td class="summaryTableLastCol">
 <p>링크 렌더러는 a 태그의 하이퍼 링크를 출력하는 칼럼 렌더러입니다.</p>
 <p>링크 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
+</td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="MaskEditRenderer.html">MaskEditRenderer</a></td><td class="summaryTableLastCol">
+<p>마스크 편집 렌더러(MaskEditRenderer)는 정의된 패턴으로 강제 시켜 입력받도록 하는 편집 렌더러입니다.</p>
+<p>마스크 편집 렌더러를 사용하기 위해서는 mask 속성을 반드시 설정해야 합니다.</p>
+<p>이 편집 렌더러는 사용자가 수정한 값의 유효성 검사(validator) 을 할 수 있습니다.</p>
+<p>클립보드의 값을 마스크 설정된 칼럼에 붙여 넣기 할 때 설정된 mask 규칙에 어긋나면 붙여 넣기 되지 않습니다.</p>
+<p>마스크 편집 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 editRenderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+<p><strong>칼럼의 editRenderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
 <tr class="prow1">
@@ -181,6 +199,7 @@
 <p>스파크 칼럼 렌더러는 특정 칼럼의 셀에 스파크 칼럼 차트를 출력시키는 칼럼 렌더러입니다.</p>
 <p>스파크 칼럼 렌더러에 출력 시킬 데이터 설정은 dataField 속성에 컴마(,) 구분자를 사용한 복수의 데이터필드를 설정하십시오.</p>
 <p>스파크 칼럼 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+<p>canvas 를 지원하는 브라우저에서 사용 가능합니다.(IE 인 경우 9 이상)</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
@@ -189,6 +208,7 @@
 <p>스파크 라인 렌더러는 특정 칼럼의 셀에 스파크 라인 차트를 출력시키는 칼럼 렌더러입니다.</p>
 <p>스파크 라인 렌더러에 출력 시킬 데이터 설정은 dataField 속성에 컴마(,) 구분자를 사용한 복수의 데이터필드를 설정하십시오.</p>
 <p>스파크 라인 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+<p>canvas 를 지원하는 브라우저에서 사용 가능합니다.(IE 인 경우 9 이상)</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
@@ -197,6 +217,7 @@
 <p>스파크 승패 렌더러는 특정 칼럼의 셀에 스파크 승패 차트를 출력시키는 칼럼 렌더러입니다.</p>
 <p>스파크 승패 렌더러에 출력 시킬 데이터 설정은 dataField 속성에 컴마(,) 구분자를 사용한 복수의 데이터필드를 설정하십시오.</p>
 <p>스파크 승패 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+<p>canvas 를 지원하는 브라우저에서 사용 가능합니다.(IE 인 경우 9 이상)</p>
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 </td>
 </tr>
@@ -208,9 +229,9 @@
 <p></p>
 <div>
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->

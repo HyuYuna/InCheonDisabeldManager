@@ -2,8 +2,8 @@
   <div>
     <div>
       <p>
-        실제 DB에 저장, 수정 삭제 하는 Master-Details 데모입니다.(더블 클릭 또는 바로 키입력으로
-        수정 가능)
+        실제 DB에 저장, 수정 삭제 하는 Master-Details 데모입니다.(더블 클릭 또는
+        바로 키입력으로 수정 가능)
       </p>
       <v-toolbar flat dense>
         <v-spacer />
@@ -43,7 +43,7 @@ import AUIGrid from "../static/AUIGrid-Vue.js/AUIGrid.vue";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -67,22 +67,31 @@ export default {
           iconTableRef: {
             // icon 값 참조할 테이블 레퍼런스
             정규직: "./assets/green_circle.png",
-            default: "./assets/gray_circle.png"
-          }
+            default: "./assets/gray_circle.png",
+          },
         },
         editRenderer: {
           type: "DropDownListRenderer",
-          list: ["정규직", "계약직"]
-        }
+          list: ["정규직", "계약직"],
+        },
       },
       {
         dataField: "position",
         headerText: "직급",
         editRenderer: {
           type: "DropDownListRenderer",
-          list: ["사장", "이사", "부장", "차장", "과장", "대리", "사원", "인턴"]
+          list: [
+            "사장",
+            "이사",
+            "부장",
+            "차장",
+            "과장",
+            "대리",
+            "사원",
+            "인턴",
+          ],
         },
-        width: 120
+        width: 120,
       },
       {
         dataField: "name",
@@ -93,7 +102,7 @@ export default {
           iconPosition: "aisle",
           iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
           iconHeight: 20,
-          iconFunction: function(rowIndex, columnIndex, value, item) {
+          iconFunction: function (rowIndex, columnIndex, value, item) {
             let sex = item.sex;
             if (sex == 1) {
               // 남자
@@ -103,9 +112,9 @@ export default {
               return "./assets/office_female.png";
             }
             return "./assets/ico_flat.gif"; // 기본
-          }
+          },
         },
-        width: 140
+        width: 140,
       },
       {
         dataField: "birth",
@@ -114,9 +123,9 @@ export default {
         formatString: "yyyy. mm. dd.",
         editRenderer: {
           type: "CalendarRenderer",
-          onlyCalendar: true
+          onlyCalendar: true,
         },
-        width: 140
+        width: 140,
       },
       {
         dataField: "sex",
@@ -124,21 +133,27 @@ export default {
         editRenderer: {
           type: "DropDownListRenderer",
           list: [1, 2],
-          labelFunction: function(rowIndex, columnIndex, value) {
+          labelFunction: function (rowIndex, columnIndex, value) {
             // 실 DB 데이터는 1, 2로 정해짐
             let valueNumber = Number(value);
             // 1인 경우 남자, 2인 경우 여자
             if (valueNumber == 1) return "남";
             else return "여";
-          }
+          },
         },
-        labelFunction: function(rowIndex, columnIndex, value, headerText, item) {
+        labelFunction: function (
+          rowIndex,
+          columnIndex,
+          value,
+          headerText,
+          item
+        ) {
           // 실 DB 데이터는 1, 2로 정해짐
           // 1인 경우 남자, 2인 경우 여자
           if (item.sex == 1) return "남";
           else return "여";
         },
-        width: 100
+        width: 100,
       },
       {
         dataField: "age", // 직접적인 데이터필드 사용 안함
@@ -147,9 +162,9 @@ export default {
         editable: false, // 나이는 자동 계산됨.
         headerTooltip: {
           show: true,
-          tooltipHtml: "나이는 생년월일에 맞게 자동 계산됨"
+          tooltipHtml: "나이는 생년월일에 맞게 자동 계산됨",
         },
-        expFunction: function(rowIndex, columnIndex, item) {
+        expFunction: function (rowIndex, columnIndex, item) {
           // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
           if (item && item.birth) {
             let birth = item.birth;
@@ -158,7 +173,7 @@ export default {
             return age;
           }
           return 0;
-        }
+        },
       },
       {
         dataField: "enterDate",
@@ -168,9 +183,9 @@ export default {
         editRenderer: {
           type: "CalendarRenderer",
           onlyCalendar: true,
-          onlyMonthMode: true // 일 단위 달력이 아닌 월 단위 달력 출력
+          onlyMonthMode: true, // 일 단위 달력이 아닌 월 단위 달력 출력
         },
-        width: 120
+        width: 120,
       },
       {
         dataField: "email",
@@ -179,7 +194,7 @@ export default {
           type: "InputEditRenderer",
 
           // 에디팅 유효성 검사
-          validator: function(oldValue, newValue) {
+          validator: function (oldValue, newValue) {
             let isValid = false;
             // eslint-disable-next-line
             const email_matcher = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/; // 이메일 체크 정규식
@@ -190,11 +205,11 @@ export default {
             // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
             return {
               validate: isValid,
-              message: "정확한 이메일 주소가 아닙니다. 다시 확인해 주세요."
+              message: "정확한 이메일 주소가 아닙니다. 다시 확인해 주세요.",
             };
-          }
-        }
-      }
+          },
+        },
+      },
     ],
 
     // 마스터 그리드 속성 정의
@@ -206,7 +221,7 @@ export default {
       showRowCheckColumn: false,
       skipReadonlyColumns: true, // 읽기 전용 칼럼은 건너 띄기
       wrapSelectionMove: true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-      enterKeyColumnBase: true // 엔터키가 옆 칼럼으로 이동할지 여부
+      enterKeyColumnBase: true, // 엔터키가 옆 칼럼으로 이동할지 여부
     },
 
     // 디테일 그리드 속성 설정
@@ -218,7 +233,7 @@ export default {
       showRowNumColumn: false,
       fixedColumnCount: 1,
       enterKeyColumnBase: true, // 엔터키가 옆 칼럼으로 이동할지 여부
-      enableFilter: true // 필터 사용
+      enableFilter: true, // 필터 사용
     },
 
     // 그리드 데이터
@@ -231,16 +246,16 @@ export default {
 
   watch: {
     // gridDataMaster 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridDataMaster: function() {
+    gridDataMaster: function () {
       const grid = this.$refs.masterGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridDataMaster);
     },
-    gridDataDeatil: function() {
+    gridDataDeatil: function () {
       const grid = this.$refs.detailGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridDataDeatil);
-    }
+    },
   },
 
   mounted() {
@@ -269,7 +284,7 @@ export default {
         headerText: "년월",
         dataType: "date",
         formatString: "yyyy년 mm월",
-        width: 100
+        width: 100,
       });
 
       for (let i = 2; i <= 32; i++) {
@@ -284,20 +299,20 @@ export default {
             allowPoint: false, // 소수점( . ) 도 허용할지 여부
             allowNegative: false, // 마이너스 부호(-) 허용 여부
             textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
-            autoThousandSeparator: true // 천단위 구분자 삽입 여부
+            autoThousandSeparator: true, // 천단위 구분자 삽입 여부
           },
           width: 40,
           filter: {
-            enable: false
+            enable: false,
           }, // 날짜만 필터링 하기 때문에 퍼포먼스를 위해 1~31일 칼럼은 필터 사용 안함 설정
-          styleFunction: function(rowIndex, columnIndex, value) {
+          styleFunction: function (rowIndex, columnIndex, value) {
             // 스타일 함수
             let numVal = Number(value);
             if (isNaN(numVal)) return "mycustom-default";
             else if (value >= 10) return "mycustom-high";
             else if (value >= 5) return "mycustom-low";
             return "mycustom-default";
-          }
+          },
         });
       }
       return columnLayout;
@@ -372,7 +387,7 @@ export default {
         type: "계약직",
         position: "인턴",
         enterDate: "2015/01/01",
-        sex: 1
+        sex: 1,
       };
       let grid = this.$refs.masterGrid;
       grid.addRow(item, "last"); // 최하단에 행 추가
@@ -383,7 +398,9 @@ export default {
       const grid = this.$refs.masterGrid;
       let items = grid.getSelectedItems();
       if (items[0] && Number(items[0].item.id) <= 10) {
-        alert("데모용으로 현재 행은 삭제 불가능합니다. 10번 행 아래 데이터만 삭제 가능합니다.");
+        alert(
+          "데모용으로 현재 행은 삭제 불가능합니다. 10번 행 아래 데이터만 삭제 가능합니다."
+        );
         return;
       }
       grid.removeRow("selectedIndex"); // 선택행 삭제
@@ -430,7 +447,7 @@ export default {
         clearTimeout(this.timerId);
       }
 
-      this.timerId = setTimeout(function() {
+      this.timerId = setTimeout(function () {
         let primeCell = event.primeCell;
         let rowItem = primeCell.item; // 행 아이템들
 
@@ -443,8 +460,8 @@ export default {
         // rowId 에 맞는 디테일 데이터 요청 후 디테일 그리드에 삽입
         that.requestDetailData();
       }, 200); // 현재 200ms 민감도....환경에 맞게 조절하세요.
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

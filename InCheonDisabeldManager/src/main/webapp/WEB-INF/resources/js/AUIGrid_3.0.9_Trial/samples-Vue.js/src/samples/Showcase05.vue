@@ -7,14 +7,17 @@
       </v-toolbar>
 
       <p>
-        각각의 나라에 따라 각 제품별로 판매량을 보기 위해 그룹핑을 하여 가격에 대하여 합계를 계산한
-        자료입니다.
+        각각의 나라에 따라 각 제품별로 판매량을 보기 위해 그룹핑을 하여 가격에
+        대하여 합계를 계산한 자료입니다.
       </p>
       <p>
-        일반 데이터를 받아 그리드가 그룹핑을 하고, 각 나라, 제품에 대하여 그리드에서 직접 합계를
-        계산합니다.
+        일반 데이터를 받아 그리드가 그룹핑을 하고, 각 나라, 제품에 대하여
+        그리드에서 직접 합계를 계산합니다.
       </p>
-      <p>필터링 또는 데이터 값 수정 시 동적으로 그룹핑 합계 및 푸터 값이 변경됩니다.</p>
+      <p>
+        필터링 또는 데이터 값 수정 시 동적으로 그룹핑 합계 및 푸터 값이
+        변경됩니다.
+      </p>
     </div>
     <!-- AUIGrid 컴포넌트 설정 -->
     <AUIGrid ref="myGrid" name="showcase5" class="grid-wrap"> </AUIGrid>
@@ -31,7 +34,7 @@ import "../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js";
 
 export default {
   components: {
-    AUIGrid
+    AUIGrid,
   },
 
   data: () => ({
@@ -52,7 +55,7 @@ export default {
       // 그룹핑 후 합계필드를 출력하도록 설정합니다.
       groupingSummary: {
         // 합계 필드는 price 1개에 대하여 실시 합니다.
-        dataFields: ["price"]
+        dataFields: ["price"],
       },
       // 최초 보여질 때 모두 열린 상태로 출력 여부
       displayTreeOpen: true,
@@ -60,7 +63,7 @@ export default {
       enableCellMerge: true,
 
       // 그리드 ROW 스타일 함수 정의
-      rowStyleFunction: function(rowIndex, item) {
+      rowStyleFunction: function (rowIndex, item) {
         if (item._$isGroupSumField) {
           // 그룹핑으로 만들어진 합계 필드인지 여부
           // 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
@@ -80,7 +83,7 @@ export default {
         }
 
         return null;
-      }
+      },
     },
     // AUIGrid 칼럼 레이아웃
     columnLayout: [
@@ -90,8 +93,8 @@ export default {
         width: 140,
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "country",
@@ -99,8 +102,8 @@ export default {
         width: 150,
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "name",
@@ -108,8 +111,8 @@ export default {
         width: 150,
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "product",
@@ -117,8 +120,8 @@ export default {
         width: 150,
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "color",
@@ -126,8 +129,8 @@ export default {
         width: 150,
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "price",
@@ -138,61 +141,61 @@ export default {
         style: "showcase5-aui-grid-my-right-style",
         filter: {
           showIcon: true,
-          useExMenu: true
-        }
+          useExMenu: true,
+        },
       },
       {
         dataField: "phone",
         headerText: "Phone",
-        width: 120
+        width: 120,
       },
       {
         dataField: "date",
-        headerText: "Date"
-      }
+        headerText: "Date",
+      },
     ],
 
     // 푸터 설정
     footerObject: [
       {
         labelText: "∑",
-        positionField: "#base"
+        positionField: "#base",
       },
       {
         labelText: "총 판매액",
-        positionField: "color"
+        positionField: "color",
       },
       {
         dataField: "price",
         positionField: "price",
         operation: "SUM",
         formatString: "#,##0",
-        style: "showcase5-aui-grid-my-custom-sum-total"
+        style: "showcase5-aui-grid-my-custom-sum-total",
       },
       {
         dataField: "price",
         positionField: "date",
         operation: "COUNT",
-        style: "showcase5-aui-grid-my-custom-sum-total2"
+        style: "showcase5-aui-grid-my-custom-sum-total2",
       },
       {
         labelText: "총 판매 수=>",
         positionField: "phone",
-        style: "showcase5-aui-grid-my-custom-sum-total2"
-      }
+        style: "showcase5-aui-grid-my-custom-sum-total2",
+      },
     ],
 
     // 그리드 데이터
-    gridData: []
+    gridData: [],
   }),
 
   watch: {
     // gridData 가 변경될 때 마다 이 기능이 실행됩니다.
-    gridData: function() {
+    gridData: function () {
       let grid = this.$refs.myGrid;
       // gridData 변경 될 때 그리드에 다시 삽입
       grid.setGridData(this.gridData);
-    }
+    },
   },
 
   mounted() {
@@ -214,7 +217,7 @@ export default {
       grid.showAjaxLoader();
       // axios 모듈을 통하여 요청합니다.
       const REQ_URL = "./data/country_phone_500.json";
-      this.$http.get(REQ_URL).then(result => {
+      this.$http.get(REQ_URL).then((result) => {
         this.gridData = result.data;
         grid.removeAjaxLoader();
       });
@@ -237,7 +240,7 @@ export default {
         headers: [
           {
             text: "",
-            height: 20 // 첫행 빈줄
+            height: 20, // 첫행 빈줄
           },
           {
             text: "국가별 핸드폰 판매 통계",
@@ -248,16 +251,16 @@ export default {
               color: "#ff0000",
               fontWeight: "bold",
               underline: true,
-              background: "#DAD9FF"
-            }
+              background: "#DAD9FF",
+            },
           },
           {
             text: "",
             height: 5,
             style: {
-              background: "#555555"
-            } // 빈줄 색깔 경계 만듬
-          }
+              background: "#555555",
+            }, // 빈줄 색깔 경계 만듬
+          },
         ],
 
         // 푸터 내용
@@ -266,8 +269,8 @@ export default {
             text: "",
             height: 5,
             style: {
-              background: "#555555"
-            } // 빈줄 색깔 경계 만듬
+              background: "#555555",
+            }, // 빈줄 색깔 경계 만듬
           },
           {
             text: "Copyright 2019 AUISoft",
@@ -276,10 +279,10 @@ export default {
               textAlign: "right",
               fontWeight: "bold",
               color: "#ffffff",
-              background: "#222222"
-            }
-          }
-        ]
+              background: "#222222",
+            },
+          },
+        ],
       };
 
       // 내보내기 실행
@@ -292,7 +295,9 @@ export default {
 
       // 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
       if (!grid.isAvailabePdf()) {
-        alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
+        alert(
+          "PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)"
+        );
         return;
       }
 
@@ -305,7 +310,7 @@ export default {
         headers: [
           {
             text: "",
-            height: 20 // 첫행 빈줄
+            height: 20, // 첫행 빈줄
           },
           {
             text: "국가별 핸드폰 판매 통계",
@@ -315,16 +320,16 @@ export default {
               textAlign: "center",
               color: "#0275BA",
               underline: true,
-              background: "#DAD9FF"
-            }
+              background: "#DAD9FF",
+            },
           },
           {
             text: "",
             height: 5,
             style: {
-              background: "#555555"
-            } // 빈줄 색깔 경계 만듬
-          }
+              background: "#555555",
+            }, // 빈줄 색깔 경계 만듬
+          },
         ],
 
         // 푸터 내용
@@ -333,8 +338,8 @@ export default {
             text: "",
             height: 5,
             style: {
-              background: "#555555"
-            } // 빈줄 색깔 경계 만듬
+              background: "#555555",
+            }, // 빈줄 색깔 경계 만듬
           },
           {
             text: "Copyright 2019 AUISoft",
@@ -342,15 +347,15 @@ export default {
             style: {
               textAlign: "right",
               color: "#ffffff",
-              background: "#222222"
-            }
-          }
-        ]
+              background: "#222222",
+            },
+          },
+        ],
       };
       // 내보내기 실행
       grid.exportToPdf(exportProps);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

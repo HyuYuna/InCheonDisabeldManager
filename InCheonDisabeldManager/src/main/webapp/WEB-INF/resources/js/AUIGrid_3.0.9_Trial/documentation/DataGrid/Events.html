@@ -23,7 +23,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.9 Documentation</span>
+<span id="title">AUIGrid 3.0.11 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -575,7 +575,7 @@ AUIGrid.bind(myGridID, "dragBegin", function( event ) {
           return false; // 0번째 행은 드래깅 막음
    }
 });</pre>
-<p> Retrun : (Boolean) 만약 false 를 반환하면 기본 행위인 행(Row) 드래깅을 하지 않습니다.</p>
+<p> Retrun : (Boolean or String) 만약 false 를 반환하면 기본 행위인 행(Row) 드래깅을 하지 않습니다.  그리고 String 을 반환하면 해당 String 이 드래깅 텍스트로 출력됩니다.</p>
 </td>
 </tr>
 <tr id="dropCancel">
@@ -793,7 +793,7 @@ AUIGrid.bind(myGridID, "headerClick", function( event ) {
 <span class="signatureLink">hScrollChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드의 수평 스크롤(X 스크롤)이 있는 경우, 수평 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
+<p>그리드의 수평 스크롤(가로 스크롤)이 있는 경우, 수평 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
@@ -1399,7 +1399,7 @@ AUIGrid.bind(myGridID, "updateRow", function( event ) {
 <span class="signatureLink">updateRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.12.5<br>
-<p>updateRowsById 메소드를 통해 사용자가 행(Row)을 수정한 경우 발생하는 이벤트입니다.</p>
+<p>updateRows, updateRowsById 메소드를 통해 사용자가 행(Row)을 수정한 경우 발생하는 이벤트입니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
@@ -1420,7 +1420,7 @@ AUIGrid.bind(myGridID, "updateRows", function( event ) {
 <span class="signatureLink">vScrollChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드의 수직 스크롤(Y 스크롤)이 있는 경우, 수직 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
+<p>그리드의 수직 스크롤(세로 스크롤)이 있는 경우, 수직 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
 <p>사용자가 마우스 휠이나 다른 특정 행위로 수직 스크롤이 변경되면 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
@@ -1444,8 +1444,8 @@ AUIGrid.bind(myGridID, "vScrollChange", function( event ) {
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved</center>
+<center class="copyright">Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved</center>
 </div>
 </body>
 </html>
-<!--Copyright(c) 2014-2020 AUISoft Co., Ltd. All Right Reserved-->
+<!--Copyright(c) 2022 AUISoft Co., Ltd. All Right Reserved-->
