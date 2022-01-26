@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmMgmtDAO">
+	<select id="selectProgramList" parameterType="egovMap" resultType="egovMap">
+		   SELECT  A.PROGRAM_CD /* PgmMgmtDAO.selectProgramList */
+			      ,A.PROGRAM_NM
+			      ,A.PROGRAM_DETAIL
+			      ,A.TIME_DETAIL
+			      ,A.TRGTER_DETAIL
+			      ,A.FEE_DETAIL
+			      ,A.OPERATE_FG
+			      ,(SELECT W.COMMCD_VALUE FROM COMMON_CODE W WHERE W.COMMCD_FG = 'FG04' AND W.USE_FG = '1' AND W.COMMCD = A.OPERATE_FG) OPERATE_NM
+			      ,(SELECT X.LCLAS_NM FROM WFFCLTY_PROGRAM_LCLAS X WHERE X.LCLAS_CD = SUBSTR(A.SCLAS_CD,1,2) AND X.WFFCLTY_CD = #{linkCd}) AS LCLAS_NM
+			      ,(SELECT Y.MCLAS_NM FROM WFFCLTY_PROGRAM_MCLAS Y WHERE Y.MCLAS_CD = SUBSTR(A.SCLAS_CD,1,4) AND Y.WFFCLTY_CD = #{linkCd}) AS MCLAS_NM
+			      ,SUBSTR(A.SCLAS_CD,1,2) AS LCLAS_CD
+                  ,SUBSTR(A.SCLAS_CD,1,4) AS MCLAS_CD
+			      ,A.SCLAS_CD AS SCLAS_CD
+			      ,(SELECT Z.SCLAS_NM FROM WFFCLTY_PROGRAM_SCLAS Z WHERE Z.SCLAS_CD = SUBSTR(A.SCLAS_CD,1,6) AND Z.WFFCLTY_CD = #{linkCd}) AS SCLAS_NM
+ 			 FROM WFFCLTY_PROGRAM A
+  			WHERE 1=1
+  			<if test= "linkCd != '' and linkCd != null">
+  			AND WFFCLTY_CD = #{linkCd}
+  			</if>
+  			<if test= "searchProgramNm != '' and searchProgramNm != null">
+  			AND A.PROGRAM_NM LIKE '%'||#{searchProgramNm}||'%'
+  			</if>
+  			<if test= "searchLclasCd != '' and searchLclasCd != null">
+  			AND SUBSTR(A.SCLAS_CD,1,2) = #{searchLclasCd}
+  			</if>
+  			<if test= "searchMclasCd != '' and searchMclasCd != null">
+  			AND SUBSTR(A.SCLAS_CD,1,4) = #{searchMclasCd}
+  			</if>
+  			<if test= "searchSclasCd != '' and searchSclasCd != null">
+ 			AND SUBSTR(A.SCLAS_CD,1,6) = #{searchSclasCd}
+ 			</if>
+ 			ORDER BY A.PROGRAM_CD
+	</select>
+	<insert id="insertPgmMgmt" parameterType="egovMap">
+	  INSERT INTO /* PgmMgmtDAO.insertPgmMgmt */
+		  WFFCLTY_PROGRAM(WFFCLTY_CD
+		  , PROGRAM_CD
+		  , PROGRAM_NM
+		  , PROGRAM_DETAIL
+		  , TRGTER_DETAIL
+		  , TIME_DETAIL
+		  , FEE_DETAIL
+		  , OPERATE_FG
+		  , SCLAS_CD
+		  , REGIST_DT
+		  , REGISTERER)
+	  VALUES
+	  	   (#{linkCd}
+         , (SELECT TO_CHAR(TO_DATE(SYSDATE, 'YYYY-MM-DD'), 'YYYY') || NVL(SUBSTR(TO_CHAR(NVL(MAX(PROGRAM_CD), 0) + 1),5 ,6),'01') AS PROGRAMCD FROM WFFCLTY_PROGRAM WHERE WFFCLTY_CD = #{linkCd})
+         , #{programNm}
+         , #{programDetail}
+         , #{trgterDetail}
+         , #{timeDetail}
+         , #{feeDetail}
+         , #{operateFg}
+         , #{sclasCd}
+         , SYSDATE
+         , #{register})
+    </insert>
+    
+    <update id="updatePgmMgmt">
+		 UPDATE WFFCLTY_PROGRAM 
+		 	SET
+	   PROGRAM_NM = #{programNm}
+	  ,PROGRAM_DETAIL = #{programDetail}
+	  ,TRGTER_DETAIL = #{trgterDetail}
+	  ,TIME_DETAIL = #{timeDetail}
+	  ,FEE_DETAIL = #{feeDetail}
+	  ,OPERATE_FG = #{operateFg}
+	  ,SCLAS_CD = #{sclasCd}
+	  ,UPDATE_DT = SYSDATE
+	  ,UPDATER = #{register}
+	  	WHERE WFFCLTY_CD = #{linkCd}
+	  AND PROGRAM_CD = #{programCd}
+	</update>
+	
+	<select id="searchLclasList" parameterType="egovMap" resultType="egovMap">
+			SELECT LCLAS_CD /* PgmMgmtDAO.searchLclasList */
+       				,LCLAS_NM
+  			FROM WFFCLTY_PROGRAM_LCLAS
+ 			WHERE WFFCLTY_CD = #{linkCd} 
+	</select>
+	
+	<select id="searchMclasList" parameterType="egovMap" resultType="egovMap">
+		   SELECT LCLAS_CD /* PgmMgmtDAO.searchMclasList */
+			      ,MCLAS_CD
+			      ,MCLAS_NM
+		  FROM WFFCLTY_PROGRAM_MCLAS
+		  WHERE WFFCLTY_CD = #{linkCd}
+		  <if test= "lclasCd != '' and lclasCd != null">
+		  AND LCLAS_CD = #{lclasCd}
+		  </if>
+	</select>
+	
+	<select id="searchSclasList" parameterType="egovMap" resultType="egovMap">
+		   SELECT LCLAS_CD /* PgmMgmtDAO.searchSclasList */
+       			  ,MCLAS_CD
+       			  ,SCLAS_CD
+       			  ,SCLAS_NM
+		   FROM WFFCLTY_PROGRAM_SCLAS
+		   WHERE 1=1
+		   AND WFFCLTY_CD = #{linkCd}
+		   <if test= "mclasCd != '' and mclasCd != null">
+		  AND MCLAS_CD = #{mclasCd}
+		  </if>
+	</select>
+	
+	<!-- 이미지 조회 -->
+	<select id="selectProgramPictureList" parameterType="egovMap" resultType="egovMap">
+		SELECT WFFCLTY_CD||ROWNUM AS ID
+			   ,WFFCLTY_CD
+		       ,PROGRAM_CD
+		       ,PICTURE_NM
+		       ,PICTURE_NM      AS PICTURE_REAL_NM
+		       ,PICTURE_PATH
+  		FROM WFFCLTY_PROGRAM_PITCURE
+  		WHERE WFFCLTY_CD = #{linkCd}
+  			AND PROGRAM_CD = #{programCd}
+	</select>
+	
+	<!-- 이미지 신규입력  -->
+	<insert id="insertImg" parameterType="egovMap" >
+	
+		INSERT INTO 
+		WFFCLTY_PROGRAM_PITCURE(WFFCLTY_CD
+                        , PROGRAM_CD
+                        , PICTURE_NM
+                        , PICTURE_PATH
+                        , REGIST_DT
+                        , REGISTERER)
+		VALUES(#{wffcltyCd    , jdbcType=VARCHAR}
+				        , #{programCd, jdbcType=VARCHAR}
+				        , #{pictureNm, jdbcType=VARCHAR}
+				        , #{picturePath, jdbcType=VARCHAR}
+				        , SYSDATE
+				        , #{register, jdbcType=VARCHAR}); 
+	</insert>
+	
+	<!-- 이미지 수정 -->
+	<update id="updateImg" parameterType="egovMap" >
+		UPDATE WFFCLTY_PROGRAM_PITCURE
+			SET
+				 PICTURE_NM  = #{pictureNm    , jdbcType=VARCHAR}
+				,UPDATE_DT   = SYSDATE
+				,UPDATER     = #{register , jdbcType=VARCHAR}
+			WHERE WFFCLTY_CD = #{wffcltyCd, jdbcType=VARCHAR}
+              AND PROGRAM_CD = #{programCd, jdbcType=VARCHAR}
+			  AND PICTURE_NM = #{pictureRealNm, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 이미지 삭제  -->
+	<delete id="deleteImg" parameterType="egovMap">
+		DELETE FROM WFFCLTY_PROGRAM_PITCURE
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+          AND PROGRAM_CD = #{programCd}
+	       AND  PICTURE_NM = #{pictureRealNm}
+	</delete>
+	
+	<!-- 프로그램 코드 채번 -->
+	<select id="selectProgramChaban" resultType="String">
+		SELECT MAX(PROGRAM_CD) AS PROGRAMCD FROM WFFCLTY_PROGRAM WHERE WFFCLTY_CD = #{linkCd}
+	</select>
+	
+	<select id="selectProgramUseStatusCnt" parameterType="egovMap" resultType="int">
+		SELECT COUNT(*) FROM WFFCLTY_PROGRAM_USE_STATUS
+		      WHERE WFFCLTY_CD = #{linkCd}
+		        AND PROGRAM_CD = #{programCd}
+	</select>
+	
+	<delete id = "deleteProgramMgmt">
+		delete WFFCLTY_PROGRAM WHERE WFFCLTY_CD = #{linkCd}
+		        			  AND PROGRAM_CD = #{programCd}
+	</delete>
+	
+	<delete id="deleteProgramPic">
+		DELETE FROM WFFCLTY_PROGRAM_PITCURE WHERE WFFCLTY_CD = #{linkCd} 
+											  AND PROGRAM_CD = #{programCd}
+	</delete>
+</mapper>

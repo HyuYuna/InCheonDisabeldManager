@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmOpStsDAO">
+
+	<select id="selectPgmOpStsReg" parameterType="egovMap" resultType="egovMap">
+		SELECT 
+		    A.WFFCLTY_CD, A.PROGRAM_CD, B.PROGRAM_NM, C.SCLAS_NM,
+		    A.YYYYMM YM, A.OPER_CNT, A.PARTCPTN_NMPR, A.NOTE
+		FROM 
+		    WFFCLTY_PROGRAM_USE_STATUS A
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM B ON A.WFFCLTY_CD=B.WFFCLTY_CD AND A.PROGRAM_CD=B.PROGRAM_CD
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM_SCLAS C ON A.WFFCLTY_CD=C.WFFCLTY_CD AND B.SCLAS_CD=C.SCLAS_CD
+		WHERE 
+		    1=1
+		    <if test="sessWffcltyCd != null and sessWffcltyCd != ''.toString() ">
+		    AND A.WFFCLTY_CD=#{sessWffcltyCd}
+		    </if>
+		    <if test="schFr != null and schFr != ''.toString() ">
+		    <![CDATA[
+		    AND A.YYYYMM >= SUBSTR(REPLACE(#{schFr},'-',''),1,6)
+		    ]]> 
+		    </if>
+		    <if test="schTo != null and schTo != ''.toString() ">
+		    <![CDATA[
+		    AND A.YYYYMM <= SUBSTR(REPLACE(#{schTo},'-',''),1,6)
+		    ]]>
+		    </if>
+		    <if test="schLclasCd != null and schLclasCd != ''.toString() ">
+		    AND C.LCLAS_CD=#{schLclasCd}
+		    </if>
+		    <if test="schMclasCd != null and schMclasCd != ''.toString() ">
+		    AND C.MCLAS_CD=#{schMclasCd}
+		    </if>
+		    <if test="schSclasCd != null and schSclasCd != ''.toString() ">
+		    AND B.SCLAS_CD=#{schSclasCd}
+		    </if>
+		    <if test="schProgramNm != null and schProgramNm != ''.toString() ">
+		    AND INSTR(B.PROGRAM_NM,#{schProgramNm}) > 0
+		    </if>
+		    ORDER BY A.YYYYMM, A.PROGRAM_CD
+	</select>
+	
+	<select id="selectPgmOpStsDuplCnt" parameterType="string" resultType="int">
+		SELECT COUNT(0) FROM WFFCLTY_PROGRAM_USE_STATUS WHERE 1=1 AND
+		${value}
+	</select>
+
+	<update id="insertPgmOpSts" parameterType="hashMap">
+		INSERT INTO WFFCLTY_PROGRAM_USE_STATUS (
+			WFFCLTY_CD,PROGRAM_CD,YYYYMM,OPER_CNT,PARTCPTN_NMPR,NOTE,
+			REGIST_DT,REGISTERER
+		) VALUES (
+			#{sessWffcltyCd},#{programCd},#{ym},#{operCnt},#{partcptnNmpr},#{note},
+			SYSDATE,#{sessUserId}
+		)
+	</update>
+	
+	<update id="updatePgmOpSts" parameterType="hashMap">
+		UPDATE WFFCLTY_PROGRAM_USE_STATUS SET
+			OPER_CNT = #{operCnt},
+			PARTCPTN_NMPR = #{partcptnNmpr},
+			NOTE = #{note},
+			UPDATE_DT = SYSDATE,
+			UPDATER = #{sessUserId}
+		WHERE
+			WFFCLTY_CD = #{sessWffcltyCd}
+			AND PROGRAM_CD = #{programCd}
+			AND YYYYMM = #{ym}
+	</update>
+	
+	<update id="deletePgmOpSts" parameterType="hashMap">
+		DELETE FROM WFFCLTY_PROGRAM_USE_STATUS
+		WHERE
+			WFFCLTY_CD = #{sessWffcltyCd}
+			AND PROGRAM_CD = #{programCd}
+			AND YYYYMM = #{ym}
+	</update>
+	
+	<select id="selectWffcltyListD" parameterType="egovMap" resultType="egovMap">
+		SELECT 
+			A.WFFCLTY_CD AS WFFCLTY_CD, A.WFFCLTY_NM AS WFFCLTY_NM
+		FROM 
+			WFFCLTY_BASE A,
+		    COMMON_CODE B
+		WHERE B.USE_FG = '1'
+			AND A.USE_FG = '1'
+		    AND B.COMMCD_FG = 'TP14' 
+		    AND A.WFFCLTY_TP = B.COMMCD
+		    AND A.OGNZT_CD = #{linkCd}   
+	</select>
+	
+	<select id="selectPgmOpStsSch" parameterType="egovMap" resultType="egovMap">
+		SELECT
+		    F.WFFCLTY_NM, B.PROGRAM_NM, A.PROGRAM_CD, 
+		    A.WFFCLTY_CD, A.YYYYMM YM, A.OPER_CNT, A.PARTCPTN_NMPR, 
+		    C.SCLAS_NM, D.MCLAS_NM, E.LCLAS_NM, A.NOTE
+		FROM
+		    WFFCLTY_PROGRAM_USE_STATUS A
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM B ON A.PROGRAM_CD = B.PROGRAM_CD AND A.WFFCLTY_CD=B.WFFCLTY_CD
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM_SCLAS C ON B.SCLAS_CD = C.SCLAS_CD AND A.WFFCLTY_CD=C.WFFCLTY_CD
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM_MCLAS D ON C.MCLAS_CD = D.MCLAS_CD AND A.WFFCLTY_CD=D.WFFCLTY_CD
+		    LEFT OUTER JOIN WFFCLTY_PROGRAM_LCLAS E ON C.LCLAS_CD = E.LCLAS_CD AND A.WFFCLTY_CD=E.WFFCLTY_CD
+		    LEFT OUTER JOIN WFFCLTY_BASE F ON A.WFFCLTY_CD = F.WFFCLTY_CD
+		WHERE
+			A.WFFCLTY_CD = #{linkCd}
+		    <if test="schFr != null and schFr != ''.toString() ">
+		    <![CDATA[
+		    AND A.YYYYMM >= SUBSTR(REPLACE(#{schFr},'-',''),1,6)
+		    ]]> 
+		    </if>
+		    <if test="schTo != null and schTo != ''.toString() ">
+		    <![CDATA[
+		    AND A.YYYYMM <= SUBSTR(REPLACE(#{schTo},'-',''),1,6)
+		    ]]>
+		    </if>
+		    <if test="schLclasCd != null and schLclasCd != ''.toString() ">
+		    AND C.LCLAS_CD=#{schLclasCd}
+		    </if>
+		    <if test="schMclasCd != null and schMclasCd != ''.toString() ">
+		    AND C.MCLAS_CD=#{schMclasCd}
+		    </if>
+		    <if test="schSclasCd != null and schSclasCd != ''.toString() ">
+		    AND B.SCLAS_CD=#{schSclasCd}
+		    </if>
+		    <if test="schProgramNm != null and schProgramNm != ''.toString() ">
+		    AND INSTR(B.PROGRAM_NM,#{schProgramNm}) > 0
+		    </if>
+		    ORDER BY A.YYYYMM, A.PROGRAM_CD
+	</select>
+	
+	<select id="selectPgmOpStsChart" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT  
+		    MONTHS, NVL(TYM_DATA,0) TYM_DATA, NVL(BYM_DATA,0) BYM_DATA
+		FROM (
+				WITH YM_TBL AS(
+				SELECT 
+				    TO_CHAR(ADD_MONTHS((SELECT ADD_MONTHS(TO_DATE(#{ym},'YYYYMM'),-11) FROM DUAL),LEVEL-1),'YYYYMM') AS TYM,
+				    TO_CHAR(ADD_MONTHS((SELECT ADD_MONTHS(TO_DATE(#{ym},'YYYYMM'),-23) FROM DUAL),LEVEL-1),'YYYYMM') AS BYM
+				FROM 
+				    DUAL
+				CONNECT BY 
+				    LEVEL <= MONTHS_BETWEEN(TO_DATE(#{ym},'YYYYMM'), ADD_MONTHS(TO_DATE(#{ym},'YYYYMM'),-11))+1
+				) 
+				SELECT 
+				    A.TYM MONTHS, A.BYM,
+		]]>
+		<if test="chartType eq '1'.toString()">
+				    (SELECT OPER_CNT FROM WFFCLTY_PROGRAM_USE_STATUS WHERE YYYYMM=A.TYM AND WFFCLTY_CD=#{wffcltyCd} AND PROGRAM_CD=#{programCd}) TYM_DATA,
+				    (SELECT OPER_CNT FROM WFFCLTY_PROGRAM_USE_STATUS WHERE YYYYMM=A.BYM AND WFFCLTY_CD=#{wffcltyCd} AND PROGRAM_CD=#{programCd}) BYM_DATA
+		</if>
+		<if test="chartType eq '2'.toString()">
+				    (SELECT PARTCPTN_NMPR FROM WFFCLTY_PROGRAM_USE_STATUS WHERE YYYYMM=A.TYM AND WFFCLTY_CD=#{wffcltyCd} AND PROGRAM_CD=#{programCd}) TYM_DATA,
+				    (SELECT PARTCPTN_NMPR FROM WFFCLTY_PROGRAM_USE_STATUS WHERE YYYYMM=A.BYM AND WFFCLTY_CD=#{wffcltyCd} AND PROGRAM_CD=#{programCd}) BYM_DATA
+		</if>
+				FROM 
+				    YM_TBL A
+				ORDER BY
+				    A.TYM ASC
+		)
+	</select>
+	
+</mapper>

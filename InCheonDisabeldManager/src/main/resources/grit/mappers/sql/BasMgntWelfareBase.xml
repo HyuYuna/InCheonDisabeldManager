@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasMgntWelfareBaseDAO">
+	<select id="selectBasMgntWelfareBaseList" parameterType="egovMap" resultType="egovMap">
+	     SELECT WFFCLTY_CD /* BasMgntWelfareBaseDAO.selectBasMgntWelfareBaseList */,
+	        A.WFFCLTY_NM AS WFFCLTY_NM
+	       ,A.WFFCLTY_CLAS AS FCLTY_CLSFC
+	       ,A.WFFCLTY_TP AS WFFCLTY_TP
+	       ,A.UNIQUE_NO AS UNIQUE_NO
+	       ,A.OPERATE_FG AS OPERATE_FG
+	       ,A.HIGH_WFFCLTY_CD AS LINK_CD
+	       ,(SELECT C.WFFCLTY_NM FROM WFFCLTY_BASE C WHERE C.WFFCLTY_CD = A.HIGH_WFFCLTY_CD) AS LINK_NM
+	       ,A.USE_FG AS USE_FG
+	       ,A.OGNZT_CD AS OGNZT_CD
+	       ,B.OGNZT_NM AS OGNZT_NM
+  		FROM WFFCLTY_BASE A,
+       		 ORGANIZATION B
+	 WHERE
+	 A.OGNZT_CD = B.OGNZT_CD(+)
+    <if test="searchWffcltyClas != null and searchWffcltyClas != ''">
+    AND A.WFFCLTY_CLAS = #{searchWffcltyClas}
+    </if>
+    <if test="searchWffcltyNm != null and searchWffcltyNm != ''">
+    AND A.WFFCLTY_NM LIKE '%'||#{searchWffcltyNm}||'%'
+    </if>
+    <if test="searchOgnztCd != null and searchOgnztCd != ''">
+    AND A.OGNZT_CD = #{searchOgnztCd}
+    </if>
+    
+	</select>
+	
+	<insert id="insertMgntWelfareBase" parameterType="egovMap">
+	INSERT INTO WFFCLTY_BASE
+					(WFFCLTY_CD 
+					,WFFCLTY_NM
+					,WFFCLTY_CLAS
+					,WFFCLTY_TP
+					,UNIQUE_NO
+					,OPERATE_FG
+					,HIGH_WFFCLTY_CD
+					,USE_FG
+					,OGNZT_CD
+					,REGISTERER
+					,REGIST_DT)
+						VALUES(
+					(SELECT SUBSTR(TO_CHAR(NVL(MAX(WFFCLTY_CD), 0) + 1, 'S0000'), 2, 4) FROM WFFCLTY_BASE)
+					,#{wffcltyNm, jdbcType=VARCHAR}
+					,#{fcltyClsfc, jdbcType=VARCHAR}
+					,#{wffcltyTp, jdbcType=VARCHAR}
+					,#{uniqueNo, jdbcType=VARCHAR}
+					,#{operateFg, jdbcType=VARCHAR}
+					,#{linkCd, jdbcType=VARCHAR}
+					,#{useFg, jdbcType=VARCHAR}
+					,#{ognztCd, jdbcType=VARCHAR}
+					,#{register, jdbcType=VARCHAR}
+					,SYSDATE)
+	</insert>
+	
+	<update id="updateMgntWelfareBase">
+	UPDATE WFFCLTY_BASE 
+		SET
+	 WFFCLTY_NM		 = #{wffcltyNm, jdbcType=VARCHAR}
+	 <if test="fcltyClsfc != null and fcltyClsfc != ''">
+	,WFFCLTY_CLAS 	 = #{fcltyClsfc, jdbcType=VARCHAR}
+	</if>
+	<if test="wffcltyTp != null and wffcltyTp != ''">
+	,WFFCLTY_TP	 	 = #{wffcltyTp, jdbcType=VARCHAR}
+	</if>
+	,UNIQUE_NO 		 = #{uniqueNo, jdbcType=VARCHAR}
+	,OPERATE_FG 	 = #{operateFg, jdbcType=VARCHAR}
+	,HIGH_WFFCLTY_CD = #{linkCd, jdbcType=VARCHAR}
+	,USE_FG  		 = #{useFg, jdbcType=VARCHAR}
+	,OGNZT_CD 		 = #{ognztCd, jdbcType=VARCHAR}
+	,UPDATE_DT 		 = SYSDATE
+	,UPDATER 		 = #{register, jdbcType=VARCHAR}
+	WHERE WFFCLTY_CD = #{fcltyCode}
+	</update>
+	
+	<!-- 시설유형 Like문으로 조회 -->
+	<select id="selectTypeFacility" parameterType="String" resultType="egovMap" >
+	SELECT /*BasMgntWelfareBaseDAO.selectTypeFacility" */
+		COMMCD		AS TYPE_FACILITY_CODE
+       ,COMMCD_VALUE 	AS TYPE_FACILITY_NM
+  		FROM COMMON_CODE
+  			WHERE 1=1
+  			<if test="fcltyClsfc ==  ''">
+ 			 AND COMMCD = #{fcltyClsfc}
+ 			</if>
+  			<if test="fcltyClsfc != null and fcltyClsfc != ''">
+ 			 AND COMMCD like '%'||#{fcltyClsfc}||'%'
+ 			</if>
+ 			AND COMMCD_FG LIKE 'WF%'
+ 			AND NOT COMMCD_FG = 'WF01'
+ 			
+   			</select>
+   			
+   			<!-- 시설유형 Like문으로 조회 -->
+	<select id="selectUnqChk" resultType="Integer">
+		 SELECT count(*) /*BasMgntWelfareBaseDAO.selectUnqChk" */
+	  FROM WFFCLTY_BASE
+	 WHERE UNIQUE_NO  = 	#{uniqueNo} 
+	   <!--   /*AND WFFCLTY_TP = 	#{wffcltyTp} */ -->
+ 			
+   	</select>	
+   	
+   	<!-- 복지시설 자동조회 -->
+	<select id="selectWffcltyList" parameterType="egovMap" resultType="egovMap">
+		SELECT /*BasMgntWelfareBaseDAO.selectWffcltyList */
+             WFFCLTY_CD   AS linkCd
+           , WFFCLTY_NM   AS linkNm      
+        FROM WFFCLTY_BASE
+          WHERE (WFFCLTY_CD LIKE '%'||#{linkCd}||'%' OR WFFCLTY_NM LIKE '%'||#{linkCd}||'%')
+	</select>
+	
+	<!-- 운영단체 자동조회 -->
+	<select id="selectOgnztList" parameterType="egovMap" resultType="egovMap">
+		SELECT /*BasMgntWelfareBaseDAO.selectOgnztList */
+             OGNZT_CD   AS linkCd
+           , OGNZT_NM   AS linkNm     
+        FROM ORGANIZATION
+          WHERE (OGNZT_CD LIKE '%'||#{ognztCd}||'%' OR OGNZT_NM LIKE '%'||#{ognztCd}||'%')
+	</select>
+	
+	<!-- Detail Count -->
+	<select id="selectDetail" parameterType="egovMap" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM WFFCLTY_DETAIL 
+		WHERE 
+		WFFCLTY_CD = #{fcltyCode}
+		
+	</select>
+	
+	<update id="updateWffcltyDetail" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+			SET
+			 ETC_DETAIL1          = null
+			,ETC_DETAIL2          = null
+			,ETC_DETAIL3          = null
+			,ETC_DETAIL4          = null
+		WHERE WFFCLTY_CD = #{fcltyCode}
+	</update>
+	
+	<select id="wffcltyCount" parameterType="String" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM WFFCLTY_DETAIL 
+		WHERE WFFCLTY_CD = #{fcltyCode}
+		
+	</select>
+	
+	<delete id="deleteSysAuthMgmt" parameterType="egovMap">
+		DELETE FROM WFFCLTY_BASE
+		 WHERE WFFCLTY_CD = #{wffcltyCd}
+	</delete>
+	
+</mapper>

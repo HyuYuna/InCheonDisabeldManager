@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmAssistDvcRepairListDAO">
+
+	<select id="selectAssDcvRepairList" parameterType="egovMap" resultType="egovMap">
+			SELECT
+			     A.DSPSN_ID
+			    ,A.DSPSN_NM
+                ,(SELECT WFFCLTY_NM FROM WFFCLTY_BASE WHERE WFFCLTY_CD = B.WFFCLTY_CD) WFFCLTY_NM
+			    ,B.RECEIPT_DD
+			    ,B.PROCESS_DD
+			    ,B.REPAIR_PAY_DD
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.ASSIST_DVC_KD AND COMMCD_FG = 'TP13' AND USE_FG = '1') AS ASSIST_DVC_KD
+			    ,B.REPAIR_RETAIL
+			    ,B.REPAIR_ITEM
+			    ,B.REPAIR_AMT
+			    ,B.REPAIR_CCPY
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.USE_FG AND COMMCD_FG = 'FG02' AND USE_FG = '1') AS USE_FG
+			   FROM DSPSN A
+			       ,ASSIST_DVC_REPAIR B
+			       ,DSPSN_DISABILITY C
+			    WHERE B.DSPSN_ID = A.DSPSN_ID
+			      AND B.DSPSN_ID = C.DSPSN_ID
+			      <if test="wffcltyCd != '' and wffcltyCd != null">
+			      AND B.WFFCLTY_CD = #{wffcltyCd}
+			      </if>
+			      <if test="dspsnId != '' and dspsnId != null">
+			      AND B.DSPSN_ID = #{dspsnId}
+			      </if>
+			      <if test="assistDvcKd != '' and assistDvcKd != null">
+			      AND B.ASSIST_DVC_KD = #{assistDvcKd}
+			      </if>
+			      <if test="sehAssistDvcKd != '' and sehAssistDvcKd != null">
+			      AND B.ASSIST_DVC_KD = #{sehAssistDvcKd}
+			      </if>
+			      <if test="sDateReceipt != '' and sDateReceipt != null and eDateReceipt != '' and eDateReceipt != null" >
+			      AND B.RECEIPT_DD BETWEEN #{sDateReceipt} AND #{eDateReceipt}
+			      </if>
+			       <if test="sDateProcess != '' and sDateProcess != null and eDateProcess != '' and eDateProcess != null" >
+			      AND B.PROCESS_DD BETWEEN #{sDateProcess} AND #{eDateProcess}
+			      </if>
+			       <if test="sDateRepairPay != '' and sDateRepairPay != null and eDateRepairPay != '' and eDateRepairPay != null" >
+			      AND B.REPAIR_PAY_DD BETWEEN #{sDateRepairPay} AND #{eDateRepairPay}
+			      </if>
+	</select>
+
+	<select id="searcAssDvcRepWffcltyList"  resultType="egovMap">
+		SELECT WFFCLTY_CD
+      		 ,'['||WFFCLTY_CD||'] '||WFFCLTY_NM  AS WFFCLTY_NM
+		FROM  WFFCLTY_BASE
+		 WHERE WFFCLTY_TP = 'D04'
+	</select>
+	
+	<select id="searcAssDvcRepWffcltyList2" parameterType="egovMap" resultType="egovMap">
+		SELECT WFFCLTY_CD
+      		 ,'['||WFFCLTY_CD||'] '||WFFCLTY_NM AS WFFCLTY_NM
+		FROM  WFFCLTY_BASE
+		 WHERE WFFCLTY_TP = 'D04'
+		  AND OGNZT_CD = #{linkCd}
+	</select>
+	
+	<select id="searchAssDcvDspsn" parameterType="egovMap" resultType="egovMap">
+		SELECT  DSPSN_ID
+			    ,DSPSN_NM
+			    ,USE_FG
+		  FROM DSPSN
+            WHERE (DSPSN_ID LIKE '%'||#{dspsnId}||'%' OR DSPSN_NM LIKE '%'||#{dspsnId}||'%')
+	</select>
+	
+
+</mapper>

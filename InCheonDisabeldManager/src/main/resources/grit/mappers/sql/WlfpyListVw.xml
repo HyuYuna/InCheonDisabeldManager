@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WlfpyListVwDAO">
+	<select id="selectWlfpyListVw" parameterType="egovMap" resultType="egovMap">
+	SELECT 
+       A.RCPMNY_SEQNO
+       ,A.WFFCLTY_CD
+       ,(SELECT B.WFFCLTY_NM FROM WFFCLTY_BASE B WHERE B.WFFCLTY_CD = A.WFFCLTY_CD) WFFCLTY_NM
+       ,A.RCPMNY_DD
+       ,A.SUBSIDY_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP06' AND Z.USE_FG = '1' AND COMMCD = A.SUBSIDY_FG) AS SUBSIDY_FG_NM 
+       ,A.SUBSIDY_TP
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP07' AND Z.USE_FG = '1' AND COMMCD = A.SUBSIDY_TP) AS SUBSIDY_TP_NM
+       ,A.RCPMNY_AMT
+       ,A.NOTE
+       ,A.USE_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG02' AND Z.USE_FG = '1' AND COMMCD = A.USE_FG) AS USE_FG_NM
+  FROM SUBSIDY_GIVE A
+  
+	  WHERE 1=1
+		  <if test ="wffcltyCd != '' and wffcltyCd != null">
+		AND A.WFFCLTY_CD = #{wffcltyCd}
+		  </if>
+	  	<if test ="fDate != '' and fDate != null">
+	    AND A.RCPMNY_DD &gt;= replace(#{fDate}, '-')
+	    </if>
+	    
+	    <if test ="eDate != '' and eDate != null">
+	    AND A.RCPMNY_DD &lt;= replace(#{eDate}, '-')
+	    </if>
+	    
+	    <if test ="searchSubsidyFg != '' and searchSubsidyFg != null">
+	    AND A.SUBSIDY_FG = #{searchSubsidyFg}
+	    </if>
+	    
+	    <if test ="searchSubsidyTp != '' and searchSubsidyTp != null">
+	    AND A.SUBSIDY_TP = #{searchSubsidyTp}
+	    </if>
+	    ORDER BY WFFCLTY_NM, RCPMNY_DD ASC
+	</select>
+</mapper>

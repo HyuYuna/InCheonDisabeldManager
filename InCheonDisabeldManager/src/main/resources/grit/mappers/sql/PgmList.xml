@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmListDAO">
+	<select id="selectProgramView" parameterType="egovMap" resultType="egovMap">
+		   SELECT (select X.WFFCLTY_NM from WFFCLTY_base X WHERE X.WFFCLTY_CD = A.WFFCLTY_CD) WFFCLTY_NM
+		   		  ,A.WFFCLTY_CD
+		   		  ,A.PROGRAM_CD /*PgmListDAO.selectPmgPic*/
+			      ,A.PROGRAM_NM
+			      ,A.PROGRAM_DETAIL
+			      ,A.TIME_DETAIL
+			      ,A.TRGTER_DETAIL
+			      ,A.FEE_DETAIL
+			      ,A.OPERATE_FG
+			      ,(SELECT W.COMMCD_VALUE FROM COMMON_CODE W WHERE W.COMMCD_FG = 'FG04' AND W.USE_FG = '1' AND W.COMMCD = A.OPERATE_FG) OPERATE_NM
+			      ,(SELECT X.LCLAS_NM FROM WFFCLTY_PROGRAM_LCLAS X WHERE X.LCLAS_CD = SUBSTR(A.SCLAS_CD,1,2) AND X.WFFCLTY_CD = #{wffcltyCd}) AS LCLAS_NM
+			      ,(SELECT Y.MCLAS_NM FROM WFFCLTY_PROGRAM_MCLAS Y WHERE Y.MCLAS_CD = SUBSTR(A.SCLAS_CD,1,4) AND Y.WFFCLTY_CD = #{wffcltyCd}) AS MCLAS_NM
+			      ,SUBSTR(A.SCLAS_CD,1,2) AS LCLAS_CD
+                  ,SUBSTR(A.SCLAS_CD,1,4) AS MCLAS_CD
+			      ,A.SCLAS_CD AS SCLAS_CD
+			      ,(SELECT Z.SCLAS_NM FROM WFFCLTY_PROGRAM_SCLAS Z WHERE Z.SCLAS_CD = SUBSTR(A.SCLAS_CD,1,6) AND Z.WFFCLTY_CD = #{wffcltyCd}) AS SCLAS_NM
+ 			 FROM WFFCLTY_PROGRAM A
+  			WHERE  1=1
+  			<if test= "wffcltyCd != '' and wffcltyCd != null">
+  			AND A.WFFCLTY_CD = #{wffcltyCd}
+  			</if>
+  			<if test= "searchProgramNm != '' and searchProgramNm != null">
+  			AND A.PROGRAM_NM LIKE '%'||#{searchProgramNm}||'%'
+  			</if>
+  			<if test= "searchLclasCd != '' and searchLclasCd != null">
+  			AND SUBSTR(A.SCLAS_CD,1,2) = #{searchLclasCd}
+  			</if>
+  			<if test= "searchMclasCd != '' and searchMclasCd != null">
+  			AND SUBSTR(A.SCLAS_CD,1,4) = #{searchMclasCd}
+  			</if>
+  			<if test= "searchSclasCd != '' and searchSclasCd != null">
+ 			AND SUBSTR(A.SCLAS_CD,1,6) = #{searchSclasCd}
+ 			</if>
+ 			ORDER BY WFFCLTY_NM, A.PROGRAM_CD ASC
+	</select>
+	
+	<select id="searchLclasView" parameterType="egovMap" resultType="egovMap">
+			SELECT LCLAS_CD /*PgmListDAO.selectPmgPic*/
+       				,LCLAS_NM
+  			FROM WFFCLTY_PROGRAM_LCLAS
+  			<if test= "wffcltyCd != '' and wffcltyCd != null">
+ 			WHERE WFFCLTY_CD = #{wffcltyCd}
+ 			</if>
+	</select>
+	
+	<select id="searchMclasView" parameterType="egovMap" resultType="egovMap">
+		   SELECT LCLAS_CD /*PgmListDAO.selectPmgPic*/
+			      ,MCLAS_CD
+			      ,MCLAS_NM
+		  FROM WFFCLTY_PROGRAM_MCLAS
+		  <if test= "wffcltyCd != '' and wffcltyCd != null">
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+		  </if>
+		  AND LCLAS_CD = #{lclasCd}
+	</select>
+	
+	<select id="searchSclasView" parameterType="egovMap" resultType="egovMap">
+		   SELECT LCLAS_CD /*PgmListDAO.selectPmgPic*/
+       			  ,MCLAS_CD
+       			  ,SCLAS_CD
+       			  ,SCLAS_NM
+		   FROM WFFCLTY_PROGRAM_SCLAS
+		   WHERE WFFCLTY_CD = #{wffcltyCd}
+		   <if test= "mclasCd != '' and mclasCd != null">
+		  AND MCLAS_CD = #{mclasCd}
+		  </if>
+	</select>
+	
+	<select id="selectOrgnzCodeD" parameterType="egovMap" resultType="egovMap">
+	SELECT /*PgmListDAO.selectPmgPic*/
+		   A.WFFCLTY_CD AS GROUP_CD
+          ,A.WFFCLTY_NM AS GROUP_NM
+     FROM WFFCLTY_BASE A
+    	WHERE A.USE_FG = '1' 
+       <if test ="linkCd != '' and linkCd != null">
+       AND A.OGNZT_CD = #{linkCd}
+       </if>
+	</select>
+	
+	<select id="selectPmgPic" parameterType="egovMap" resultType="egovMap">
+	SELECT  /*PgmListDAO.selectPmgPic*/
+		PICTURE_PATH||'/'||PICTURE_NM AS ALL_PICTURE_PATH
+	FROM WFFCLTY_PROGRAM_PITCURE
+		WHERE WFFCLTY_CD = #{wffcltyCd}
+		 AND PROGRAM_CD = #{programCd}
+	</select>
+</mapper>

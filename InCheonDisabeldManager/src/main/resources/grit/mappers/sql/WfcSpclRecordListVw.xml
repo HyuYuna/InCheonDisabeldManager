@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcSpclRecordListVwDAO">
+<select id="selectWfcSpclRecord" parameterType="egovMap" resultType="egovMap">
+	 SELECT
+	  (select X.WFFCLTY_NM from WFFCLTY_base X WHERE X.WFFCLTY_CD = D.WFFCLTY_CD) AS WFFCLTY_NM
+       ,D.DSPSN_ID /* 이용장애인 ID */
+       ,A.DSPSN_NM /* 장애인이름 */
+       ,DEC_B64('KEY1', A.ENC_BIRTH_DD) ENC_BIRTH_DD /* 생년월일 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP03' AND Z.COMMCD = A.GENDER AND Z.USE_FG = '1') GENDER /* 성별 */
+       ,A.PICTURE_PATH /* 장애인 사진파일path */
+       ,A.PICTURE_NM   /* 장애인  사진파일 이름 */
+       ,B.HEALTH_STS01 /* 시각문제 */
+       ,B.HEALTH_STS02 /* 언어문제 */
+       ,B.HEALTH_STS03 /* 청각문제 */
+       ,B.HEALTH_STS06 /* 질환 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP05'AND Z.COMMCD = C.DISABLE_TP AND Z.USE_FG = '1') DISABLE_TP  /* 장애유형 */
+       
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12'AND Z.COMMCD = C.DISABLE_DGREE_FG AND Z.USE_FG = '1') DISABLE_DGREE_FG /* 장애정도구분 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01'AND Z.COMMCD = C.OUTBREAK_TIME_FG AND Z.USE_FG = '1') OUTBREAK_TIME_FG /* 장애발생시기 */
+       ,D.RECORD_DD /* 기록일자(yyyymmdd) */
+       ,TO_CHAR(TO_DATE(D.RECORD_TT, 'HH24:MI:SS'), 'HH24:MI:SS') RECORD_TT
+       ,D.UNUSAL_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP15'AND Z.COMMCD = D.UNUSAL_FG AND Z.USE_FG = '1') UNUSAL_FG_NM /* 특이사례구분 */
+       ,D.ACT_TP /* 행동유형 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG LIKE '%'||D.UNUSAL_FG AND z.COMMCD = D.ACT_TP AND Z.USE_FG='1') ACT_TP_NM
+       ,D.ACT_TP_DETAIL /* 행동유형기타상세 */
+       ,D.MEASURE_DETAIL /* 조치내역 */
+ 				from 
+ 					 DSPSN A
+             ,DSPSN_HEALTH B
+         ,DSPSN_DISABILITY C
+             ,DSPSN_UNUSAL D
+            
+            WHERE D.DSPSN_ID = A.DSPSN_ID
+            AND   D.DSPSN_ID = B.DSPSN_ID(+)
+            AND   D.DSPSN_ID = C.DSPSN_ID
+            <if test="searchDspsnId != '' and searchDspsnId != null">
+            AND D.DSPSN_ID LIKE '%'||#{searchDspsnId}||'%'
+            </if>
+            <if test="sDate != '' and sDate != null">
+            AND D.RECORD_DD &gt;= replace(#{sDate},'-')
+            </if>
+            <if test="eDate != '' and eDate != null">
+            AND D.RECORD_DD &lt;= replace(#{eDate},'-')
+            </if>
+            <if test="searchUnusalFg != '' and searchUnusalFg != null">
+            AND D.UNUSAL_FG = #{searchUnusalFg}
+            </if>
+            <if test="linkCd != '' and linkCd != null">
+            AND D.WFFCLTY_CD = #{linkCd}
+            </if>
+            <if test="wffcltyCd != '' and wffcltyCd != null">
+            AND D.WFFCLTY_CD = #{wffcltyCd}
+            </if>
+            
+            ORDER BY WFFCLTY_NM, D.RECORD_DD, D.RECORD_TT ASC
+	</select>
+	
+	<select id="selectTypeBehavior" parameterType="egovMap" resultType="egovMap">
+	SELECT COMMCD AS TYPE_BEHAVIOR_CD
+       	   ,COMMCD_VALUE AS TYPE_BEHAVIOR_NM
+       	   FROM COMMON_CODE
+ 		WHERE COMMCD_FG like '%'||#{unusalFg}
+	</select>
+	
+	<select id="selectAjaxDspsnList" parameterType="egovMap" resultType="egovMap">
+		  SELECT A.DSPSN_ID
+       			,A.DSPSN_NM
+  				FROM DSPSN A
+ 		  WHERE DSPSN_ID LIKE '%'||#{dspsnId} ||'%' ;
+	</select>
+</mapper>

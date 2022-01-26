@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commonCodeDAO">
+	
+	
+	<!-- 사용자 그룹코드 조회 -->
+	<select id="searchUserGroup" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchUserGroup" */
+		  COMMCD        AS user_Group_Cd
+		, COMMCD_VALUE	AS user_Group_Nm
+		FROM COMMON_CODE 
+		 WHERE COMMCD_FG = 'TP01'
+		  AND USE_FG = '1'
+	</select>
+	
+	<!-- 사용여부 조회 -->
+	<select id="searchUse" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchUse" */
+		  COMMCD        AS use_Fg
+		, COMMCD_VALUE	AS use_Fg_Nm
+		FROM COMMON_CODE 
+		 WHERE COMMCD_FG = 'FG02'
+		  AND USE_FG = '1'
+		 ORDER BY COMMCD DESC
+	</select>
+
+	
+	<!-- 복지시설 조회 => 1차분류  -->
+	<select id="searchWffcltyCdList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchWffcltyCdList" */
+	      COMMCD        AS wffclty_Clas
+	    , COMMCD_VALUE  AS wffclty_Nm
+	FROM COMMON_CODE
+	  WHERE COMMCD_FG = 'WF01'
+	     AND USE_FG = '1'
+	ORDER BY SORT_ORD ASC
+	</select>
+	
+	<select id="searchWffcltyCdSubList" parameterType="String" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchWffcltyCdSubList" */
+	      COMMCD        AS wffclty_Clas
+	    , COMMCD_VALUE  AS wffclty_Nm
+	FROM COMMON_CODE
+	  WHERE COMMCD_FG = #{code}
+	     AND USE_FG = '1'
+	ORDER BY SORT_ORD ASC
+	</select>
+	
+	<!-- 복지시설 조회 => 2차분류 -->
+	
+	<!-- 운영단체 조회 -->
+	<select id="searchOgnztCdList" resultType="egovMap">
+		  SELECT /*commonCodeDAO."searchOgnztCdList" */
+		      COMMCD        AS ognzt_Fg
+		    , COMMCD_VALUE  AS ognzt_Nm
+		FROM COMMON_CODE
+		  WHERE COMMCD_FG = 'TP04'
+		     AND USE_FG = '1'
+	</select>
+
+	
+	<!-- 시설운영조회 조회 -->
+	<select id="selectFacOp" resultType="egovMap">
+	SELECT  /*commonCodeDAO."selectFacOp" */
+			 COMMCD   AS FAC_CODE
+       		,COMMCD_VALUE AS FAC_NM
+  			FROM COMMON_CODE
+ 			 WHERE COMMCD_FG = 'FG04'
+ 			  AND USE_FG = '1'
+ 			 ORDER BY COMMCD DESC
+	</select>
+	
+	<!-- 단체구분 조회 -->
+	<select id="selectGroupClsfc" resultType="egovMap">
+	SELECT /*commonCodeDAO."selectGroupClsfc" */
+		COMMCD AS GROUP_CODE
+       ,COMMCD_VALUE AS GROUP_NM
+  		FROM COMMON_CODE
+ 		 WHERE COMMCD_FG = 'TP04'
+   			AND USE_FG = '1';
+	</select>
+	
+	<!-- 시설분류 조회 -->
+	<select id="selectFcltyClsfc" resultType="egovMap">
+	SELECT /*commonCodeDAO."selectFcltyClsfc" */ 
+		COMMCD AS FCLTY_CLSFC_CODE
+       ,COMMCD_VALUE AS FCLTY_CLSFC_NM
+  		FROM COMMON_CODE
+ 		 WHERE COMMCD_FG = 'WF01'
+   			AND USE_FG = '1';
+   	</select>
+
+   	
+   	
+   	<!-- 수입제원 조회 -->
+	<select id="searchRevenueTp" resultType="egovMap">
+		SELECT COMMCD        AS REVENUE_SOURCE_TP
+			 , COMMCD_VALUE  AS REVENUE_SOURCE_TP_NM
+		  FROM COMMON_CODE 
+		    WHERE COMMCD_FG = 'TP08'
+		     AND USE_FG = '1'
+	</select>		
+
+   	<!-- 시설소유 조회 -->
+	<select id="searchOwnershipTp" resultType="egovMap">
+		SELECT COMMCD        AS OWNERSHIP_TP
+		     , COMMCD_VALUE  AS OWNERSHIP_TP_NM
+		  FROM COMMON_CODE 
+		    WHERE COMMCD_FG = 'TP09'
+		     AND USE_FG = '1'
+	</select>	   			
+
+   	<!-- 중식제공 조회 -->
+	<select id="searchLunchTp" resultType="egovMap">
+		SELECT COMMCD       AS LUNCH_TP
+		     , COMMCD_VALUE AS LUNCH_TP_NM
+		FROM COMMON_CODE 
+		WHERE COMMCD_FG = 'TP10'
+		 AND USE_FG = '1'
+	</select>
+
+   	<!-- 장애유형 조회 -->
+	<select id="searchDisableTp" resultType="egovMap">
+		SELECT COMMCD       AS DISABLE_TP
+		     , COMMCD_VALUE AS DISABLE_TP_NM
+		FROM COMMON_CODE 
+		WHERE COMMCD_FG = 'TP05'
+		 AND USE_FG = '1'
+	</select>	
+
+   			
+   	<!-- 퇴소사유 조회 -->
+	<select id="selectRsnLvng" resultType="egovMap">
+	SELECT COMMCD RSN_LVNG_CODE/*commonCodeDAO."selectRsnLvng" */
+	, COMMCD_VALUE RSN_LVNG_NM
+  	   FROM COMMON_CODE
+ 		WHERE COMMCD_FG ='RS01'
+ 		AND USE_FG = '1';
+ 		</select>
+ 		
+ 	<!-- 장애유형 조회 -->
+	<select id="selectDspsnTP" resultType="egovMap">
+	SELECT COMMCD DSPSN_TP_CODE 
+	       ,COMMCD_VALUE DSPSN_TP_NM
+	  FROM COMMON_CODE
+	 WHERE COMMCD_FG ='TP05'
+	 AND USE_FG = '1';
+ 		</select>
+ 		
+ 	<!-- 진행상태 조회 -->
+ 	<select id="selectProgress" resultType="egovMap">
+ 	SELECT COMMCD AS PROGRESS_CODE
+       ,COMMCD_VALUE AS PROGRESS_NM
+  	 FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PS01'
+   	AND USE_FG = '1';
+	</select>
+	
+	<!-- 시군구 조회 -->
+	<select id="selectSigungu" resultType="egovMap">
+ 	SELECT COMMCD AS SIGUNGU_CD
+       ,COMMCD_VALUE AS SIGUNGU_NM
+  	 FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'CG01'
+   	AND USE_FG = '1';
+	</select>
+	
+	<!-- 입퇴소 시설 유형 TP14 조회 -->
+	<select id="searchTypeExtFcltyList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchWffcltyCdList" */
+	      COMMCD        AS TYPE_EXT_FCLTY_CD
+	    , COMMCD_VALUE  AS TYPE_EXT_FCLTY_NM
+	FROM COMMON_CODE
+	  WHERE COMMCD_FG = 'TP14'
+	     AND USE_FG = '1'
+	</select>
+	
+	<!-- 보조금 지급 구분 TP06 조회 -->
+	<select id="searchSbspyClsfcList" resultType="egovMap">
+	SELECT COMMCD AS SBSPY_CLS_CD
+           ,COMMCD_VALUE AS SBSPY_CLS_NM
+              FROM COMMON_CODE
+             WHERE COMMCD_FG = 'TP06'
+               AND USE_FG = '1';
+	</select>
+	
+	<!-- 보조금 유형 TP07 조회 -->
+	<select id="searchTypeGrantList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchTypeGrantList" */
+			COMMCD        AS TYPE_GRANT_CD
+	    , COMMCD_VALUE  AS TYPE_GRANT_NM
+              FROM COMMON_CODE
+             WHERE COMMCD_FG = 'TP07'
+               AND USE_FG = '1'
+	</select>
+	
+	
+	<!-- 성별 유형 TP03 조회 -->
+	<select id="searchGenderList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchGenderList" */
+			COMMCD        AS GENDER
+	      , COMMCD_VALUE  AS GENDER_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'TP03'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 혈액형 유형 TP11 조회 -->
+	<select id="searchBloodTypeList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchBloodTypeList" */
+			COMMCD        AS BLOOD_TP
+	      , COMMCD_VALUE  AS BLOOD_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'TP11'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 혼인여부 유형 FG10 조회 -->
+	<select id="searchMaritalStatusList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchMaritalStatusList" */
+			COMMCD        AS MARRIAGE_TP
+	      , COMMCD_VALUE  AS MARRIAGE_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'FG10'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 보장자격 유형 TP2 조회 -->
+	<select id="searchGuaranteedList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchGuaranteedList" */
+			COMMCD        AS GUARANTEED_FG
+	      , COMMCD_VALUE  AS GUARANTEED_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'TP12'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 장애여부 조회 -->
+	<select id="searchDisabilityList" resultType="egovMap">
+	SELECT COMMCD DISABILITY_CD /*commonCodeDAO."searchTypeGrantList */
+      	 ,COMMCD_VALUE DISABILITY_NM
+		  FROM COMMON_CODE
+		 WHERE COMMCD_FG = 'FG11'
+		 AND USE_FG = '1'
+	</select>
+	
+	
+	<!-- 장애정도 유형 FG12 조회 -->
+	<select id="searchDisableDreeFgList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchDisableDreeFgList" */
+			COMMCD        AS DISABLE_DGREE_FG
+	      , COMMCD_VALUE  AS DISABLE_DGREE_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'FG12'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 장애등급 유형  -->
+	<select id="searchDisableGrade" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchDisableGrade" */
+			COMMCD        AS DISABLE_GRADE
+	      , COMMCD_VALUE  AS DISABLE_GRADE_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = #{grade}
+          AND USE_FG = '1'
+	</select>
+	
+	
+	<!-- 발생시기 유형 DT01 조회 -->
+	<select id="searchOutbreakTimeFg" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchOutbreakTimeFg" */
+			COMMCD        AS OUTBREAK_TIME_FG
+	      , COMMCD_VALUE  AS OUTBREAK_TIME_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'DT01'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 발생사유 유형 FG13 조회 -->
+	<select id="searchOutbreakRsnFg" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchOutbreakRsnFg" */
+			COMMCD        AS OUTBREAK_RSN_FG
+	      , COMMCD_VALUE  AS OUTBREAK_RSN_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'FG13'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 사례관리대상여부 유형 FG09 조회 -->
+	<select id="searchCaseManageFgList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchCaseManageFgList" */
+			COMMCD        AS CASE_MANAGE_FG
+	      , COMMCD_VALUE  AS CASE_MANAGE_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'FG09'
+          AND USE_FG = '1'
+          ORDER BY COMMCD DESC
+	</select>
+	
+	<!-- 사례관리대상여부 유형 RS03 조회 -->
+	<select id="searchCaseManageEndRsnList" resultType="egovMap">
+	SELECT /*commonCodeDAO."searchCaseManageEndRsnList" */
+			COMMCD        AS CASE_MANAGE_END_RSN
+	      , COMMCD_VALUE  AS CASE_MANAGE_END_RSN_NM
+       FROM COMMON_CODE
+         WHERE COMMCD_FG = 'RS03'
+          AND USE_FG = '1'
+	</select>
+	
+	<!-- 사례관리구분 TP15 조회 -->
+	<select id="searchCsmnDvsnFg" resultType="egovMap">
+	SELECT COMMCD AS CSMN_DVSN_CD
+      ,COMMCD_VALUE CSMN_DVSN_NM
+  		FROM COMMON_CODE
+ 		WHERE COMMCD_FG = 'TP15'
+   		 AND USE_FG = '1';
+	</select>
+	
+	<!-- 보정구구분 TP13 조회 -->
+	<select id="searchAssistDvcRepair" resultType="egovMap">
+	SELECT COMMCD       AS ASSIST_DVC_KD
+	     , COMMCD_VALUE AS ASSIST_DVC_KD_NM
+	    FROM COMMON_CODE 
+	    WHERE COMMCD_FG = 'TP13'
+	     AND USE_FG = '1'
+	</select>
+	
+	<!-- 개인정보 보호책임자 복지과 조회 -->
+	<select id="searchPrsnInfD" resultType="egovMap">
+	SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'D'
+  		AND USE_FG = '1';
+	</select>
+	
+	<!-- 개인정보 보호책임자 전자우편 조회 -->
+	<select id="searchPrsnInfE" resultType="egovMap">
+	   SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'E'
+  		AND USE_FG = '1';
+	</select>
+	
+	<!-- 개인정보 보호책임자 팩스번호 조회 -->
+	<select id="searchPrsnInfF" resultType="egovMap">
+	   SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'F'
+  		AND USE_FG = '1';
+	</select>
+	
+	<!-- 개인정보 보호책임자 성명 조회 -->
+	<select id="searchPrsnInfN" resultType="egovMap">
+	   SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'N'
+  		AND USE_FG = '1';
+	</select>
+	
+	<!-- 개인정보 보호책임자 직책 조회 -->
+	<select id="searchPrsnInfP" resultType="egovMap">
+	   SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'P'
+  		AND USE_FG = '1';
+	</select>
+	
+	<!-- 개인정보 보호책임자 전화번호 조회 -->
+	<select id="searchPrsnInfT" resultType="egovMap">
+	   SELECT COMMCD
+		  ,COMMCD_VALUE
+  		FROM COMMON_CODE
+ 	WHERE COMMCD_FG = 'PM01'
+   		AND COMMCD = 'T'
+  		AND USE_FG = '1';
+	</select>
+</mapper>

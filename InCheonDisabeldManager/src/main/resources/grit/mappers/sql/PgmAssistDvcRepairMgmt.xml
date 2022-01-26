@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmAssistDvcRepairMgmtDAO">
+
+	<select id="selectAssistDcvRepairList" parameterType="egovMap" resultType="egovMap">
+			SELECT
+			     B.WFFCLTY_CD 
+			    ,A.DSPSN_ID
+			    ,A.DSPSN_NM
+			    ,DEC_B64('KEY1', A.ENC_PHONE_NUM) ENC_PHONE_NUM
+			    ,TO_DATE(DEC_B64('KEY1', A.ENC_BIRTH_DD),'YYYY-MM-DD') ENC_BIRTH_DD
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = A.GENDER AND COMMCD_FG = 'TP03' AND USE_FG = '1') AS GENDER
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = C.DISABLE_TP AND COMMCD_FG = 'TP05' AND USE_FG = '1') AS DISABLE_TP
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = C.DISABLE_DGREE_FG AND COMMCD_FG = 'FG12' AND USE_FG = '1') AS DISABLE_DGREE_FG
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = C.OUTBREAK_TIME_FG AND COMMCD_FG = 'DT01' AND USE_FG = '1') AS OUTBREAK_TIME_FG
+			    ,B.RECEIPT_DD
+			    ,B.PROCESS_DD
+			    ,B.REPAIR_PAY_DD
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.ASSIST_DVC_KD AND COMMCD_FG = 'TP13' AND USE_FG = '1') AS ASSIST_DVC_KD_NM
+			    ,B.ASSIST_DVC_KD
+			    ,B.REPAIR_RETAIL
+			    ,B.REPAIR_ITEM
+			    ,B.REPAIR_AMT
+			    ,B.REPAIR_CCPY
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.USE_FG AND COMMCD_FG = 'FG02' AND USE_FG = '1') AS USE_FG_NM
+			    ,B.USE_FG
+			   FROM DSPSN A
+			       ,ASSIST_DVC_REPAIR B
+			       ,DSPSN_DISABILITY C
+			    WHERE B.DSPSN_ID = A.DSPSN_ID
+			      AND B.DSPSN_ID = C.DSPSN_ID(+)
+			      AND B.WFFCLTY_CD = #{wffcltyCd}
+			      <if test="dspsnId != '' and dspsnId != null">
+			      AND B.DSPSN_ID = #{dspsnId}
+			      </if>
+			      <if test="assistDvcKd != '' and assistDvcKd != null">
+			      AND B.ASSIST_DVC_KD = #{assistDvcKd}
+			      </if>
+			      <if test="sehAssistDvcKd != '' and sehAssistDvcKd != null">
+			      AND B.ASSIST_DVC_KD = #{sehAssistDvcKd}
+			      </if>
+			      <if test="sDateReceipt != '' and sDateReceipt != null and eDateReceipt != '' and eDateReceipt != null" >
+			      AND B.RECEIPT_DD BETWEEN #{sDateReceipt} AND #{eDateReceipt}
+			      </if>
+			       <if test="sDateProcess != '' and sDateProcess != null and eDateProcess != '' and eDateProcess != null" >
+			      AND B.PROCESS_DD BETWEEN #{sDateProcess} AND #{eDateProcess}
+			      </if>
+			       <if test="sDateRepairPay != '' and sDateRepairPay != null and eDateRepairPay != '' and eDateRepairPay != null" >
+			      AND B.REPAIR_PAY_DD BETWEEN #{sDateRepairPay} AND #{eDateRepairPay}
+			      </if>
+	</select>
+	
+	<insert id="insertAssistDvcRepair" parameterType="egovMap">
+		INSERT INTO ASSIST_DVC_REPAIR(
+			        WFFCLTY_CD
+					,DSPSN_ID
+					,RECEIPT_DD
+					,PROCESS_DD
+					,ASSIST_DVC_KD
+					,REPAIR_RETAIL
+					,REPAIR_ITEM
+					,REPAIR_AMT
+					,REPAIR_CCPY
+					,REPAIR_PAY_DD
+					,USE_FG
+					,REGIST_DT
+					,REGISTERER
+			)VALUES(
+			         #{wffcltyCd    , jdbcType=VARCHAR}
+			        ,#{dspsnId      , jdbcType=VARCHAR}
+			        ,replace(#{assReceiptDd, jdbcType=VARCHAR}, '-')
+			        ,replace(#{assProcessDd, jdbcType=VARCHAR}, '-')
+			        ,#{assAssistDvcKd  , jdbcType=VARCHAR}
+			        ,#{assRepairRetail , jdbcType=VARCHAR}
+			        ,#{assRepairItem   , jdbcType=VARCHAR}
+			        ,replace(#{assRepairAmt, jdbcType=VARCHAR}, ',')
+			        ,#{assRepairCcpy   , jdbcType=VARCHAR}
+			        ,replace(#{assRepairPayDd, jdbcType=VARCHAR}, '-')
+			        ,#{useFg        , jdbcType=VARCHAR}
+			        ,SYSDATE
+			        ,#{register     , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	
+	<update id="upadateAssistDvcRepair" parameterType="egovMap">
+		UPDATE ASSIST_DVC_REPAIR
+      		 	SET 
+      		 	  	DSPSN_ID        = #{dspsnId      , jdbcType=VARCHAR}
+					,RECEIPT_DD     = replace(#{assReceiptDd, jdbcType=VARCHAR}, '-')
+					,PROCESS_DD     = replace(#{assProcessDd, jdbcType=VARCHAR}, '-')
+					,ASSIST_DVC_KD  = #{assAssistDvcKd  , jdbcType=VARCHAR}
+					,REPAIR_RETAIL  = #{assRepairRetail , jdbcType=VARCHAR}
+					,REPAIR_ITEM    = #{assRepairItem   , jdbcType=VARCHAR}
+					,REPAIR_AMT     = replace(#{assRepairAmt, jdbcType=VARCHAR}, ',')
+					,REPAIR_CCPY    = #{assRepairCcpy   , jdbcType=VARCHAR}
+					,REPAIR_PAY_DD  = replace(#{assRepairPayDd, jdbcType=VARCHAR}, '-')
+					,USE_FG         = #{useFg      , jdbcType=VARCHAR}
+					,UPDATE_DT      = SYSDATE
+					,UPDATER        = #{register   , jdbcType=VARCHAR}
+				WHERE WFFCLTY_CD = #{wffcltyCd}
+					AND DSPSN_ID = #{vDspsnId}
+					AND RECEIPT_DD =  replace(#{vReceiptDd}, '-')
+	</update>
+	
+	<select id="searchAssDspsn" parameterType="egovMap" resultType="egovMap">
+		SELECT  DSPSN_ID
+			    ,DSPSN_NM
+		  FROM DSPSN
+            WHERE (DSPSN_ID LIKE '%'||#{dspsnId}||'%' OR DSPSN_NM LIKE '%'||#{dspsnId}||'%')
+              
+	</select>
+	
+	<select id="searchAssDspsn2" parameterType="egovMap" resultType="egovMap">
+		SELECT  A.DSPSN_ID
+			    ,A.DSPSN_NM
+			    ,DEC_B64('KEY1', A.ENC_BIRTH_DD) ENC_BIRTH_DD
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = A.GENDER AND COMMCD_FG = 'TP03' AND USE_FG = '1') AS GENDER
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.DISABLE_TP AND COMMCD_FG = 'TP05' AND USE_FG = '1') AS DISABLE_TP
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.DISABLE_DGREE_FG AND COMMCD_FG = 'FG12' AND USE_FG = '1') AS DISABLE_DGREE_FG
+			    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = B.OUTBREAK_TIME_FG AND COMMCD_FG = 'DT01' AND USE_FG = '1') AS OUTBREAK_TIME_FG
+			    , DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+			FROM DSPSN A
+			     ,DSPSN_DISABILITY B
+            WHERE A.DSPSN_ID = B.DSPSN_ID
+              AND (A.DSPSN_ID LIKE '%'||#{dspsnId}||'%' OR A.DSPSN_NM LIKE '%'||#{dspsnId}||'%')
+	</select>
+	
+	<select id="selectCheckDspsn" resultType="egovMap" parameterType="egovMap">
+		SELECT A.DSPSN_ID AS DSPSN_ID
+       ,A.DSPSN_NM AS DSPSN_NM
+       ,DEC_B64 ('KEY1', A.ENC_BIRTH_DD) AS ENC_BIRTH_DD
+       ,DEC_B64 ('KEY1', A.ENC_PHONE_NUM) AS ENC_PHONE_NUM
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP05' AND Z.COMMCD = B.DISABLE_TP) DISABLE_TP
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12' AND Z.COMMCD = B.DISABLE_DGREE_FG) DISABLE_DGREE_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01' AND Z.COMMCD = B.OUTBREAK_TIME_FG) OUTBREAK_TIME_FG
+       ,A.USE_FG
+       FROM DSPSN A
+       		,DSPSN_DISABILITY B
+ WHERE 1=1
+   <if test ="dspsnId != '' and dspsnId != null">
+   AND A.DSPSN_ID = #{dspsnId}
+   </if>
+   AND A.DSPSN_NM = #{dspsnNm}
+   AND A.DSPSN_ID = B.DSPSN_ID(+)
+   AND A.ENC_BIRTH_DD = ENC_B64('KEY1', replace(#{encBirthDd},'-'))
+   <if test ="encPhoneNum != '' and encPhoneNum != null">
+   AND A.ENC_PHONE_NUM = ENC_B64('KEY1', replace(#{encPhoneNum},'-'))
+   </if>
+	</select>
+	
+	<insert id="quickSaveDspsn" parameterType="egovMap">
+	   INSERT INTO DSPSN
+	            (DSPSN_ID
+	            ,DSPSN_NM
+	            ,ENC_PHONE_NUM
+	            ,ENC_BIRTH_DD
+	            ,USE_FG
+	            ,REGIST_DT
+	            ,REGISTERER)
+	            
+	            VALUES(
+	            #{dspsnId}
+	            ,#{assDspsnNm}
+	            ,ENC_B64('KEY1', replace(#{assGender},'-'))
+	            ,ENC_B64('KEY1', replace(#{assEncJuminNo},'-'))
+	            ,'1'
+	            ,SYSDATE
+	            ,#{register})
+   </insert>
+   
+   <select id = "selectSaveCnt" parameterType="egovMap" resultType="integer">
+		SELECT count(*)
+  			FROM DSPSN A
+       			,ASSIST_DVC_REPAIR B
+	WHERE B.DSPSN_ID = A.DSPSN_ID
+	   AND B.WFFCLTY_CD = #{wffcltyCd}
+	   AND A.DSPSN_ID =	  #{dspsnId}
+	   AND DEC_B64('KEY1', A.ENC_BIRTH_DD) = replace(#{encBirthDd}, '-')
+	   AND B.RECEIPT_DD = replace(#{receiptDd}, '-')
+   </select>
+</mapper>

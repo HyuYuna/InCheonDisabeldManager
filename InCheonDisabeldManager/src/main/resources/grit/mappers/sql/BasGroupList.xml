@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasGroupListDAO">
+
+	<select id="selectGroupList" parameterType="egovMap" resultType="egovMap">
+		SELECT  
+		     OGNZT_CD
+		    ,OGNZT_NM
+		    ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = OGNZT_FG AND COMMCD_FG = 'TP04' AND USE_FG = '1') OGNZT_FG
+		    , DECODE(OGNZT_FG, 'E',DEC_B64('KEY1',ENC_PRMISN_NO), ENC_PRMISN_NO) ENC_PRMISN_NO  
+		    ,RPRSNTV_NM
+		    ,PHONE_NUM1
+		    ,PHONE_NUM2
+		    ,FAX_NUM
+		    ,ZIP_CD
+		    ,ADDR_BASE ||' '|| ADDR_DETAIL AS ADDR_BASE
+		    ,ESTABLISH_DD
+		    ,EXECUTIVE_DETAIL
+		    ,CHARGER_NM
+		    ,ASSETS
+		    ,MEMBER_CNT
+		    ,WFFCLTY_OPER_FG
+		    ,DECODE(USE_FG,0,'미운영','1','운영') AS USE_FG
+		FROM ORGANIZATION
+		  WHERE 1=1
+		    <if test="ognztNm != null and ognztNm != ''">
+		    AND OGNZT_NM LIKE '%'|| #{ognztNm} ||'%'
+		    </if>
+		    <if test="rprsntvNm != null and rprsntvNm != ''">
+		    AND RPRSNTV_NM LIKE '%'|| #{rprsntvNm} ||'%'
+		    </if>
+		    <if test="ognztFg != '' and ognztFg != null">
+		    AND OGNZT_FG = #{ognztFg}
+		    </if>
+		    <if test="useFg != '' and useFg != null">
+		    AND USE_FG   = #{useFg}
+		    </if>
+		    <if test="assets != '' and assets != null and assets2 != '' and assets2 != null">
+		    AND ASSETS BETWEEN #{assets} and #{assets2}
+		    </if>
+	</select>
+	
+</mapper>

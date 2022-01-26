@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcInOutViewDAO">
+<select id="selectWfcInOutView" parameterType="egovMap" resultType="egovMap">
+	 SELECT WFFCLTY_CD/* WfcInOutViewDAO.selectWfcInOutView */
+		   ,A.DSPSN_ID
+		   ,(SELECT B.WFFCLTY_NM FROM WFFCLTY_BASE B WHERE B.WFFCLTY_CD = A.WFFCLTY_CD) WFFCLTY_NM
+		   ,(select X.WFFCLTY_TP from WFFCLTY_BASE X where A.WFFCLTY_CD = X.WFFCLTY_CD(+)) AS WFFCLTY_TP /* 시설유형 */
+		   ,(select COMMCD_VALUE  from COMMON_CODE  where COMMCD_FG = 'TP14' AND USE_FG = 1 AND COMMCD = (select X.WFFCLTY_TP from WFFCLTY_BASE X where A.WFFCLTY_CD = X.WFFCLTY_CD(+))) AS WFFCLTY_TP_NM
+           ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'TP05'AND D.COMMCD = B.DISABLE_TP AND D.USE_FG = '1') AS DISABLE_TP
+           ,C.DSPSN_NM   /* 장애인명 */
+           ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'FG12'AND D.COMMCD = B.DISABLE_DGREE_FG AND USE_FG='1') AS DISABLE_DGREE_FG /* 장애정도 */
+	       ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'DT01'AND D.COMMCD = B.OUTBREAK_TIME_FG AND USE_FG='1') AS OUTBREAK_TIME_FG /* 발생시기 */
+	       ,TO_CHAR(TO_DATE(A.ENTRNC_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS ENTRNC_DD/* 입소일 */
+	       ,TO_DATE(SYSDATE,'YYYY-MM-DD') - TO_DATE(A.ENTRNC_DD, 'YYYYMMDD') AS SUM_ENTRNC_DD/* 경과일 */
+	       ,A.ENTER_RSN/* 입소사유 */
+	       ,TO_CHAR(TO_DATE(A.LVHS_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS LVHS_DD/* 퇴소일 */
+	       ,A.LVHS_RSN_FG/* 퇴소사유 */
+	       ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'RS01'AND D.COMMCD = A.LVHS_RSN_FG AND D.USE_FG = '1') AS LVHS_RSN_NM
+	       ,A.LVHS_RSN_ETC_DETAIL/* 퇴소사유 기타내역 */
+	       ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'TP12'AND D.COMMCD = C.GUARANTEE_FG AND D.USE_FG = '1') AS GUARANTEE_FG /* 보장자격 */
+	       ,A.BEFORE_ZIP_CD/* 입소전우편번호 */
+	       ,A.BEFORE_ADDR_BASE/* 입소전기본주소 */
+	       ,A.BEFORE_ADDR_BASE ||' '|| DEC_B64('KEY1',A.ENC_BEFORE_ADDR_DETAIL) AS FULL_ADDR /* Grid 입소전 주소 */
+	       ,DEC_B64('KEY1',A.ENC_BEFORE_ADDR_DETAIL) AS ENC_BEFORE_ADDR_DETAIL/* 입소전상세주소 */
+	       ,A.DAYTIME_USE_FACILITY/* daytime_use_facility */
+	       ,A.LVHS_PRPRTY AS ENTER_PRPRTY/* 입소시 개인소유재산 */
+	       ,A.LVHS_PRPRTY AS LVHS_PRPRTY/* 퇴소시 개인소유재산 */
+	       ,A.TFCMN_TP/* 교통수단(셔틀버스, 전철, 버스, 장애인콜택시,기타) */
+	       ,A.TFCMN_ETC_DETAIL/* 교통수단 기타내역 */
+	       ,A.PARTCPTN_TP/* 참여유형(장애인 직업재활관련 시설에서만 적용) */
+	       ,TO_CHAR(A.LY_MLY_WAGE, '999,999,999') AS LY_MLY_WAGE
+           ,TO_CHAR(A.LY_HLY_WAGE, '999,999,999') AS LY_HLY_WAGE
+           ,TO_CHAR(A.TY_MLY_WAGE, '999,999,999') AS  TY_MLY_WAGE
+           ,TO_CHAR(A.TY_HLY_WAGE, '999,999,999') TY_HLY_WAGE
+           ,TO_CHAR(A.FEE, '999,999,999') FEE
+	       ,TO_CHAR(TO_DATE(A.CONTRACT_START_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CONTRACT_START_DD/* 이용계약서시작일(장애인 주간보호시설에서만 적용) */
+	       ,TO_CHAR(TO_DATE(A.CONTRACT_END_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CONTRACT_END_DD/* 이용계약서종료일(장애인 주간보호시설에서만 적용) */
+	       ,DECODE(A.CONTRACT_START_DD||A.CONTRACT_END_DD, '', '', TO_CHAR(TO_DATE(A.CONTRACT_START_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') ||' ~ '|| TO_CHAR(TO_DATE(A.CONTRACT_END_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD')) AS FULL_CONTRACT_DD /* 이용 계약서 시작일부터 종료일까지*/
+	       ,A.USE_FG /* 사용여부 */
+			  FROM WFFCLTY_ENTER A, 
+			    DSPSN_DISABILITY B,
+			    DSPSN            C
+		 WHERE A.DSPSN_ID = B.DSPSN_ID(+)
+		   AND A.DSPSN_ID = C.DSPSN_ID(+)
+		   <if test ="searchlwffcltyFg != '' and searchlwffcltyFg != null">
+		   AND A.WFFCLTY_CD = #{searchlwffcltyFg}
+		   </if>
+		   <if test ="searchDspsnNm != '' and searchDspsnNm != null">
+		   AND C.DSPSN_NM like '%'||#{searchDspsnNm}||'%'
+		   </if>
+           <if test ="searchlvhsRsnFg == 1">
+           		AND A.LVHS_DD IS NULL
+           </if>
+           <if test ="searchlvhsRsnFg == 2">
+           		AND A.LVHS_DD IS NOT NULL
+           </if>
+           ORDER BY A.WFFCLTY_CD, C.DSPSN_ID ASC
+	</select>
+	
+	<select id="selectWffcltyCodeAB" parameterType="egovMap" resultType="egovMap">
+		SELECT A.WFFCLTY_CD
+		        , A.WFFCLTY_NM 
+		FROM WFFCLTY_BASE A
+		     , COMMON_CODE B
+		     WHERE (SELECT B.WFFCLTY_TP FROM WFFCLTY_BASE B WHERE A.WFFCLTY_CD = B.WFFCLTY_CD) = B.COMMCD
+			     AND B.COMMCD_FG = 'TP14'
+			     AND A.USE_FG = '1'
+			     AND B.USE_FG = '1'
+	</select>
+	
+	<select id="selectWffcltyCodeC" parameterType="egovMap" resultType="egovMap">
+		SELECT WFFCLTY_CD
+               ,WFFCLTY_NM
+                FROM WFFCLTY_BASE
+                WHERE USE_FG = '1' 
+             <if test ="linkCd != '' and linkCd != null">
+                AND WFFCLTY_CD = #{linkCd}
+			</if>
+	</select>
+	
+	<select id="selectGroupCodeD" parameterType="egovMap" resultType="egovMap">
+	SELECT A.WFFCLTY_CD AS WFFCLTY_CD
+           ,A.WFFCLTY_NM AS WFFCLTY_NM
+     FROM WFFCLTY_BASE A,
+           COMMON_CODE B
+    WHERE B.USE_FG = '1'
+       AND A.USE_FG = '1'
+       AND B.COMMCD_FG = 'TP14' 
+       AND A.WFFCLTY_TP = B.COMMCD
+       <if test ="linkCd != '' and linkCd != null">
+       AND A.OGNZT_CD = #{linkCd}
+       </if>
+	</select>
+</mapper>

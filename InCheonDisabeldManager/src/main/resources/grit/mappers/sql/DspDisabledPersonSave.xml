@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DspDisabledPersonSaveDAO">
+
+	<!-- 이용장애인정보  조회 -->
+	<select id="selectDisablePersonList" parameterType="egovMap" resultType="egovMap">
+		SELECT
+	             A.DSPSN_ID
+	            ,A.DSPSN_NM
+	            ,DEC_B64('KEY1',A.ENC_BIRTH_DD)    AS ENC_BIRTH_DD
+	            ,A.GENDER
+	            ,A.MARRIAGE_TP
+	            ,A.BLOOD_TP
+	            ,A.ACADEMIC_DETAIL
+	            ,A.DSPSN_JOB
+	            ,DEC_B64('KEY1',A.ENC_PHONE_NUM)  AS ENC_PHONE_NUM
+	            ,A.PRTCTOR_NM
+	            ,A.PRTCTOR_RELATION
+	            ,DEC_B64('KEY1',A.ENC_PRTCTOR_PHONE_NUM) AS ENC_PRTCTOR_PHONE_NUM
+	            ,A.PRTCTOR_JOB
+	            ,A.ZIP_CD
+	            ,A.ADDR_BASE
+	            ,DEC_B64('KEY1', A.ENC_ADDR_DETAIL)    AS ENC_ADDR_DETAIL
+	            ,A.GUARANTEE_FG
+	            ,A.PICTURE_PATH
+	            ,A.PICTURE_NM
+	            ,A.PICTURE_NM         AS  PICTURE_REAL_NM
+	            ,A.CASE_MANAGE_FG
+	            ,TO_CHAR(TO_DATE(A.CASE_MANAGE_END_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CASE_MANAGE_END_DD
+	            ,A.CASE_MANAGE_END_RSN
+	            ,A.CASE_MANAGE_END_DETAIL
+	            ,A.HOPE_FACILITY
+	            ,TO_CHAR(TO_DATE(A.CMMRLCT_FIRST_USE_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CMMRLCT_FIRST_USE_DD
+	            ,TO_CHAR(TO_DATE(A.SELF_FIRST_USE_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS SELF_FIRST_USE_DD
+	            ,A.USE_FG
+	            ,B.DISABLE_TP
+	            ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'TP05' AND D.COMMCD = B.DISABLE_TP AND D.USE_FG= '1') AS DISABLE_TP_NM
+	            ,B.DISABLE_DGREE_FG
+	            ,B.DISABLE_GRADE
+	            ,B.OUTBREAK_TIME_FG
+	            ,B.OUTBREAK_RSN_FG
+	            ,B.ETC_DISABLE_TP01     AS DISABLE_TP01
+	            ,B.ETC_DISABLE_TP02     AS DISABLE_TP02
+	            ,B.ETC_DISABLE_TP03     AS DISABLE_TP03
+	            ,B.ETC_DISABLE_TP04     AS DISABLE_TP04
+	            ,B.ETC_DISABLE_TP05     AS DISABLE_TP05
+	            ,B.ETC_DISABLE_TP06     AS DISABLE_TP06
+	            ,B.ETC_DISABLE_TP07     AS DISABLE_TP07
+	            ,B.ETC_DISABLE_TP08     AS DISABLE_TP08
+	            ,B.ETC_DISABLE_TP09     AS DISABLE_TP09
+	            ,B.ETC_DISABLE_TP10     AS DISABLE_TP10
+	            ,B.ETC_DISABLE_TP11     AS DISABLE_TP11
+	            ,B.ETC_DISABLE_TP12     AS DISABLE_TP12
+	            ,B.ETC_DISABLE_TP13     AS DISABLE_TP13
+	            ,B.ETC_DISABLE_TP14     AS DISABLE_TP14
+	            ,B.ETC_DISABLE_TP15     AS DISABLE_TP15
+	            ,C.HEALTH_STS01
+	            ,C.HEALTH_STS02
+	            ,C.HEALTH_STS03
+	            ,C.HEALTH_STS06
+			FROM DSPSN A
+		    	LEFT OUTER JOIN DSPSN_DISABILITY B ON A.DSPSN_ID = B.DSPSN_ID
+		    	LEFT OUTER JOIN DSPSN_HEALTH C ON A.DSPSN_ID = C.DSPSN_ID
+			WHERE 1=1
+				<if test="dspsnNm != '' and dspsnNm != null">
+				AND A.DSPSN_NM LIKE '%'||#{dspsnNm}||'%'
+				</if>
+				<if test="disableTp != '' and disableTp != null">
+				AND B.DISABLE_TP = #{disableTp}
+				</if>
+				
+				<if test="wffcltyCd != null and wffcltyCd != ''.toString() ">
+				AND A.DSPSN_ID IN(SELECT DISTINCT D.DSPSN_ID FROM WFFCLTY_ENTER D 
+              		WHERE D.WFFCLTY_CD = #{wffcltyCd}  
+                AND D.LVHS_DD IS NULL)
+				</if>
+				<if test="wffcltyCd != null and wffcltyCd != ''.toString() ">
+		   		 AND A.DSPSN_ID IN(SELECT DISTINCT D.DSPSN_ID FROM WFFCLTY_ENTER D 
+              	 WHERE D.WFFCLTY_CD = #{wffcltyCd}  
+                 AND D.LVHS_DD IS NULL)
+                 
+                 OR A.DSPSN_ID IN(SELECT DISTINCT F.DSPSN_ID FROM ASSIST_DVC_REPAIR F
+              		WHERE F.WFFCLTY_CD = #{wffcltyCd}  
+                AND F.RECEIPT_DD IS NOT NULL)
+		</if>
+				ORDER BY A.DSPSN_ID
+	</select>
+	
+	<!-- 이용장애인  입력 -->
+	<insert id="insertDisablePersonInfo" parameterType="egovMap">
+		INSERT INTO DSPSN(
+			DSPSN_ID
+			,DSPSN_NM
+			,ENC_BIRTH_DD
+			,GENDER
+			,MARRIAGE_TP
+			,BLOOD_TP
+			,ACADEMIC_DETAIL
+			,DSPSN_JOB
+			,ENC_PHONE_NUM
+			,PRTCTOR_NM
+			,PRTCTOR_RELATION
+			,ENC_PRTCTOR_PHONE_NUM
+			,PRTCTOR_JOB
+			,ZIP_CD
+			,ADDR_BASE
+			,ENC_ADDR_DETAIL
+			,GUARANTEE_FG
+			,PICTURE_PATH
+			,PICTURE_NM
+			,CASE_MANAGE_FG
+			,CASE_MANAGE_END_DD
+			,CASE_MANAGE_END_RSN
+			,CASE_MANAGE_END_DETAIL
+			,HOPE_FACILITY
+			,CMMRLCT_FIRST_USE_DD
+			,SELF_FIRST_USE_DD
+			,USE_FG
+			,REGIST_DT
+			,REGISTERER
+		)VALUES(
+		     #{dspsnId,                jdbcType=VARCHAR}
+			,#{dspsnNm,                jdbcType=VARCHAR}	
+			,ENC_B64('KEY1',#{encBirthDd,  jdbcType=VARCHAR})
+			,#{gender,                 jdbcType=VARCHAR}
+			,#{marriageTp,             jdbcType=VARCHAR}
+			,#{bloodTp,                jdbcType=VARCHAR}
+			,#{academicDetail,         jdbcType=VARCHAR}
+			,#{dspsnJob,               jdbcType=VARCHAR}
+			,ENC_B64('KEY1',replace(#{encPhoneNum, jdbcType=VARCHAR}, '-')) 
+			,#{prtctorNm,              jdbcType=VARCHAR}
+			,#{prtctorRelation,        jdbcType=VARCHAR}
+			,ENC_B64('KEY1',replace(#{encPrtctorPhoneNum, jdbcType=VARCHAR}, '-')) 
+			,#{prtctorJob,      	   jdbcType=VARCHAR}
+			,#{zipCd,      		       jdbcType=VARCHAR}
+			,#{addrBase,               jdbcType=VARCHAR}
+			,ENC_B64('KEY1',#{encAddrDetail, jdbcType=VARCHAR})
+			,#{guaranteeFg,            jdbcType=VARCHAR}
+			,#{picturePath,            jdbcType=VARCHAR}
+			,#{pictureNm,              jdbcType=VARCHAR}
+			,#{caseManageFg,           jdbcType=VARCHAR}
+			,replace(#{caseManageEndDd,        jdbcType=VARCHAR}, '-')
+			,#{caseManageEndRsn,       jdbcType=VARCHAR}
+			,#{caseManageEndDetail, jdbcType=VARCHAR}
+			,#{hopeFacility,           jdbcType=VARCHAR}
+			,replace(#{cmmrlctFirstUseDd,      jdbcType=VARCHAR}, '-')
+			,replace(#{selfFirstUseDd,         jdbcType=VARCHAR}, '-')
+			,#{useFg,                  jdbcType=VARCHAR}
+			,SYSDATE                   
+			,#{register,               jdbcType=VARCHAR}
+		)
+		
+	</insert>
+	
+	<!-- 이용장애인  수정 -->
+	<update id="updateDisablePersonInfo" >
+		UPDATE DSPSN
+		  SET
+				DSPSN_NM                = #{dspsnNm,             jdbcType=VARCHAR}       
+				,ENC_BIRTH_DD           = ENC_B64('KEY1',#{encBirthDd, jdbcType=VARCHAR})	   
+				,GENDER                 = #{gender,              jdbcType=VARCHAR}       
+				,MARRIAGE_TP            = #{marriageTp,          jdbcType=VARCHAR}       
+				,BLOOD_TP               = #{bloodTp,             jdbcType=VARCHAR}       
+				,ACADEMIC_DETAIL        = #{academicDetail,      jdbcType=VARCHAR}       
+				,DSPSN_JOB              = #{dspsnJob,            jdbcType=VARCHAR}       
+				,ENC_PHONE_NUM          = ENC_B64('KEY1', replace(#{encPhoneNum,         jdbcType=VARCHAR}, '-'))     
+				,PRTCTOR_NM             = #{prtctorNm,           jdbcType=VARCHAR}       
+				,PRTCTOR_RELATION       = #{prtctorRelation,     jdbcType=VARCHAR}        
+				,ENC_PRTCTOR_PHONE_NUM  = ENC_B64('KEY1',replace(#{encPrtctorPhoneNum,  jdbcType=VARCHAR}, '-'))       
+				,PRTCTOR_JOB            = #{prtctorJob,          jdbcType=VARCHAR}       
+				,ZIP_CD                 = #{zipCd,               jdbcType=VARCHAR}       
+				,ADDR_BASE              = #{addrBase,            jdbcType=VARCHAR}       
+				,ENC_ADDR_DETAIL        = ENC_B64('KEY1',#{encAddrDetail,       jdbcType=VARCHAR})  
+				,GUARANTEE_FG           = #{guaranteeFg,         jdbcType=VARCHAR}       
+				,PICTURE_PATH           = #{picturePath,         jdbcType=VARCHAR}       
+				,PICTURE_NM             = #{pictureNm,           jdbcType=VARCHAR}       
+				,CASE_MANAGE_FG         = #{caseManageFg,        jdbcType=VARCHAR}       
+				,CASE_MANAGE_END_DD     = replace(#{caseManageEndDd,     jdbcType=VARCHAR}, '-')       
+				,CASE_MANAGE_END_RSN    = #{caseManageEndRsn,    jdbcType=VARCHAR}  
+				,CASE_MANAGE_END_DETAIL = #{caseManageEndDetail, jdbcType=VARCHAR}    
+				,HOPE_FACILITY          = #{hopeFacility,        jdbcType=VARCHAR}       
+				,CMMRLCT_FIRST_USE_DD   = replace(#{cmmrlctFirstUseDd,   jdbcType=VARCHAR}, '-')         
+				,SELF_FIRST_USE_DD      = replace(#{selfFirstUseDd,      jdbcType=VARCHAR}, '-')       
+				,USE_FG                 = #{useFg,               jdbcType=VARCHAR}       
+				,UPDATE_DT              = SYSDATE                  
+				,UPDATER                = #{register,            jdbcType=VARCHAR}                         
+		  WHERE DSPSN_ID = #{dspsnId}                                  
+	</update>                                                                            
+	
+	<!-- 이용장애인 장애정보 입력 -->
+	<insert id="insertDspsnDisablity" parameterType="egovMap">
+			MERGE INTO DSPSN_DISABILITY
+            USING DUAL
+            ON (DSPSN_ID = #{dspsnId})
+            WHEN NOT MATCHED THEN
+            	INSERT(
+				DSPSN_ID
+				,DISABLE_TP
+				,DISABLE_DGREE_FG
+				,DISABLE_GRADE
+				,OUTBREAK_TIME_FG
+				,OUTBREAK_RSN_FG
+				,ETC_DISABLE_TP01
+				,ETC_DISABLE_TP02
+				,ETC_DISABLE_TP03
+				,ETC_DISABLE_TP04
+				,ETC_DISABLE_TP05
+				,ETC_DISABLE_TP06
+				,ETC_DISABLE_TP07
+				,ETC_DISABLE_TP08
+				,ETC_DISABLE_TP09
+				,ETC_DISABLE_TP10
+				,ETC_DISABLE_TP11
+				,ETC_DISABLE_TP12
+				,ETC_DISABLE_TP13
+				,ETC_DISABLE_TP14
+				,ETC_DISABLE_TP15
+				,USE_FG
+				,REGIST_DT
+				,REGISTERER
+			)VALUES(
+				#{dspsnId,           jdbcType=VARCHAR}
+				,#{disableTp,        jdbcType=VARCHAR}	
+				,#{disableDgreeFg,   jdbcType=VARCHAR}
+				,#{disableGrade,     jdbcType=VARCHAR}
+				,#{outbreakTimeFg,   jdbcType=VARCHAR}
+				,#{outbreakRsnFg,    jdbcType=VARCHAR}
+				,#{checkdisableTp01, jdbcType=VARCHAR}
+				,#{checkdisableTp02, jdbcType=VARCHAR}
+				,#{checkdisableTp03, jdbcType=VARCHAR}
+				,#{checkdisableTp04, jdbcType=VARCHAR}
+				,#{checkdisableTp05, jdbcType=VARCHAR}
+				,#{checkdisableTp06, jdbcType=VARCHAR}
+				,#{checkdisableTp07, jdbcType=VARCHAR}
+				,#{checkdisableTp08, jdbcType=VARCHAR}
+				,#{checkdisableTp09, jdbcType=VARCHAR}
+				,#{checkdisableTp10, jdbcType=VARCHAR}
+				,#{checkdisableTp11, jdbcType=VARCHAR}
+				,#{checkdisableTp12, jdbcType=VARCHAR}
+				,#{checkdisableTp13, jdbcType=VARCHAR}
+				,#{checkdisableTp14, jdbcType=VARCHAR}
+				,#{checkdisableTp15, jdbcType=VARCHAR}
+				,#{useFg,            jdbcType=VARCHAR}
+				,SYSDATE
+				,#{register,         jdbcType=VARCHAR}
+			)
+            WHEN MATCHED THEN
+            UPDATE
+		  SET
+				 DISABLE_TP         =  #{disableTp,         jdbcType=VARCHAR} 
+				,DISABLE_DGREE_FG   =  #{disableDgreeFg,    jdbcType=VARCHAR} 
+				,DISABLE_GRADE      =  #{disableGrade,      jdbcType=VARCHAR}
+				,OUTBREAK_TIME_FG   =  #{outbreakTimeFg,    jdbcType=VARCHAR}
+				,OUTBREAK_RSN_FG    =  #{outbreakRsnFg,     jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP01   =  #{checkdisableTp01,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP02   =  #{checkdisableTp02,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP03   =  #{checkdisableTp03,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP04   =  #{checkdisableTp04,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP05   =  #{checkdisableTp05,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP06   =  #{checkdisableTp06,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP07   =  #{checkdisableTp07,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP08   =  #{checkdisableTp08,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP09   =  #{checkdisableTp09,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP10   =  #{checkdisableTp10,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP11   =  #{checkdisableTp11,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP12   =  #{checkdisableTp12,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP13   =  #{checkdisableTp13,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP14   =  #{checkdisableTp14,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP15   =  #{checkdisableTp15,  jdbcType=VARCHAR}        
+				,USE_FG             =  #{useFg,             jdbcType=VARCHAR}
+				,UPDATE_DT          =   SYSDATE                                   
+				,UPDATER            =  #{register,          jdbcType=VARCHAR}  
+		  WHERE DSPSN_ID = #{dspsnId};
+	</insert>
+	
+	<!-- 이용장애인 장애정보 수정 -->
+	<update id="updateDspsnDisablity" >
+		MERGE INTO DSPSN_DISABILITY
+            USING DUAL
+            ON (DSPSN_ID = #{dspsnId})
+            WHEN MATCHED THEN
+                      UPDATE
+		  SET
+				 DISABLE_TP         =  #{disableTp,         jdbcType=VARCHAR} 
+				,DISABLE_DGREE_FG   =  #{disableDgreeFg,    jdbcType=VARCHAR} 
+				,DISABLE_GRADE      =  #{disableGrade,      jdbcType=VARCHAR}
+				,OUTBREAK_TIME_FG   =  #{outbreakTimeFg,    jdbcType=VARCHAR}
+				,OUTBREAK_RSN_FG    =  #{outbreakRsnFg,     jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP01   =  #{checkdisableTp01,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP02   =  #{checkdisableTp02,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP03   =  #{checkdisableTp03,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP04   =  #{checkdisableTp04,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP05   =  #{checkdisableTp05,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP06   =  #{checkdisableTp06,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP07   =  #{checkdisableTp07,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP08   =  #{checkdisableTp08,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP09   =  #{checkdisableTp09,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP10   =  #{checkdisableTp10,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP11   =  #{checkdisableTp11,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP12   =  #{checkdisableTp12,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP13   =  #{checkdisableTp13,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP14   =  #{checkdisableTp14,  jdbcType=VARCHAR}  
+				,ETC_DISABLE_TP15   =  #{checkdisableTp15,  jdbcType=VARCHAR}        
+				,USE_FG             =  #{useFg,             jdbcType=VARCHAR}
+				,UPDATE_DT          =   SYSDATE                                   
+				,UPDATER            =  #{register,          jdbcType=VARCHAR}  
+		  WHERE DSPSN_ID = #{dspsnId}
+            WHEN NOT MATCHED THEN
+            INSERT(
+				DSPSN_ID
+				,DISABLE_TP
+				,DISABLE_DGREE_FG
+				,DISABLE_GRADE
+				,OUTBREAK_TIME_FG
+				,OUTBREAK_RSN_FG
+				,ETC_DISABLE_TP01
+				,ETC_DISABLE_TP02
+				,ETC_DISABLE_TP03
+				,ETC_DISABLE_TP04
+				,ETC_DISABLE_TP05
+				,ETC_DISABLE_TP06
+				,ETC_DISABLE_TP07
+				,ETC_DISABLE_TP08
+				,ETC_DISABLE_TP09
+				,ETC_DISABLE_TP10
+				,ETC_DISABLE_TP11
+				,ETC_DISABLE_TP12
+				,ETC_DISABLE_TP13
+				,ETC_DISABLE_TP14
+				,ETC_DISABLE_TP15
+				,USE_FG
+				,REGIST_DT
+				,REGISTERER
+			)VALUES(
+				#{dspsnId,           jdbcType=VARCHAR}
+				,#{disableTp,        jdbcType=VARCHAR}	
+				,#{disableDgreeFg,   jdbcType=VARCHAR}
+				,#{disableGrade,     jdbcType=VARCHAR}
+				,#{outbreakTimeFg,   jdbcType=VARCHAR}
+				,#{outbreakRsnFg,    jdbcType=VARCHAR}
+				,#{checkdisableTp01, jdbcType=VARCHAR}
+				,#{checkdisableTp02, jdbcType=VARCHAR}
+				,#{checkdisableTp03, jdbcType=VARCHAR}
+				,#{checkdisableTp04, jdbcType=VARCHAR}
+				,#{checkdisableTp05, jdbcType=VARCHAR}
+				,#{checkdisableTp06, jdbcType=VARCHAR}
+				,#{checkdisableTp07, jdbcType=VARCHAR}
+				,#{checkdisableTp08, jdbcType=VARCHAR}
+				,#{checkdisableTp09, jdbcType=VARCHAR}
+				,#{checkdisableTp10, jdbcType=VARCHAR}
+				,#{checkdisableTp11, jdbcType=VARCHAR}
+				,#{checkdisableTp12, jdbcType=VARCHAR}
+				,#{checkdisableTp13, jdbcType=VARCHAR}
+				,#{checkdisableTp14, jdbcType=VARCHAR}
+				,#{checkdisableTp15, jdbcType=VARCHAR}
+				,#{useFg,            jdbcType=VARCHAR}
+				,SYSDATE
+				,#{register,         jdbcType=VARCHAR}
+			)
+	</update>
+	
+	<!-- 이용장애인건강상태 입력 -->
+	<insert id="insertDspsnHealth" parameterType="egovMap">
+			INSERT INTO DSPSN_HEALTH(
+				DSPSN_ID
+				,HEALTH_STS01
+				,HEALTH_STS02
+				,HEALTH_STS03
+				,HEALTH_STS06
+				,USE_FG
+				,REGIST_DT
+				,REGISTERER
+			)VALUES(
+				#{dspsnId,           jdbcType=VARCHAR}
+				,#{healthSts01,      jdbcType=VARCHAR}
+				,#{healthSts02,      jdbcType=VARCHAR}
+				,#{healthSts03,      jdbcType=VARCHAR}
+				,#{healthSts06,      jdbcType=VARCHAR}
+				,#{useFg,            jdbcType=VARCHAR}
+				,SYSDATE
+				,#{register,         jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 이용장애인건강상태 수정 -->
+	<update id="updateDspsnHealth" >
+		MERGE INTO DSPSN_HEALTH 
+  			  USING DUAL 
+  			  ON (DSPSN_ID = #{dspsnId})
+  			  WHEN MATCHED THEN
+  			  	UPDATE
+			  	SET
+			  		HEALTH_STS01    =  #{healthSts01,      jdbcType=VARCHAR}
+					,HEALTH_STS02    =  #{healthSts02,      jdbcType=VARCHAR}
+					,HEALTH_STS03    =  #{healthSts03,      jdbcType=VARCHAR}
+					,HEALTH_STS06    =  #{healthSts06,      jdbcType=VARCHAR}
+					,USE_FG          =  #{useFg,            jdbcType=VARCHAR}
+					,UPDATE_DT       =  SYSDATE
+					,UPDATER         =  #{register,         jdbcType=VARCHAR}
+			  WHERE DSPSN_ID = #{dspsnId}
+    	WHEN NOT MATCHED THEN
+    	INSERT(
+						DSPSN_ID
+						,HEALTH_STS01
+						,HEALTH_STS02
+						,HEALTH_STS03
+						,HEALTH_STS06
+						,USE_FG
+						,REGIST_DT
+						,REGISTERER
+					)VALUES(
+						#{dspsnId,           jdbcType=VARCHAR}
+						,#{healthSts01,      jdbcType=VARCHAR}
+						,#{healthSts02,      jdbcType=VARCHAR}
+						,#{healthSts03,      jdbcType=VARCHAR}
+						,#{healthSts06,      jdbcType=VARCHAR}
+						,#{useFg,            jdbcType=VARCHAR}
+						,SYSDATE
+						,#{register,         jdbcType=VARCHAR}
+					);                       		
+	</update>
+	
+	<!-- 장애인코드 채번 -->
+	<select id="selectDspsnId" resultType="String">
+		SELECT TO_CHAR(SYSDATE,'YYYY')||SUBSTR(TO_CHAR(DSPSN_SEQ.nextval, '000000'), 2, 6) FROM DUAL
+	</select>
+	
+	<!-- 생년월일 중복체크  -->
+	<select id="selectencBirthDd" parameterType="egovMap" resultType="egovMap">
+		SELECT DEC_B64('KEY1',ENC_BIRTH_DD) AS ENC_BIRTH_DD
+		      ,DSPSN_NM
+		      ,DEC_B64('KEY1',ENC_PHONE_NUM) AS ENC_PHONE_NUM
+		   FROM DSPSN
+		  WHERE DEC_B64('KEY1',ENC_BIRTH_DD) = #{encBirthDd} 
+		   AND DSPSN_NM = #{dspsnNm}
+		   <if test="encPhoneNum != null and encPhoneNum != ''">
+		   AND DEC_B64('KEY1',ENC_PHONE_NUM) = #{encPhoneNum}
+		   </if> 
+	</select>
+	
+</mapper>

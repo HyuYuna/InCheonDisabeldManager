@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EmpWorkerMgmtDAO">
+	<select id="selectWorkerMgmt" parameterType="egovMap" resultType="egovMap">
+		SELECT /* EmpWorkerMgmtDAO.selectWorkerMgmt */
+        A.WORKER_ID /* 종사자  ID */
+        ,A.WORKER_NM /* 성명 */
+        ,DEC_B64('KEY1',A.ENC_BIRTH_DD) AS ENC_BIRTH_DD /* 생년월일 */ 
+        ,A.ZIP_CD /* 우편번호 */
+        ,A.ADDR_BASE /* 기본주소 */
+        ,DEC_B64('KEY1', A.ENC_ADDR_DETAIL) AS ENC_ADDR_DETAIL /* 상세주소 */
+        ,DEC_B64('KEY1', A.ENC_MOBLPHON_NUM) AS ENC_MOBLPHON_NUM /* 핸드폰번호 */
+        ,A.POSITION_CD /* 직위코드 */
+        ,(select COMMCD_VALUE from COMMON_CODE B where B.COMMCD_FG = SUBSTR(A.POSITION_CD, 1, 4) AND  B.COMMCD = SUBSTR(A.POSITION_CD, 5, 6) AND USE_FG='1') AS POSITION_NM /* 직위네임값 */
+        ,A.DISABLE_HAVE_FG /* 장애여부 */
+        ,A.WORK_RECORD /* 복지시설근무이력  */
+        ,A.SALARY_CLASS /* 호봉 */
+        ,A.JOIN_DD /* 현재근무중인 시설 입사일 */
+        ,A.RETIRE_DD /* 현재 근무중인 시설 퇴사일 */
+        ,A.USE_FG /* 사용여부 */
+        ,A.WFFCLTY_CD /* 현재 근무중인 복지시설코드 */ 
+FROM WFFCLTY_WORKER A
+	WHERE A.WFFCLTY_CD = #{linkCd}
+	<if test ="searchWorkerNm != '' and searchWorkerNm != null">
+	AND A.WORKER_NM like '%'||#{searchWorkerNm}||'%'
+	</if>
+	<if test ="searchPosition != '' and searchPosition != null">
+    AND A.POSITION_CD = #{searchPosition}
+    </if>
+    <if test ="searchEncMoblphonNum != '' and searchEncMoblphonNum != null">
+    AND DEC_B64('KEY1', A.ENC_MOBLPHON_NUM) like '%'||(#{searchEncMoblphonNum})||'%'
+    </if>
+    ORDER BY A.WORKER_ID ASC
+	</select>
+	
+	<select id="selectFcltyType" parameterType="egovMap" resultType="egovMap">
+		SELECT WFFCLTY_TP
+ 			FROM WFFCLTY_BASE
+	  	<if test ="linkCd != '' and linkCd != null">
+	   WHERE WFFCLTY_CD = #{linkCd}
+	   </if>
+	</select>
+	
+	<select id="selectPosition" parameterType="egovMap" resultType="egovMap">
+	SELECT COMMCD_FG||COMMCD AS POSITION_CD
+        ,COMMCD_VALUE AS POSITION_NM
+	  FROM COMMON_CODE
+	 WHERE COMMCD_FG LIKE '%'||#{wffcltyTp}
+	  AND USE_FG = '1'
+	</select>
+	
+	<insert id = "insertWorkerMgmt" parameterType="egovMap">
+	INSERT INTO WFFCLTY_WORKER(
+			WORKER_ID
+			,WORKER_NM
+			,ENC_BIRTH_DD
+			,ZIP_CD
+			,ADDR_BASE
+			,ENC_ADDR_DETAIL
+			,ENC_MOBLPHON_NUM
+			,POSITION_CD
+			,DISABLE_HAVE_FG
+			,WORK_RECORD
+			,SALARY_CLASS
+			,JOIN_DD
+			,RETIRE_DD
+			,USE_FG
+			,WFFCLTY_CD
+			,REGIST_DT
+			,REGISTERER)
+		VALUES(
+			(SELECT TO_CHAR(SYSDATE, 'YYYY')||SUBSTR((NVL(MAX(WORKER_ID), 0) + 1), 5, 3) FROM WFFCLTY_WORKER)
+			,#{workerNm,      jdbcType=VARCHAR}
+			,ENC_B64('KEY1', #{encBirthDd,      jdbcType=VARCHAR})
+			,#{zipCd,      jdbcType=VARCHAR}
+			,#{addrBase,      jdbcType=VARCHAR}
+			,ENC_B64('KEY1', #{encAddrDetail,      jdbcType=VARCHAR})
+			,ENC_B64('KEY1',replace(#{encMoblphonNum, jdbcType=VARCHAR}, '-')) 
+			,#{position,      jdbcType=VARCHAR}
+			,#{disableHaveFg,      jdbcType=VARCHAR}
+			,#{workRecord,      jdbcType=VARCHAR}
+			,#{salaryClass,      jdbcType=VARCHAR}
+			,replace(#{joinDd,      jdbcType=VARCHAR}, '-')
+			,replace(#{retireDd,      jdbcType=VARCHAR},'-')
+			,#{useFg,      jdbcType=VARCHAR}
+			,#{linkCd,      jdbcType=VARCHAR}
+			,SYSDATE
+			,#{register,      jdbcType=VARCHAR})
+	</insert>
+	
+	<update id = "updateWorkerMgmt" parameterType="egovMap">
+		UPDATE WFFCLTY_WORKER
+	   		SET 
+	   		WORKER_NM = #{workerNm,      jdbcType=VARCHAR}
+	   		<if test ="updateJuminNo == 1">
+	   	   ,ENC_BIRTH_DD = ENC_B64('KEY1', #{encBirthDd,      jdbcType=VARCHAR})
+	   	   </if>
+	       ,ZIP_CD = #{zipCd,      jdbcType=VARCHAR}
+	       ,ADDR_BASE = #{addrBase,      jdbcType=VARCHAR} 
+	       ,ENC_ADDR_DETAIL = ENC_B64('KEY1', #{encAddrDetail,      jdbcType=VARCHAR})
+	       ,ENC_MOBLPHON_NUM  = ENC_B64('KEY1',replace(#{encMoblphonNum,  jdbcType=VARCHAR}, '-')) 
+	       ,POSITION_CD = #{position,      jdbcType=VARCHAR}
+	       ,DISABLE_HAVE_FG = #{disableHaveFg,      jdbcType=VARCHAR}
+	       ,WORK_RECORD = #{workRecord,      jdbcType=VARCHAR}
+	       ,SALARY_CLASS = #{salaryClass,      jdbcType=VARCHAR}
+	       ,JOIN_DD = replace(#{joinDd,      jdbcType=VARCHAR}, '-')
+	       ,RETIRE_DD = replace(#{retireDd,      jdbcType=VARCHAR}, '-')
+	       ,WFFCLTY_CD = #{linkCd}
+	       ,USE_FG = #{useFg,      jdbcType=VARCHAR}
+	       ,UPDATE_DT = SYSDATE 
+	       ,UPDATER = #{register,      jdbcType=VARCHAR}
+	 WHERE WORKER_ID = #{workerId}
+	 </update>
+	 
+	 <select id="selectChkCnt" parameterType="egovMap" resultType="egovMap">
+	  SELECT 	count(ENC_BIRTH_DD) AS ENC_BIRTH_DD
+      			 ,count(JOIN_DD) AS JOIN_DD
+       			 ,count(RETIRE_DD) AS RETIRE_DD
+  				FROM WFFCLTY_WORKER
+ 				WHERE WORKER_NM = #{workerNm}
+		 	 		AND ENC_BIRTH_DD = ENC_B64('KEY1', #{encBirthDd})
+		 		<if test ="encMoblphonNum != null and encMoblphonNum != ''">
+		 		  	AND ENC_MOBLPHON_NUM = ENC_B64('KEY1', #{encMoblphonNum})
+		 		</if>
+	 </select>
+	 
+	 <select id="selectKeyValue" resultType="egovMap">
+		SELECT WORKER_ID
+		       ,WORKER_NM
+		       ,DEC_B64('KEY1', ENC_BIRTH_DD) AS ENC_BIRTH_DD
+               ,ZIP_CD,ADDR_BASE
+               ,DEC_B64('KEY1', ENC_ADDR_DETAIL) AS ENC_ADDR_DETAIL
+               ,DEC_B64('KEY1', ENC_MOBLPHON_NUM) AS ENC_MOBLPHON_NUM
+               ,WORK_RECORD
+               ,USE_FG
+		  FROM WFFCLTY_WORKER
+		 WHERE ENC_BIRTH_DD = ENC_B64('KEY1', #{encBirthDd})
+		   AND WORKER_NM = #{workerNm}
+	 </select>
+	 
+	 <select id="selectJuminUse" resultType="egovMap">
+	 SELECT (SELECT WFFCLTY_NM FROM WFFCLTY_BASE B WHERE B.WFFCLTY_CD = A.WFFCLTY_CD) AS WFFCLTY_NM
+         FROM WFFCLTY_WORKER A
+         WHERE A.ENC_BIRTH_DD = ENC_B64('KEY1', #{encBirthDd})
+         </select>
+         
+      <delete id="deleteWorker">
+      	DELETE FROM WFFCLTY_WORKER WHERE WORKER_ID = #{workerId}
+      </delete>
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PopupDAO">
+	
+	<!-- 운영단체 팝업 조회  -->
+	<select id="selectOgnztList" parameterType="egovMap" resultType="egovMap">
+		SELECT  /*PopupDAO."selectOgnztList" */
+             OGNZT_CD
+           , OGNZT_NM
+           , RPRSNTV_NM
+           , DECODE(OGNZT_FG, 'E',DEC_B64('KEY1', ENC_PRMISN_NO), ENC_PRMISN_NO) ENC_PRMISN_NO
+           , DECODE(USE_FG,'0','미사용','사용')     AS USE_FG
+       FROM ORGANIZATION
+         WHERE  1=1
+           <if test="ognztCd != null and ognztCd != ''">
+           AND(OGNZT_CD LIKE '%'||#{ognztCd}||'%'
+	        OR OGNZT_NM LIKE  '%'||#{ognztCd}||'%') 
+	       </if>
+	       <if test="rprsntvNm != null and rprsntvNm != ''">  
+           AND RPRSNTV_NM LIKE '%'|| #{rprsntvNm} || '%'
+           </if>
+           <if test="ognztFg != '' and ognztFg != null">
+           AND OGNZT_FG LIKE '%'|| #{ognztFg} || '%'
+           </if>
+           
+	</select>
+	
+	<!-- 복지시설 팝업 조회  -->
+	<select id="selectWffcltyList" parameterType="egovMap" resultType="egovMap">
+		 SELECT  
+                A.WFFCLTY_CD
+		      , A.WFFCLTY_NM
+		      , A.WFFCLTY_TP
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = WFFCLTY_CLAS AND COMMCD_FG = 'WF01'AND USE_FG = '1' ) AS WFFCLTY_CLAS 
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = A.WFFCLTY_TP AND COMMCD_FG = C.COMMCD_FG AND USE_FG = '1') AS WFFCLTY_TP_NM
+		      , B.OGNZT_NM
+		      , A.UNIQUE_NO
+		      , (SELECT WFFCLTY_NM FROM WFFCLTY_BASE F WHERE A.HIGH_WFFCLTY_CD = F.WFFCLTY_CD) AS HIGH_WFFCLTY_NM
+		      , DECODE(A.OPERATE_FG,'0','미운영','운영') AS OPERATE_FG
+		      , DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+	    FROM WFFCLTY_BASE A
+	       , ORGANIZATION B
+           , (SELECT  COMMCD 
+                    , DECODE(COMMCD,'A','WF02','B','WF03','C','WF04','D','WF05','E','WF06') AS COMMCD_FG
+               FROM COMMON_CODE
+                WHERE COMMCD_FG = 'WF01'
+                  AND USE_FG = '1') C
+	      WHERE A.OGNZT_CD     = B.OGNZT_CD
+	      	 AND A.WFFCLTY_CLAS = C.COMMCD
+             <if test="wffcltyCd != null and wffcltyCd != ''">
+             AND (A.WFFCLTY_CD LIKE '%'|| #{wffcltyCd}|| '%'
+                 OR A.WFFCLTY_NM LIKE '%'|| #{wffcltyCd}|| '%')
+             </if>    
+             <if test="wffcltyclas != '' and wffcltyclas != null">
+             AND A.WFFCLTY_CLAS = #{wffcltyclas}
+             </if>
+	</select>
+    
+    <!-- 장애인 검색 팝업 조회  -->
+	<select id="selectDspsnList" parameterType="egovMap" resultType="egovMap">
+		SELECT A.DSPSN_ID /* PopupDAO.selectDspsnList*/
+	       ,A.DSPSN_NM
+	       ,DEC_B64('KEY1', A.ENC_BIRTH_DD) AS ENC_BIRTH_DD
+	       ,DEC_B64('KEY1',A.ENC_PHONE_NUM) ENC_PHONE_NUM
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP03' AND C.COMMCD = A.GENDER AND C.USE_FG = '1') AS GENDER
+           ,B.DISABLE_TP
+           ,C.HEALTH_STS01 /* 시각문제 */
+      	   ,C.HEALTH_STS02 /* 언어문제 */
+           ,C.HEALTH_STS03 /* 청각문제 */
+           ,C.HEALTH_STS06 /* 질환 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12'AND Z.COMMCD = B.DISABLE_DGREE_FG AND Z.USE_FG = '1') DISABLE_DGREE_FG /* 장애정도구분 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01'AND Z.COMMCD = B.OUTBREAK_TIME_FG AND Z.USE_FG = '1') OUTBREAK_TIME_FG /* 장애발생시기 */
+           ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP05' AND C.COMMCD = DISABLE_TP AND C.USE_FG = '1') AS DISABLE_TP_NM
+	       ,DISABLE_GRADE 
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'FG12' AND C.COMMCD = B.DISABLE_DGREE_FG) AS DISABLE_DGREE_FG
+	       ,PICTURE_PATH
+           ,PICTURE_NM
+           ,DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+ 				FROM DSPSN A
+ 				LEFT OUTER JOIN DSPSN_DISABILITY B ON A.DSPSN_ID = B.DSPSN_ID
+ 				LEFT OUTER JOIN DSPSN_HEALTH C 	   ON A.DSPSN_ID = C.DSPSN_ID
+ 		WHERE 1=1
+        <if test="wffcltyCd != null and wffcltyCd != ''.toString() ">
+		   		 AND A.DSPSN_ID IN(SELECT DISTINCT D.DSPSN_ID FROM WFFCLTY_ENTER D 
+              	 WHERE D.WFFCLTY_CD = #{wffcltyCd}  
+                 AND D.LVHS_DD IS NULL)
+                 
+                 OR A.DSPSN_ID IN(SELECT DISTINCT F.DSPSN_ID FROM ASSIST_DVC_REPAIR F
+              		WHERE F.WFFCLTY_CD = #{wffcltyCd}
+                AND F.PROCESS_DD IS NOT NULL)
+		</if>
+        <if test="searchDspsnNm != '' and searchDspsnNm != null">
+        AND (A.DSPSN_ID LIKE '%'||#{searchDspsnNm}|| '%'
+                 OR A.DSPSN_NM LIKE '%'||#{searchDspsnNm}|| '%')
+        </if>
+        <if test="searchEncBirthDd != '' and searchEncBirthDd != null">
+        AND DEC_B64('KEY1', A.ENC_BIRTH_DD) LIKE '%'||replace(#{searchEncBirthDd}, '-')||'%'
+        </if>
+ 		<if test="searchDspsnNm != '' and searchDspsnNm != null">
+        AND (A.DSPSN_ID LIKE '%'||#{searchDspsnNm}|| '%'
+                 OR A.DSPSN_NM LIKE '%'||#{searchDspsnNm}|| '%')
+        </if>
+        <if test="searchOgnztFg != '' and searchOgnztFg != null">
+        	AND B.DISABLE_TP = #{searchOgnztFg}
+        </if>
+        ORDER BY DSPSN_NM ASC
+        </select>
+        
+            <!-- 장애인 검색 팝업 조회  -->
+	<select id="selectDspsnList2" parameterType="egovMap" resultType="egovMap">
+		SELECT A.DSPSN_ID /* PopupDAO.selectDspsnList2*/
+	       ,A.DSPSN_NM
+	       ,DEC_B64('KEY1', A.ENC_BIRTH_DD) AS ENC_BIRTH_DD
+	       ,DEC_B64('KEY1',A.ENC_PHONE_NUM) ENC_PHONE_NUM
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP03' AND C.COMMCD = A.GENDER AND C.USE_FG = '1') AS GENDER
+           ,B.DISABLE_TP
+           ,C.HEALTH_STS01 /* 시각문제 */
+      	   ,C.HEALTH_STS02 /* 언어문제 */
+           ,C.HEALTH_STS03 /* 청각문제 */
+           ,C.HEALTH_STS06 /* 질환 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12'AND Z.COMMCD = B.DISABLE_DGREE_FG AND Z.USE_FG = '1') DISABLE_DGREE_FG /* 장애정도구분 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01'AND Z.COMMCD = B.OUTBREAK_TIME_FG AND Z.USE_FG = '1') OUTBREAK_TIME_FG /* 장애발생시기 */
+           ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP05' AND C.COMMCD = DISABLE_TP AND C.USE_FG = '1') AS DISABLE_TP_NM
+	       ,DISABLE_GRADE 
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'FG12' AND C.COMMCD = B.DISABLE_DGREE_FG) AS DISABLE_DGREE_FG
+	       ,PICTURE_PATH
+           ,PICTURE_NM
+           ,DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+ 				FROM DSPSN A
+ 				LEFT OUTER JOIN DSPSN_DISABILITY B  ON A.DSPSN_ID = B.DSPSN_ID
+ 				LEFT OUTER JOIN    DSPSN_HEALTH C  ON A.DSPSN_ID = C.DSPSN_ID
+ 		WHERE 1=1
+        <if test="searchDspsnNm != '' and searchDspsnNm != null">
+        AND (A.DSPSN_ID LIKE '%'||#{searchDspsnNm}|| '%'
+                 OR A.DSPSN_NM LIKE '%'||#{searchDspsnNm}|| '%')
+        </if>
+        <if test="searchEncBirthDd != '' and searchEncBirthDd != null">
+        AND DEC_B64('KEY1', A.ENC_BIRTH_DD) LIKE '%'||replace(#{searchEncBirthDd}, '-')||'%'
+        </if>
+ 		<if test="searchDspsnNm != '' and searchDspsnNm != null">
+        AND (A.DSPSN_ID LIKE '%'||#{searchDspsnNm}|| '%'
+                 OR A.DSPSN_NM LIKE '%'||#{searchDspsnNm}|| '%')
+        </if>
+        <if test="searchOgnztFg != '' and searchOgnztFg != null">
+        	AND B.DISABLE_TP = #{searchOgnztFg}
+        </if>
+        ORDER BY DSPSN_NM ASC
+        </select>
+</mapper>

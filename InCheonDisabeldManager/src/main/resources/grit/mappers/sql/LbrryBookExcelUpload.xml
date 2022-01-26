@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LbrryBookExcelUploadDAO">
+
+	
+	<select id="selectLbrExcelTempList" resultType="egovMap" parameterType="String">
+		   SELECT 
+				 WFFCLTY_CD
+				,BOOK_NO
+				,BOOK_NM
+				,AUTHOR
+				,PUBLISHER
+				,PBLS_YEAR
+				,TYPE_NAME
+			FROM LBRRY_BOOK_TEMP
+			 WHERE WFFCLTY_CD = #{linkCd}	
+			  ORDER BY TO_NUMBER(BOOK_NO)
+		
+	</select>
+	
+	<select id="selectLbrErrorList" resultType="egovMap" parameterType="String">
+		     SELECT           
+                 A.WFFCLTY_CD
+                ,A.BOOK_NO
+                ,A.BOOK_NM
+                ,A.AUTHOR
+                ,A.PUBLISHER
+                ,A.PBLS_YEAR
+                ,A.TYPE_NAME
+                ,A.CHECK_ERROR
+        FROM (SELECT         
+                  WFFCLTY_CD
+                 ,BOOK_NO
+                 ,BOOK_NM
+                 ,AUTHOR
+                 ,PUBLISHER
+                 ,PBLS_YEAR
+                 ,TYPE_NAME
+                ,(CASE 
+                     WHEN BOOK_NO   IS NULL                                    THEN '[연번]을 입력하세요.'  
+                     WHEN BOOK_NM   IS NULL                                    THEN '[도서명]을 입력하세요.' 
+                     WHEN AUTHOR    IS NULL                                    THEN '[저자]를 입력하세요.' 
+                     WHEN PUBLISHER IS NULL                                    THEN '[발행자]를 입력하세요.' 
+                     WHEN PBLS_YEAR IS NULL                                    THEN '[발행년도]를 입력하세요.' 
+                     WHEN TYPE_NAME IS NULL                                    THEN '[유형명]을 입력하세요.'
+                     WHEN NOT REGEXP_INSTR(BOOK_NO ,'[^0-9]') = 0              THEN '[연번] 숫자가 들어가야 합니다.'
+                     WHEN lengthb(BOOK_NM) <![CDATA[>]]> 100                   THEN '[도서명]은 최대 33자리 입니다'
+                     WHEN lengthb(AUTHOR) <![CDATA[>]]> 50                     THEN '[저자]는 최대 16자리 입니다.'
+                     WHEN lengthb(PUBLISHER) <![CDATA[>]]> 50                  THEN '[발행자]는 최대 16자리 입니다.'
+                     WHEN lengthb(TYPE_NAME) <![CDATA[>]]> 50                  THEN '[유형명]은 최대 16자리 입니다.'
+                     ELSE '정상'
+                 END) AS CHECK_ERROR
+         FROM LBRRY_BOOK_TEMP
+           WHERE WFFCLTY_CD = #{linkCd}) A
+         WHERE A.WFFCLTY_CD = #{linkCd}
+          AND A.CHECK_ERROR <![CDATA[<>]]> '정상'
+	</select>
+	
+	<select id="selectTypeList" resultType="egovMap">
+		SELECT 
+			DISTINCT TYPE_NAME , WFFCLTY_CD
+		 FROM LBRRY_BOOK_TEMP 
+	</select>
+	
+	<select id="selectType" resultType="int" parameterType="egovMap">
+		SELECT COUNT(TYPE_NM)
+		 FROM LBRRY_BOOK_TYPE
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+		   AND TYPE_NM = #{typeName}
+	</select>
+	
+	<select id="selectCatalog" resultType="int">
+		SELECT COUNT(*)
+		 FROM LBRRY_BOOK_CATALOG
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+	</select>
+
+
+	<insert id="insertLbrryTemp" parameterType="PgmLbrryBookExcelVO">
+		INSERT INTO LBRRY_BOOK_TEMP(
+			 WFFCLTY_CD
+			,BOOK_NO
+			,BOOK_NM
+			,AUTHOR
+			,PUBLISHER
+			,PBLS_YEAR
+			,TYPE_NAME
+		)VALUES(
+			 #{wffcltyCd, jdbcType=VARCHAR}
+			,(SELECT LPAD(MAX(#{bookNo    ,jdbcType=VARCHAR}),'6','0') FROM DUAL)
+			,#{bookNm    ,jdbcType=VARCHAR}
+			,#{author    ,jdbcType=VARCHAR}
+			,#{publisher ,jdbcType=VARCHAR}
+			,#{pblsYear  ,jdbcType=VARCHAR}
+			,#{typeName  ,jdbcType=VARCHAR}
+		)
+	
+	</insert>
+	
+	<insert id="insertType" parameterType="egovMap">
+		INSERT INTO LBRRY_BOOK_TYPE(
+			 WFFCLTY_CD
+			,TYPE_CD
+			,TYPE_NM
+			,USE_FG
+			,REGIST_DT
+			,REGISTERER
+		)VALUES(
+			 #{wffcltyCd, jdbcType=VARCHAR}
+			,(SELECT LPAD(NVL(MAX(TYPE_CD)+1,1),'3','0') FROM LBRRY_BOOK_TYPE WHERE WFFCLTY_CD = #{wffcltyCd, jdbcType=VARCHAR})
+			,#{typeName   ,jdbcType=VARCHAR}
+			,'0'
+			,SYSDATE
+			,#{register, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="confirmLbrry" parameterType="egovMap">
+		INSERT INTO LBRRY_BOOK(
+			WFFCLTY_CD
+			,BOOK_NO
+			,BOOK_NM
+			,AUTHOR
+			,PUBLISHER
+			,PBLS_YEAR
+			,CATALOG_NO
+			,TYPE_CD
+			,USE_FG
+			,REGIST_DT
+			,REGISTERER
+		)VALUES(
+			 #{wffcltyCd, jdbcType=VARCHAR}
+			,#{bookNo, jdbcType=VARCHAR}
+			,#{bookNm, jdbcType=VARCHAR}
+			,#{author, jdbcType=VARCHAR}
+			,#{publisher, jdbcType=VARCHAR}
+			,#{pblsYear, jdbcType=VARCHAR}
+			,(SELECT CATALOG_NO FROM LBRRY_BOOK_CATALOG WHERE WFFCLTY_CD = #{wffcltyCd, jdbcType=VARCHAR})
+			,(SELECT TYPE_CD FROM LBRRY_BOOK_TYPE WHERE WFFCLTY_CD = #{wffcltyCd, jdbcType=VARCHAR} AND TYPE_NM = #{typeName , jdbcType=VARCHAR})
+			,'0'
+			,SYSDATE
+			,#{register, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertCatalog" parameterType="egovMap">
+		INSERT INTO LBRRY_BOOK_CATALOG(
+		     WFFCLTY_CD
+			,CATALOG_NO
+			,CATALOG_NM
+			,USE_FG
+			,REGIST_DT
+			,REGISTERER
+		)VALUES(
+			 #{wffcltyCd, jdbcType=VARCHAR}
+			,(SELECT LPAD(NVL(MAX(CATALOG_NO)+1,1),'3','0') FROM LBRRY_BOOK_CATALOG WHERE WFFCLTY_CD = #{wffcltyCd, jdbcType=VARCHAR})
+			,'공통분류'
+			,'0'
+			,SYSDATE
+			,#{register, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteLbrryTemp">
+		DELETE FROM LBRRY_BOOK_TEMP
+	</delete>
+	
+	<delete id="deleteLbrry" parameterType="egovMap">
+		DELETE FROM LBRRY_BOOK
+		  WHERE WFFCLTY_CD = #{wffcltyCd} 
+	</delete>
+	
+	<delete id="deleteType" parameterType="egovMap">
+		DELETE FROM LBRRY_BOOK_TYPE
+		 WHERE WFFCLTY_CD = #{wffcltyCd}
+	</delete>
+	
+	<delete id="deleteCatalog" parameterType="egovMap">
+		DELETE FROM LBRRY_BOOK_CATALOG
+		  WHERE WFFCLTY_CD = #{wffcltyCd}  	
+	</delete>
+	
+</mapper>	

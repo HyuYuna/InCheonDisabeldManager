@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Doc version="1.0" pagecount="1"                  docname="" fontRevision="1" serviceid="48B5F134F77599425FC9AA878FCF78" enableNoPage="true" isconverthtml="false">
+<DocProperty width="595" height="841" dwidth="595.2755905511812" dheight="841.8897637795277" margintop="58" marginbottom="56" marginleft="58" marginright="57" pagesize="A4" orientation="Portrait" language="Korean" />
+<Fontobj id="0_0" name="Arial" style="0" size="40" />
+<Fontobj id="1_0" name="맑은 고딕" style="1" size="16" />
+<Fontobj id="2_0" name="맑은 고딕" style="1" size="10" />
+<Lineobj id="0_0" type="-1" thickness="1" colorid="0_0" />
+<Colorobj id="0_0" color="000000" />
+<Colorobj id="1_0" color="ffffff" />
+<Colorobj id="2_0" color="cc0033" />
+<Colorobj id="3_0" color="3366ff" />
+<Colorobj id="4_0" color="003300" />
+<Borderobj id="0_0" top="0_0" bottom="0_0" left="0_0" right="0_0" diagonaldown="0_0" diagonalup="0_0" />
+<Imageobj id="IMAGE5http12299197808080ubi4workimagesLOGOjpg" width="0" height="0" originalsize="false" fixedrate="1" brightness="0" loadtype="2" loadsrc="http://122.99.197.80:8080/ubi4/work/images/LOGO.jpg" />
+<Page pagenum="1" masterflag="0" mastertitle="" width="595" height="841" iwidth="480" iheight="727" x="58" y="58" pagesize="A4" orientation="Portrait">
+<Fontid>0_0</Fontid>
+<Fontid>1_0</Fontid>
+<Fontid>2_0</Fontid>
+<Lineid>0_0</Lineid>
+<Colorid>0_0</Colorid>
+<Colorid>1_0</Colorid>
+<Colorid>2_0</Colorid>
+<Colorid>3_0</Colorid>
+<Colorid>4_0</Colorid>
+<Borderid>0_0</Borderid>
+<Objectid>IMAGE5http12299197808080ubi4workimagesLOGOjpg</Objectid>
+<Item classname="UbiImageItem" id="IMAGE5" x="0" y="218" width="480" height="267" compid="COMP1" forecolorid="" backcolorid="" transparent="0" >
+<Image imageid="IMAGE5http12299197808080ubi4workimagesLOGOjpg" halign="1" valign="1" borderid="0_0" />
+</Item>
+<Item classname="UbiTextItem" id="TEXT5" x="0" y="0" width="480" height="84" compid="COMP1" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="0_0" >UbiReport 4.0</Text>
+</Item>
+<Item classname="UbiTextItem" id="TEXT4" x="0" y="588" width="480" height="33" compid="COMP1" forecolorid="2_0" backcolorid="1_0" linked="1" linkfilename="www.ubireport.com" linkstyle="WEBPAGE" >
+<Text fontid="1_0" halign="1" border="0_0" >UbiReport  Homepage ( http://www.ubireport.com )</Text>
+</Item>
+<Item classname="UbiTextItem" id="USERCOLUMN1" x="240" y="707" width="240" height="20" compid="COMP1" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="5" margintop="1" marginbottom="1" >출력일시 : 2020/12/09 11:20:29</Text>
+</Item>
+<Item classname="UbiTextItem" id="USERCOLUMN2" x="0" y="707" width="240" height="20" compid="COMP1" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" border="0_0" marginleft="5" marginright="1" margintop="1" marginbottom="1" >출력자 : 홍길동</Text>
+</Item>
+<Item classname="UbiTextItem" id="TEXT9" x="0" y="321" width="480" height="267" compid="COMP1" forecolorid="3_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="0_0" marginleft="5" marginright="1" margintop="1" marginbottom="1" >This page is the UbiReport 4.0 installation test page.
+
+If preview is normal in web browser, please save and 
+
+print test.</Text>
+</Item>
+<Item classname="UbiTextItem" id="TEXT7" x="0" y="84" width="480" height="237" compid="COMP1" forecolorid="4_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="0_0" marginleft="5" marginright="1" margintop="1" marginbottom="1" >UbiReport 4.0 설치 테스트 화면 입니다.
+
+웹브라우저에서 미리보기가 정상적이라면, 파일저장, 인쇄 
+
+테스트를 진행하시기 바랍니다.</Text>
+</Item>
+</Page>
+<DocInfo startindex="1" pagecount="1" docname="" />
+</Doc>

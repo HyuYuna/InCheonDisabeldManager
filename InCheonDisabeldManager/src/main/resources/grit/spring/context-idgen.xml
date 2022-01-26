@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- MENU ID -->
+	<bean name="menuIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="menuIdGnrStrategy" />
+		<property name="blockSize" value="1" />
+		<property name="table" value="TNSM_IDS" />
+		<property name="tableName" value="TNSM_MENU" />
+	</bean>
+	<bean name="menuIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="MENU" />
+		<property name="cipers" value="6" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<!-- PROGRAM ID -->
+	<bean name="programIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS" />
+		<property name="tableName" value="TNSM_PROGRM" />
+		<property name="blockSize" value="1" />
+		<property name="strategy" ref="programIdGnrStrategy" />
+	</bean>
+	<bean name="programIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="PROG" />
+		<property name="cipers" value="6" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<!-- AUTHOR ID -->
+	<bean name="authorIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS" />
+		<property name="tableName" value="TNSM_AUTHOR" />
+		<property name="blockSize" value="1" />
+		<property name="strategy" ref="authorIdGnrStrategy" />
+	</bean>
+	<bean name="authorIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="AUTH" />
+		<property name="cipers" value="6" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<!-- AUTHOR GROUP ID -->
+	<bean name="authorGroupIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS" />
+		<property name="tableName" value="TNSM_AUTHORGROUP" />
+		<property name="blockSize" value="1" />
+		<property name="strategy" ref="authorGroupIdGnrStrategy" />
+	</bean>
+	<bean name="authorGroupIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="AUTHGRP" />
+		<property name="cipers" value="6" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<!-- USER GROUP ID -->
+	<bean name="userGroupIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS" />
+		<property name="tableName" value="TNSM_USERGROUP" />
+		<property name="blockSize" value="1" />
+		<property name="strategy" ref="userGroupIdGnrStrategy" />
+	</bean>
+	<bean name="userGroupIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="USERGRP" />
+		<property name="cipers" value="6" />
+		<property name="fillChar" value="0" />
+	</bean>								
+	
+	<!-- ATTACH FILE ID -->
+	<bean name="atchFileIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS"/>
+		<property name="tableName" value="TNSM_ATCHFILE"/>
+		<property name="blockSize" value="1"/>
+		<property name="strategy" ref="atchFileIdStrategy" />
+	</bean>
+	<bean name="atchFileIdStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="FILE" />
+		<property name="cipers" value="15" />
+		<property name="fillChar" value="0" />
+	</bean>				
+	
+	<!-- NTCN ID -->
+	<bean name="ntcnIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="TNSM_IDS"/>
+		<property name="tableName" value="TNSM_NTCN"/>
+		<property name="blockSize" value="1"/>
+		<property name="strategy" ref="ntcnIdStrategy" />
+	</bean>
+	<bean name="ntcnIdStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="NTCN" />
+		<property name="cipers" value="16" />
+		<property name="fillChar" value="0" />
+	</bean>
+</beans>

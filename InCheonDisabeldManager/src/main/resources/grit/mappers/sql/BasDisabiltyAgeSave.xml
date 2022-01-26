@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasDisabiltyAgeSaveDAO">
+
+	<insert id="insertDisalbleAge" parameterType="basDisabiltyAgeSaveVO">
+		INSERT INTO CITY_DISABILITY_AGE_STATE_TEMP(
+				YYYYMM
+				,GU_CD
+				,AGE
+				,DISABLE_TP01
+				,MALE01_CNT
+				,FEMALE01_CNT
+				,DISABLE_TP02
+				,MALE02_CNT
+				,FEMALE02_CNT
+				,DISABLE_TP03
+				,MALE03_CNT
+				,FEMALE03_CNT
+				,DISABLE_TP04
+				,MALE04_CNT
+				,FEMALE04_CNT
+				,DISABLE_TP05
+				,MALE05_CNT
+				,FEMALE05_CNT
+				,DISABLE_TP06
+				,MALE06_CNT
+				,FEMALE06_CNT
+				,DISABLE_TP07
+				,MALE07_CNT
+				,FEMALE07_CNT
+				,DISABLE_TP08
+				,MALE08_CNT
+				,FEMALE08_CNT
+				,DISABLE_TP09
+				,MALE09_CNT
+				,FEMALE09_CNT
+				,DISABLE_TP10
+				,MALE10_CNT
+				,FEMALE10_CNT
+				,DISABLE_TP11
+				,MALE11_CNT
+				,FEMALE11_CNT
+				,DISABLE_TP12
+				,MALE12_CNT
+				,FEMALE12_CNT
+				,DISABLE_TP13
+				,MALE13_CNT
+				,FEMALE13_CNT
+				,DISABLE_TP14
+				,MALE14_CNT
+				,FEMALE14_CNT
+				,DISABLE_TP15
+				,MALE15_CNT
+				,FEMALE15_CNT
+			)values(
+				 #{yyyymm ,jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guNm,jdbcType=VARCHAR})
+				,#{age , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp01 ,jdbcType=VARCHAR})
+				,#{male01Cnt , jdbcType=VARCHAR}
+				,#{female01Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp02 ,jdbcType=VARCHAR})
+				,#{male02Cnt , jdbcType=VARCHAR}
+				,#{female02Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp03 ,jdbcType=VARCHAR})
+				,#{male03Cnt , jdbcType=VARCHAR}
+				,#{female03Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp04 ,jdbcType=VARCHAR})
+				,#{male04Cnt , jdbcType=VARCHAR}
+				,#{female04Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp05 ,jdbcType=VARCHAR})
+				,#{male05Cnt , jdbcType=VARCHAR}
+				,#{female05Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp06 ,jdbcType=VARCHAR})
+				,#{male06Cnt , jdbcType=VARCHAR}
+				,#{female06Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp07 ,jdbcType=VARCHAR})
+				,#{male07Cnt , jdbcType=VARCHAR}
+				,#{female07Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp08 ,jdbcType=VARCHAR})
+				,#{male08Cnt , jdbcType=VARCHAR}
+				,#{female08Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp09 ,jdbcType=VARCHAR})
+				,#{male09Cnt , jdbcType=VARCHAR}
+				,#{female09Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp10 ,jdbcType=VARCHAR})
+				,#{male10Cnt , jdbcType=VARCHAR}
+				,#{female10Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp11 ,jdbcType=VARCHAR})
+				,#{male11Cnt , jdbcType=VARCHAR}
+				,#{female11Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp12 ,jdbcType=VARCHAR})
+				,#{male12Cnt , jdbcType=VARCHAR}
+				,#{female12Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp13 ,jdbcType=VARCHAR})
+				,#{male13Cnt , jdbcType=VARCHAR}
+				,#{female13Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp14 ,jdbcType=VARCHAR})
+				,#{male14Cnt , jdbcType=VARCHAR}
+				,#{female14Cnt , jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp15 ,jdbcType=VARCHAR})
+				,#{male15Cnt , jdbcType=VARCHAR}
+				,#{female15Cnt , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteTempDisableAge" >
+		DELETE FROM CITY_DISABILITY_AGE_STATE_TEMP
+	</delete>
+	
+	
+	<select id="selectErrorAgeList"  resultType="egovMap">
+		SELECT 
+                YYYYMM
+                ,GU_CD
+                ,AGE
+                ,DISABLE_TP01         AS DISABLE_TP1
+                ,MALE01_CNT           AS MALE_CNT1
+                ,FEMALE01_CNT         AS FEMALE_CNT1
+                ,DISABLE_TP02         AS DISABLE_TP2
+                ,MALE02_CNT           AS MALE_CNT2  
+                ,FEMALE02_CNT         AS FEMALE_CNT2
+                ,DISABLE_TP03         AS DISABLE_TP3
+                ,MALE03_CNT           AS MALE_CNT3  
+                ,FEMALE03_CNT         AS FEMALE_CNT3
+                ,DISABLE_TP04         AS DISABLE_TP4
+                ,MALE04_CNT           AS MALE_CNT4  
+                ,FEMALE04_CNT         AS FEMALE_CNT4
+                ,DISABLE_TP05         AS DISABLE_TP5
+                ,MALE05_CNT           AS MALE_CNT5  
+                ,FEMALE05_CNT         AS FEMALE_CNT5
+                ,DISABLE_TP06         AS DISABLE_TP6
+                ,MALE06_CNT           AS MALE_CNT6  
+                ,FEMALE06_CNT         AS FEMALE_CNT6
+                ,DISABLE_TP07         AS DISABLE_TP7
+                ,MALE07_CNT           AS MALE_CNT7  
+                ,FEMALE07_CNT         AS FEMALE_CNT7
+                ,DISABLE_TP08         AS DISABLE_TP8
+                ,MALE08_CNT           AS MALE_CNT8  
+                ,FEMALE08_CNT         AS FEMALE_CNT8
+                ,DISABLE_TP09         AS DISABLE_TP9
+                ,MALE09_CNT           AS MALE_CNT9  
+                ,FEMALE09_CNT         AS FEMALE_CNT9
+                ,DISABLE_TP10         AS DISABLE_TP10
+                ,MALE10_CNT           AS MALE_CNT10  
+                ,FEMALE10_CNT         AS FEMALE_CNT10
+                ,DISABLE_TP11         AS DISABLE_TP11
+                ,MALE11_CNT           AS MALE_CNT11  
+                ,FEMALE11_CNT         AS FEMALE_CNT11
+                ,DISABLE_TP12         AS DISABLE_TP12
+                ,MALE12_CNT           AS MALE_CNT12  
+                ,FEMALE12_CNT         AS FEMALE_CNT12
+                ,DISABLE_TP13         AS DISABLE_TP13
+                ,MALE13_CNT           AS MALE_CNT13  
+                ,FEMALE13_CNT         AS FEMALE_CNT13
+                ,DISABLE_TP14         AS DISABLE_TP14
+                ,MALE14_CNT           AS MALE_CNT14  
+                ,FEMALE14_CNT         AS FEMALE_CNT14
+                ,DISABLE_TP15         AS DISABLE_TP15
+                ,MALE15_CNT           AS MALE_CNT15  
+                ,FEMALE15_CNT         AS FEMALE_CNT15
+               ,(CASE 
+                    WHEN NOT REGEXP_LIKE(YYYYMM||'01', '^[0-9]{4}(((0[13578]|(10|12))(0[1-9]|[1-2][0-9]|3[0-1]))|(02(0[1-9]|[1-2][0-9]))|((0[469]|11)(0[1-9]|[1-2][0-9]|30)))$')  THEN '날짜 형식이 잘못 됐습니다.'
+                    WHEN GU_CD IS  NULL                                     THEN '군구를 정확히 입력하세요.'                
+                    WHEN NOT REGEXP_INSTR(MALE01_CNT     ,'[^0-9]') = 0 THEN '[지체 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE01_CNT   ,'[^0-9]') = 0 THEN '[지체 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE02_CNT     ,'[^0-9]') = 0 THEN '[시각 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE02_CNT   ,'[^0-9]') = 0 THEN '[시각 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE03_CNT     ,'[^0-9]') = 0 THEN '[청각 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE03_CNT   ,'[^0-9]') = 0 THEN '[청각 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE04_CNT     ,'[^0-9]') = 0 THEN '[언어 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE04_CNT   ,'[^0-9]') = 0 THEN '[언어 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE05_CNT     ,'[^0-9]') = 0 THEN '[지적 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE05_CNT   ,'[^0-9]') = 0 THEN '[지적 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE06_CNT     ,'[^0-9]') = 0 THEN '[뇌병변 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE06_CNT   ,'[^0-9]') = 0 THEN '[뇌병변 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE07_CNT     ,'[^0-9]') = 0 THEN '[자폐 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE07_CNT   ,'[^0-9]') = 0 THEN '[자폐 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE08_CNT     ,'[^0-9]') = 0 THEN '[정신 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE08_CNT   ,'[^0-9]') = 0 THEN '[정신 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE09_CNT     ,'[^0-9]') = 0 THEN '[신장 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE09_CNT   ,'[^0-9]') = 0 THEN '[신장 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE10_CNT     ,'[^0-9]') = 0 THEN '[심장 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE10_CNT   ,'[^0-9]') = 0 THEN '[심장 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE11_CNT     ,'[^0-9]') = 0 THEN '[호흡기 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE11_CNT   ,'[^0-9]') = 0 THEN '[호흡기 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE12_CNT     ,'[^0-9]') = 0 THEN '[간 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE12_CNT   ,'[^0-9]') = 0 THEN '[간 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE13_CNT     ,'[^0-9]') = 0 THEN '[안면 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE13_CNT   ,'[^0-9]') = 0 THEN '[안면 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE14_CNT     ,'[^0-9]') = 0 THEN '[장루.요루 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE14_CNT   ,'[^0-9]') = 0 THEN '[장루.요루 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE15_CNT     ,'[^0-9]') = 0 THEN '[뇌전증 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE15_CNT   ,'[^0-9]') = 0 THEN '[뇌전증 여성] 숫자가 들어가야 합니다'
+                    ELSE '정상'
+                END) AS CHECK_ERROR
+		FROM CITY_DISABILITY_AGE_STATE_TEMP 
+		  WHERE (CASE 
+                    WHEN NOT REGEXP_LIKE(YYYYMM||'01', '^[0-9]{4}(((0[13578]|(10|12))(0[1-9]|[1-2][0-9]|3[0-1]))|(02(0[1-9]|[1-2][0-9]))|((0[469]|11)(0[1-9]|[1-2][0-9]|30)))$')  THEN 1
+                    WHEN GU_CD IS  NULL                                 THEN 2
+                    WHEN NOT REGEXP_INSTR(MALE01_CNT     ,'[^0-9]') = 0 THEN 3
+                    WHEN NOT REGEXP_INSTR(FEMALE01_CNT   ,'[^0-9]') = 0 THEN 4
+                    WHEN NOT REGEXP_INSTR(MALE02_CNT     ,'[^0-9]') = 0 THEN 5
+                    WHEN NOT REGEXP_INSTR(FEMALE02_CNT   ,'[^0-9]') = 0 THEN 6
+                    WHEN NOT REGEXP_INSTR(MALE03_CNT     ,'[^0-9]') = 0 THEN 7
+                    WHEN NOT REGEXP_INSTR(FEMALE03_CNT   ,'[^0-9]') = 0 THEN 8
+                    WHEN NOT REGEXP_INSTR(MALE04_CNT     ,'[^0-9]') = 0 THEN 9
+                    WHEN NOT REGEXP_INSTR(FEMALE04_CNT   ,'[^0-9]') = 0 THEN 10
+                    WHEN NOT REGEXP_INSTR(MALE05_CNT     ,'[^0-9]') = 0 THEN 11
+                    WHEN NOT REGEXP_INSTR(FEMALE05_CNT   ,'[^0-9]') = 0 THEN 12
+                    WHEN NOT REGEXP_INSTR(MALE06_CNT     ,'[^0-9]') = 0 THEN 13
+                    WHEN NOT REGEXP_INSTR(FEMALE06_CNT   ,'[^0-9]') = 0 THEN 14
+                    WHEN NOT REGEXP_INSTR(MALE07_CNT     ,'[^0-9]') = 0 THEN 15
+                    WHEN NOT REGEXP_INSTR(FEMALE07_CNT   ,'[^0-9]') = 0 THEN 16
+                    WHEN NOT REGEXP_INSTR(MALE08_CNT     ,'[^0-9]') = 0 THEN 17
+                    WHEN NOT REGEXP_INSTR(FEMALE08_CNT   ,'[^0-9]') = 0 THEN 18
+                    WHEN NOT REGEXP_INSTR(MALE09_CNT     ,'[^0-9]') = 0 THEN 19
+                    WHEN NOT REGEXP_INSTR(FEMALE09_CNT   ,'[^0-9]') = 0 THEN 20
+                    WHEN NOT REGEXP_INSTR(MALE10_CNT     ,'[^0-9]') = 0 THEN 21
+                    WHEN NOT REGEXP_INSTR(FEMALE10_CNT   ,'[^0-9]') = 0 THEN 22
+                    WHEN NOT REGEXP_INSTR(MALE11_CNT     ,'[^0-9]') = 0 THEN 23
+                    WHEN NOT REGEXP_INSTR(FEMALE11_CNT   ,'[^0-9]') = 0 THEN 24
+                    WHEN NOT REGEXP_INSTR(MALE12_CNT     ,'[^0-9]') = 0 THEN 25
+                    WHEN NOT REGEXP_INSTR(FEMALE12_CNT   ,'[^0-9]') = 0 THEN 26
+                    WHEN NOT REGEXP_INSTR(MALE13_CNT     ,'[^0-9]') = 0 THEN 27
+                    WHEN NOT REGEXP_INSTR(FEMALE13_CNT   ,'[^0-9]') = 0 THEN 28
+                    WHEN NOT REGEXP_INSTR(MALE14_CNT     ,'[^0-9]') = 0 THEN 29
+                    WHEN NOT REGEXP_INSTR(FEMALE14_CNT   ,'[^0-9]') = 0 THEN 30
+                    WHEN NOT REGEXP_INSTR(MALE15_CNT     ,'[^0-9]') = 0 THEN 31
+                    WHEN NOT REGEXP_INSTR(FEMALE15_CNT   ,'[^0-9]') = 0 THEN 32
+		          END)  <![CDATA[<>]]> 0
+  
+	</select>
+	
+	<select id="selectExcelTempAgeList"  resultType="egovMap">
+	      SELECT
+	      	YYYYMM
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = GU_CD)   AS GU_CD
+			,AGE
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP01) AS DISABLE_TP1
+			,MALE01_CNT     AS MALE_CNT1
+			,FEMALE01_CNT   AS FEMALE_CNT1
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP02) AS DISABLE_TP2
+			,MALE02_CNT     AS MALE_CNT2   
+			,FEMALE02_CNT   AS FEMALE_CNT2
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP03) AS DISABLE_TP3
+			,MALE03_CNT     AS MALE_CNT3  
+			,FEMALE03_CNT   AS FEMALE_CNT3
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP04) AS DISABLE_TP4
+			,MALE04_CNT     AS MALE_CNT4  
+			,FEMALE04_CNT   AS FEMALE_CNT4
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP05) AS DISABLE_TP5
+			,MALE05_CNT     AS MALE_CNT5  
+			,FEMALE05_CNT   AS FEMALE_CNT5
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP06) AS DISABLE_TP6
+			,MALE06_CNT     AS MALE_CNT6  
+			,FEMALE06_CNT   AS FEMALE_CNT6
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP07) AS DISABLE_TP7
+			,MALE07_CNT     AS MALE_CNT7  
+			,FEMALE07_CNT   AS FEMALE_CNT7
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP08) AS DISABLE_TP8
+			,MALE08_CNT     AS MALE_CNT8  
+			,FEMALE08_CNT   AS FEMALE_CNT8
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP09) AS DISABLE_TP9
+			,MALE09_CNT     AS MALE_CNT9  
+			,FEMALE09_CNT   AS FEMALE_CNT9
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP10) AS DISABLE_TP10
+			,MALE10_CNT     AS MALE_CNT10  
+			,FEMALE10_CNT   AS FEMALE_CNT10
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP11) AS DISABLE_TP11
+			,MALE11_CNT     AS MALE_CNT11  
+			,FEMALE11_CNT   AS FEMALE_CNT11
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP12) AS DISABLE_TP12
+			,MALE12_CNT     AS MALE_CNT12  
+			,FEMALE12_CNT   AS FEMALE_CNT12
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP13) AS DISABLE_TP13
+			,MALE13_CNT     AS MALE_CNT13  
+			,FEMALE13_CNT   AS FEMALE_CNT13
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP14) AS DISABLE_TP14
+			,MALE14_CNT     AS MALE_CNT14  
+			,FEMALE14_CNT   AS FEMALE_CNT14
+			,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP15) AS DISABLE_TP15
+			,MALE15_CNT     AS MALE_CNT15
+			,FEMALE15_CNT   AS FEMALE_CNT15
+           FROM  CITY_DISABILITY_AGE_STATE_TEMP
+	</select>
+	
+	
+	<insert id="confirmDisableAge" parameterType="egovMap">
+		INSERT INTO CITY_DISABILITY_AGE_STATE(
+				YYYYMM
+				,GU_CD
+				,DISABLE_TP
+				,AGE
+				,MALE_DISABLE_CNT
+				,FEMALE_DISABLE_CNT
+				,REGIST_DT
+				,REGISTERER
+			)values(
+				 #{yyyymm ,jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp ,jdbcType=VARCHAR})
+				,#{age ,jdbcType=VARCHAR}
+				,#{maleCnt    ,jdbcType=VARCHAR}
+				,#{femaleCnt  ,jdbcType=VARCHAR}
+				,SYSDATE
+				,#{register          ,jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteDisableAge" parameterType="String">
+		DELETE 
+		   FROM 
+		    CITY_DISABILITY_AGE_STATE 
+		  WHERE YYYYMM      = #{delyyyymm}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasSysInfoMgmtDAO">
+
+	<!-- 사용자  조회 -->
+	<select id="selectUserList" parameterType="egovMap" resultType="egovMap">
+	SELECT /*BasSysInfoMgmtDAO."selectUserList" */
+	      USER_ID          
+	    , USER_NM          
+	    , SUBSTR(ENC_PASSWORD,0,10) AS ENC_PASSWORD
+        , ENC_PASSWORD  AS HIDDEN_ENC_PASSWORD     
+	    , USER_GROUP_CD
+	    , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = USER_GROUP_CD AND COMMCD_FG = 'TP01'AND USE_FG = '1') AS USER_GROUP_NM    
+	    , LINK_CD
+	    , LINK_NM
+	    , USE_FG 
+  FROM(
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD   
+               ,'' 
+               ,A.LINK_CD
+               ,B.WFFCLTY_NM      AS LINK_NM
+               ,A.USE_FG 
+          FROM USERS A ,
+               WFFCLTY_BASE B
+         WHERE USER_GROUP_CD = 'C'
+               <if test="wffcltyNm != null and wffcltyNm != ''">
+			    AND B.WFFCLTY_NM LIKE '%'||#{wffcltyNm}||'%'
+			   </if>
+           AND a.LINK_CD = b.WFFCLTY_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''
+               ,A.LINK_CD
+               ,B.OGNZT_NM        AS LINK_NM
+               ,A.USE_FG 
+          FROM USERS A ,
+               ORGANIZATION B
+         WHERE USER_GROUP_CD = 'D'
+           AND a.LINK_CD = b.OGNZT_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''    
+               ,A.LINK_CD
+               ,''
+               ,A.USE_FG 
+          FROM USERS A
+	         WHERE USER_GROUP_CD NOT IN ('C','D')
+		  )A
+	    WHERE USER_NM LIKE '%'|| #{userNm} || '%'
+	      <if test="userGroupCd != '' and userGroupCd != null">
+	      AND USER_GROUP_CD = #{userGroupCd}
+	      </if>
+	      ORDER BY USER_ID
+	</select>
+	
+	<!-- 사용자 저장  -->
+	<insert id="insertSysInfo" parameterType="egovMap">
+		INSERT INTO USERS(
+			    USER_ID
+			    ,USER_NM
+			    ,ENC_PASSWORD
+			    ,USER_GROUP_CD
+			    ,LINK_CD
+			    ,ACCESS_FG
+			    ,PASSWORD_MOD_DD
+			    ,USE_FG
+			    ,REGIST_DT
+			    ,REGISTERER
+			)VALUES(
+		  		NVL((SELECT DISTINCT(#{userGroupCd , jdbcType=VARCHAR} || TO_CHAR(SYSDATE,'YY') || LPAD((SELECT NVL(MAX(SUBSTRB(USER_ID,4,8)+1),1) 
+                                        FROM USERS 
+                                        WHERE NVL(SUBSTR(USER_ID,1,3),(#{userGroupCd , jdbcType=VARCHAR}||TO_CHAR(SYSDATE,'YY'))) = #{userGroupCd , jdbcType=VARCHAR} || TO_CHAR(SYSDATE,'YY')
+                                        ),5,0))
+  				   FROM USERS	 
+				 WHERE USER_ID LIKE #{userGroupCd , jdbcType=VARCHAR} || '%'|| '%'), (SELECT DISTINCT(#{userGroupCd , jdbcType=VARCHAR} || TO_CHAR(SYSDATE,'YY') || LPAD((SELECT NVL(MAX(SUBSTRB(USER_ID,4,8)+1),1) 
+                                        FROM USERS 
+                                        WHERE NVL(SUBSTR(USER_ID,1,3),(#{userGroupCd , jdbcType=VARCHAR}||TO_CHAR(SYSDATE,'YY'))) = #{userGroupCd , jdbcType=VARCHAR} || TO_CHAR(SYSDATE,'YY')
+                                        ),5,0))
+  				   FROM USERS))             	  	
+			    ,#{userNm  , jdbcType=VARCHAR}
+			    ,HASH_STR('71',#{encPassword , jdbcType=VARCHAR})
+			    ,#{userGroupCd , jdbcType=VARCHAR}
+			    ,#{linkCd , jdbcType=VARCHAR}
+			    ,'0'
+			    ,(SELECT TO_CHAR(SYSDATE, 'yyyymmdd') FROM DUAL)
+			    ,#{useFg , jdbcType=VARCHAR}
+			    ,SYSDATE
+			    ,#{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 사용자 수정 -->
+	<update id="updateSysInfo" parameterType="egovMap">
+		UPDATE USERS 
+		  SET
+		     USER_NM       = #{userNm , jdbcType=VARCHAR}
+		    ,USE_FG        = #{useFg  , jdbcType=VARCHAR}
+		    ,LINK_CD       = #{linkCd , jdbcType=VARCHAR}
+		    ,UPDATE_DT     = SYSDATE
+		    ,UPDATER       = #{register , jdbcType=VARCHAR}
+		   WHERE USER_ID = #{userId}
+	</update>
+	
+	<!-- 기존비밀번호 채번 -->
+	<select id="getOldPwd" parameterType="String" resultType="String">
+		SELECT HASH_STR('71',#{oldPwd}) FROM DUAL
+	</select>
+	
+	<!-- 신규비밀번호 채번 -->
+	<select id="getNewPwd" parameterType="String" resultType="String">
+		SELECT HASH_STR('71',#{chgPwd}) FROM DUAL
+	</select>
+	
+	<!-- 사용자 비밀번호 변경 -->
+	<update id="updateSysPassword" parameterType="egovMap">
+		UPDATE USERS
+		  SET
+		     ENC_PASSWORD  = #{pwd}
+		    ,ACCESS_FG       = '0'
+		    ,PASSWORD_MOD_DD = (SELECT TO_CHAR(SYSDATE, 'yyyymmdd') FROM DUAL)
+		    ,UPDATE_DT     = SYSDATE
+		    ,UPDATER       = #{register}
+		   WHERE USER_ID = #{userId}
+	</update>
+	
+	<!-- 사용자 비밀번호 초기화 -->
+	<update id="resetPassword" parameterType="egovMap">
+		UPDATE USERS
+		  SET
+		     ENC_PASSWORD    = HASH_STR('71','a1234567@')
+		    ,ACCESS_FG       = '0'
+		    ,UPDATE_DT       = SYSDATE
+		    ,UPDATER         = #{register}
+		   WHERE USER_ID = #{userId}
+	</update>
+	
+	<!-- 복지시설 자동조회 -->
+	<select id="selectWffcltyList" parameterType="egovMap" resultType="egovMap">
+		SELECT /*BasSysInfoMgmtDAO.selectWffcltyList */
+             WFFCLTY_CD   AS linkCd
+           , WFFCLTY_NM   AS linkNm
+           , DECODE(USE_FG,'0','미사용','사용')     AS USE_FG
+           , #{userGroupCd}                      AS USER_GROUP_CD
+        FROM WFFCLTY_BASE
+          WHERE (WFFCLTY_CD LIKE '%'||#{linkCd}||'%' OR WFFCLTY_NM LIKE '%'||#{linkCd}||'%')
+	</select>
+	
+	<!-- 운영단체 자동조회 -->
+	<select id="selectOgnztList" parameterType="egovMap" resultType="egovMap">
+		SELECT /*BasSysInfoMgmtDAO.selectOgnztList */
+             OGNZT_CD   AS linkCd
+           , OGNZT_NM   AS linkNm 
+           , DECODE(USE_FG,'0','미사용','사용')     AS USE_FG
+           , #{userGroupCd}                      AS USER_GROUP_CD   
+        FROM ORGANIZATION
+          WHERE (OGNZT_CD LIKE '%'||#{linkCd}||'%' OR OGNZT_NM LIKE '%'||#{linkCd}||'%')
+	</select>
+	
+</mapper>

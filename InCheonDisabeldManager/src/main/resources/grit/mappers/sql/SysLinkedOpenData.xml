@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SysLinkedOpenDataDAO">
+
+	<select id="selectLinkOpenDataOgnztList" resultType="egovMap">
+		SELECT OGNZT_CD                                                
+		     , OGNZT_NM                                                 
+		     , (SELECT COMMCD_VALUE 
+		         FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'TP04'
+		          AND COMMCD = A.OGNZT_FG                               
+		       )                           AS OGNZT_Gb                                 
+		     , RPRSNTV_NM                                              
+		     , Get_telnum(PHONE_NUM1)      AS PHONE_NUM1                          
+		     , Get_telnum(PHONE_NUM2)      AS PHONE_NUM2                          
+		     , Get_telnum(FAX_NUM)         AS FAX_NUM                         
+		     , ZIP_CD                                              
+		     , ADDR_BASE || ADDR_DETAIL       AS ADDR                           
+		     , TO_CHAR(TO_DATE(ESTABLISH_DD, 'YYYYMMDD'), 'YYYY-MM-DD')  AS ESTABLISH_DD
+		     , EXECUTIVE_DETAIL                                         
+		     , DECODE(WFFCLTY_OPER_FG, '1', 'Y', 'N')   AS WFFCLTY_OPER_FG 
+		    <!--  ,(SELECT MAX(LENGTH(OGNZT_NM)) FROM ORGANIZATION)  AS MAX_LENGTH_OGNZT_NM  
+		     ,(SELECT MAX(LENGTH(ADDR_BASE || ADDR_DETAIL)) FROM ORGANIZATION) AS MAX_LENGTH_ADDR 
+		     ,(SELECT MAX(LENGTH(EXECUTIVE_DETAIL)) FROM ORGANIZATION)  AS MAX_LENGTH_EXECUTIVE_DETAIL   -->
+		 FROM ORGANIZATION A  
+		   ORDER BY 1;
+	</select>
+	
+	<select id="selectLinkOpenDataWffcltyList" resultType="egovMap">
+		 SELECT A.WFFCLTY_CD 
+		      , A.WFFCLTY_NM 
+		      , A.WFFCLTY_CLAS 
+		      , (SELECT COMMCD_VALUE 
+		          FROM COMMON_CODE
+		         WHERE COMMCD_FG = 'WF01'
+		           AND COMMCD    = A.WFFCLTY_CLAS
+		       )                                     AS WFFCLTY_CLAS_CD
+		     , A.WFFCLTY_TP 
+		     , CASE WHEN A.WFFCLTY_CLAS = 'A' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF02'
+		                                                AND COMMCD    = A.WFFCLTY_TP
+		                                           )    
+		            WHEN A.WFFCLTY_CLAS = 'B' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF03'
+		                                                AND COMMCD    = A.WFFCLTY_TP
+		                                           )                                               
+		            WHEN A.WFFCLTY_CLAS = 'C' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF04'
+		                                                AND COMMCD    = A.WFFCLTY_TP
+		                                           )                                                               
+		                                           
+		            WHEN A.WFFCLTY_CLAS = 'D' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF05'
+		                                                AND COMMCD    = A.WFFCLTY_TP
+		                                           )                                                               
+		            WHEN A.WFFCLTY_CLAS = 'E' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF06'
+		                                                AND COMMCD    = A.WFFCLTY_TP
+		                                           )                                                               
+		       END                                   AS WFFCLTY_TP_NM
+		     , A.UNIQUE_NO 
+		     , B.INTENDANT_NM 
+		     , A.OGNZT_CD 
+		     , (SELECT OGNZT_NM
+		         FROM ORGANIZATION
+		        WHERE OGNZT_CD = A.OGNZT_CD
+		       )                                     AS OGNZT_NM
+		     , GET_TELNUM(B.PHONE_NUM)               AS PHONE_NUM
+		     , GET_TELNUM(B.FAX_NUM)                 AS FAX_NUM
+		     , B.ZIP_CD
+		     , B.ADDR_BASE || B.ADDR_DETAIL          AS ADDR
+		     , B.GU_CD 
+		     , ( SELECT COMMCD_VALUE
+		           FROM COMMON_CODE
+		          WHERE COMMCD_FG = 'CG01'
+		            AND COMMCD    = B.GU_CD
+		        )                                    AS GUNM                               
+		     , TO_CHAR(TO_DATE(ESTABLISH_DD, 'YYYYMMDD'), 'YYYY-MM-DD') AS ESTABLISH_DD
+		     , B.HOMEPAGE_URL 
+		     , GET_WORKER(A.WFFCLTY_CD)              AS WORKER     
+		     , GET_DISABLE_TYPE(A.WFFCLTY_CD)        AS DISABLE_TYPE
+		     , B.CAPACITY 
+		     , B.AREA 
+		     , CASE WHEN A.WFFCLTY_TP = 'B02' THEN B.ETC_DETAIL1
+		            WHEN A.WFFCLTY_TP = 'B07' THEN B.ETC_DETAIL1
+		            WHEN A.WFFCLTY_TP = 'B08' THEN B.ETC_DETAIL1
+		            WHEN A.WFFCLTY_TP = 'D03' THEN B.ETC_DETAIL1
+		            ELSE                           '' 
+		       END                                   AS SERVICE_PLACE  
+		  FROM WFFCLTY_BASE   A
+		     , WFFCLTY_DETAIL B
+		 WHERE A.WFFCLTY_CD = B.WFFCLTY_CD
+		 ORDER BY 1
+	</select>
+	
+	<select id="selectLinkOpenDataProgramList" resultType="egovMap">
+		SELECT A.WFFCLTY_CD 
+		     , B.WFFCLTY_NM 
+		     , B.WFFCLTY_CLAS 
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		         WHERE COMMCD_FG = 'WF01'
+		           AND COMMCD    = B.WFFCLTY_CLAS
+		       )                                    AS WFFCLTY_CLAS_CD
+		     , B.WFFCLTY_TP 
+		     , CASE WHEN B.WFFCLTY_CLAS = 'A' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF02'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )    
+		            WHEN B.WFFCLTY_CLAS = 'B' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF03'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                               
+		            WHEN B.WFFCLTY_CLAS = 'C' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF04'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		                                           
+		            WHEN B.WFFCLTY_CLAS = 'D' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF05'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		            WHEN B.WFFCLTY_CLAS = 'E' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF06'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		       END                                    AS WFFCLTY_TP_NM
+		     , A.PROGRAM_CD 
+		     , A.PROGRAM_NM 
+		     , A.PROGRAM_DETAIL
+		     , A.TRGTER_DETAIL 
+		     , A.TIME_DETAIL 
+		     , A.FEE_DETAIL
+		    <!--  ,(SELECT MAX(LENGTH(WFFCLTY_NM)) FROM WFFCLTY_BASE)        AS MAX_LENGTH_WFFCLTY_NM
+		     ,(SELECT MAX(LENGTH(PROGRAM_NM)) FROM WFFCLTY_PROGRAM)     AS MAX_LENGTH_PROGRAM_NM
+		     ,(SELECT MAX(LENGTH(PROGRAM_DETAIL)) FROM WFFCLTY_PROGRAM) AS MAX_LENGTH_PROGRAM_DETAIL
+		     ,(SELECT MAX(LENGTH(TRGTER_DETAIL)) FROM WFFCLTY_PROGRAM)  AS MAX_LENGTH_TRGTER_DETAIL
+		     ,(SELECT MAX(LENGTH(TIME_DETAIL)) FROM WFFCLTY_PROGRAM)    AS MAX_LENGTH_TIME_DETAIL 
+		     ,(SELECT MAX(LENGTH(FEE_DETAIL)) FROM WFFCLTY_PROGRAM)     AS MAX_LENGTH_FEE_DETAIL -->
+		  FROM WFFCLTY_PROGRAM A
+		     , WFFCLTY_BASE    B
+		 WHERE A.WFFCLTY_CD = B.WFFCLTY_CD    
+		  AND A.WFFCLTY_CD != '0070'
+		 ORDER BY A.WFFCLTY_CD, A.PROGRAM_CD   
+	</select>
+	
+	
+	<select id="selectLinkOpenDataWokerList" resultType="egovMap">
+		SELECT A.WFFCLTY_CD 
+		     , B.WFFCLTY_NM 
+		     , B.WFFCLTY_CLAS 
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		         WHERE COMMCD_FG = 'WF01'
+		           AND COMMCD    = B.WFFCLTY_CLAS
+		       )                AS WFFCLTY_CLAS_CD
+		     , B.WFFCLTY_TP 
+		     , CASE WHEN B.WFFCLTY_CLAS = 'A' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF02'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )    
+		            WHEN B.WFFCLTY_CLAS = 'B' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF03'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                               
+		            WHEN B.WFFCLTY_CLAS = 'C' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF04'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		                                           
+		            WHEN B.WFFCLTY_CLAS = 'D' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF05'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		            WHEN B.WFFCLTY_CLAS = 'E' THEN ( SELECT COMMCD_VALUE
+		                                               FROM COMMON_CODE
+		                                              WHERE COMMCD_FG = 'WF06'
+		                                                AND COMMCD    = B.WFFCLTY_TP
+		                                           )                                                               
+		       END                           AS  WFFCLTY_TP_NM
+		     , A.WORKER_ID 
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		         WHERE COMMCD_FG = SUBSTR(A.POSITION_CD, 1, 4)
+		           AND COMMCD    = SUBSTR(A.POSITION_CD, 5, 2)
+		       )                                         AS  JOB_POSITION 
+		     , DECODE(A.DISABLE_HAVE_FG, '1', 'Y', 'N')  AS  DISABLE_HAVE_FG
+		  FROM WFFCLTY_WORKER A
+		     , WFFCLTY_BASE   B
+		 WHERE A.WFFCLTY_CD = B.WFFCLTY_CD
+		 ORDER BY A.WFFCLTY_CD, A.WORKER_ID;
+	</select>
+
+	<select id="selectLinkOpenDataDspsnList" resultType="egovMap">
+		 SELECT A.DSPSN_ID 
+		     , (SELECT COMMCD_VALUE
+		         FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'TP03'
+		          AND COMMCD    = A.GENDER
+		       )                  AS GENDER
+		     , (SELECT COMMCD_VALUE
+		         FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'TP12'
+		          AND COMMCD    = A.GUARANTEE_FG
+		       )                 AS GUARANTEE_FG
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'TP05'
+		          AND COMMCD    = B.DISABLE_TP
+		       )                  AS DISABLE_TP
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'FG12'
+		          AND COMMCD    = B.DISABLE_DGREE_FG
+		       )                 AS DISABLE_DGREE_FG
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'DT01'
+		          AND COMMCD    = B.OUTBREAK_TIME_FG
+		       )                 AS OUTBREAK_TIME_FG
+		     , (SELECT COMMCD_VALUE
+		          FROM COMMON_CODE
+		        WHERE COMMCD_FG = 'FG13'
+		          AND COMMCD    = B.OUTBREAK_RSN_FG
+		       )                 AS OUTBREAK_RSN_FG
+             , (SELECT LISTAGG(D.WFFCLTY_NM,',') WITHIN GROUP (ORDER BY D.WFFCLTY_NM) AS AD
+                  FROM WFFCLTY_ENTER C, WFFCLTY_BASE D 
+                WHERE C.DSPSN_ID = A.DSPSN_ID
+                  AND C.LVHS_DD is null 
+                  AND C.WFFCLTY_CD = D.WFFCLTY_CD
+               )				 AS WFFCLTY_NM
+		  FROM DSPSN A
+		     , DSPSN_DISABILITY B
+		 WHERE A.DSPSN_ID = B.DSPSN_ID(+)
+		   AND A.USE_FG=1
+		 ORDER BY  A.DSPSN_ID
+	</select>	
+</mapper>

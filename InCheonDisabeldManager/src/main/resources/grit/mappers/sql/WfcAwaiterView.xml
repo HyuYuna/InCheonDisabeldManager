@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcAwaiterViewDAO">
+	<select id="selectWfcAwaiterView" parameterType="egovMap" resultType="egovMap">
+	SELECT 		(select X.WFFCLTY_NM from WFFCLTY_base X WHERE X.WFFCLTY_CD = A.WFFCLTY_CD) AS WFFCLTY_NM
+			   ,A.RECEIVE_DD /* 예약접수일자(YYYYMMDD) */
+               ,A.RECEIVE_SEQNO /* 예약접수순번(일자별 순번) */
+               ,TO_CHAR(TO_DATE(A.RECEIVE_DD||A.RECEIVE_TM, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS REGIST_DT
+               ,A.RECEIVE_TM /* 예약접수시간*/
+               ,A.RSVCTM  /* 예약자*/
+               ,DEC_B64('KEY1', A.ENC_PHONE_NUM) AS ENC_PHONE_NUM /* 연락처 */
+               ,A.EMAIL /* 이메일 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP05' AND A.DISABLE_TP = Z.COMMCD) AS DISABLE_TP_NM /* 시설이용대상자장애유형 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12' AND A.DISABLE_DGREE_FG = Z.COMMCD) AS DISABLE_DGREE_FG_NM /* 시설이용대상자장애정도 */
+               ,A.DISABLE_TP/* 시설이용대상자장애유형 */
+               ,A.DISABLE_DGREE_FG /* 시설이용대상자장애정도 */
+               ,A.NOTE /*  비고 */
+               ,A.PROGRESS_STS /* 진행상태 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'PS01' AND PROGRESS_STS = Z.COMMCD) AS PROGRESS_STS_NM /* 진행상태 */
+               ,A.PROCESS_DT /* 처리일자 */
+               ,(select USER_NM from users where USER_ID = A.DISPOSER AND USE_FG = '1') AS DISPOSER /* 작업자 */
+               ,A.WFFCLTY_CD /* 복지시설코드 */
+               ,A.USE_FG /*  사용여부 */
+               ,A.REGIST_DT/* 등록일 */  
+               ,A.REGISTERER /* 등록자 */
+    		FROM WFFCLTY_AWAITER A
+    		WHERE 1=1
+      <if test ="wffcltyCd != '' and wffcltyCd != null">
+      AND A.WFFCLTY_CD = #{wffcltyCd}
+     </if>
+      <if test ="searchprogressSts != '' and searchprogressSts != null">
+      AND A.PROGRESS_STS = #{searchprogressSts}
+      </if>
+      <if test ="sDate != '' and sDate != null">
+      AND TO_CHAR(A.REGIST_DT, 'YYYY-MM-DD') &gt;= #{sDate}
+      </if>
+      <if test ="eDate != '' and eDate != null">
+      AND TO_CHAR(A.REGIST_DT, 'YYYY-MM-DD') &lt;= #{eDate}
+      </if>
+      <if test ="searchMemberNm != '' and searchMemberNm != null">
+      AND A.RSVCTM LIKE '%'||#{searchMemberNm}||'%'
+      </if>
+      ORDER BY WFFCLTY_NM ASC
+	</select>
+	
+</mapper>

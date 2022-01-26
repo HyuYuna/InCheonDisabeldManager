@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sysCodeMgmtDAO">
+
+	<select id="selectSysCodeMgmt" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT
+		    COMMCD_FG,
+		    COMMCD_FG_NM,
+		    COMMCD,
+		    COMMCD_VALUE,
+		    SORT_ORD,
+		    USE_FG,
+		    DECODE(USE_FG,'1','사용','미사용') USE_FG_NM
+		FROM
+		    COMMON_CODE
+		WHERE
+		    1=1
+		]]>
+		<if test='schCommcd != "" and schCommcd != null'>
+		    AND INSTR(COMMCD_FG,#{schCommcd}) > 0
+		</if>
+		<if test='schCommcdValue != "" and schCommcdValue != null'>
+		    AND INSTR(COMMCD_VALUE,#{schCommcdValue}) > 0
+		</if>
+	</select>
+	
+	<update id="saveSysCodeMgmt" parameterType="egovMap">
+		<![CDATA[
+		MERGE INTO COMMON_CODE 
+		USING DUAL
+		ON (COMMCD_FG=#{commcdFg} and COMMCD=#{commcd})
+		WHEN MATCHED THEN
+			UPDATE SET
+			    COMMCD_FG_NM = #{commcdFgNm},
+			    COMMCD_VALUE = #{commcdValue},
+			    SORT_ORD = #{sortOrd},
+			    USE_FG = #{useFg},
+			    UPDATE_DT= SYSDATE,
+			    UPDATER = #{sessUserId}
+		WHEN NOT MATCHED THEN
+			INSERT (COMMCD_FG, COMMCD_FG_NM, COMMCD, COMMCD_VALUE, SORT_ORD, USE_FG, REGIST_DT, REGISTERER)
+			VALUES (#{commcdFg},#{commcdFgNm},#{commcd},#{commcdValue},#{sortOrd},#{useFg},SYSDATE,#{sessUserId})
+		]]>
+	</update>
+	
+
+</mapper>

@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Doc version="1.0" pagecount="2"                  docname="" fontRevision="1" serviceid="48B5F134F77599425FC9AA878FCF78" enableNoPage="true" isconverthtml="false">
+<DocProperty width="595" height="841" dwidth="595.2755905511812" dheight="841.8897637795277" margintop="29" marginbottom="27" marginleft="29" marginright="28" pagesize="A4" orientation="Portrait" language="Korean" />
+<Fontobj id="0_0" name="맑은 고딕" style="0" size="10" />
+<Fontobj id="1_0" name="맑은 고딕" style="1" size="15" />
+<Fontobj id="2_0" name="맑은 고딕" style="1" size="17" />
+<Fontobj id="3_0" name="맑은 고딕" style="0" size="14" />
+<Fontobj id="4_0" name="맑은 고딕" style="0" size="17" />
+<Fontobj id="5_0" name="맑은 고딕" style="0" size="13" />
+<Fontobj id="6_0" name="맑은 고딕" style="1" size="13" />
+<Fontobj id="7_0" name="맑은 고딕" style="1" size="10" />
+<Lineobj id="0_0" type="-1" thickness="1" colorid="0_0" />
+<Lineobj id="1_0" type="0" thickness="1" colorid="0_0" />
+<Colorobj id="0_0" color="000000" />
+<Colorobj id="1_0" color="ffffff" />
+<Borderobj id="0_0" top="0_0" bottom="0_0" left="0_0" right="0_0" diagonaldown="0_0" diagonalup="0_0" />
+<Borderobj id="1_0" top="1_0" bottom="1_0" left="1_0" right="1_0" diagonaldown="0_0" diagonalup="0_0" />
+<Imageobj id="CELL184httpwwwubireportcomimageslogojpg" width="0" height="0" originalsize="false" fixedrate="0" brightness="0" loadtype="2" loadsrc="http://www.ubireport.com/images/logo.jpg" />
+<Page pagenum="1" masterflag="0" mastertitle="" width="595" height="841" iwidth="538" iheight="785" x="29" y="29" pagesize="A4" orientation="Portrait">
+<Fontid>0_0</Fontid>
+<Fontid>1_0</Fontid>
+<Fontid>2_0</Fontid>
+<Fontid>3_0</Fontid>
+<Fontid>4_0</Fontid>
+<Fontid>5_0</Fontid>
+<Fontid>6_0</Fontid>
+<Fontid>7_0</Fontid>
+<Lineid>0_0</Lineid>
+<Lineid>1_0</Lineid>
+<Colorid>0_0</Colorid>
+<Colorid>1_0</Colorid>
+<Borderid>0_0</Borderid>
+<Borderid>1_0</Borderid>
+<Objectid>CELL184httpwwwubireportcomimageslogojpg</Objectid>
+<Item classname="UbiTextItem" id="CELL162" x="0" y="264" width="538" height="26" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지체 &gt; 청각언어 &gt; 시각 &gt; 뇌병변 &gt; 발달장애 &gt; 신장 &gt; 정신 &gt; 장루요루 &gt; 간 &gt; 호흡기 &gt; 뇌전증 &gt; 심장 &gt; 안면</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL164" x="0" y="384" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >군구별 현황</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL166" x="0" y="0" width="163" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >인천광영식 인구 :</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL168" x="0" y="42" width="163" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장애인 등록인구 :</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL170" x="0" y="84" width="163" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >남:</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL173" x="350" y="0" width="188" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="3_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >(외국인 미포함)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL176" x="163" y="0" width="187" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="4_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >2,945,565명</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL177" x="163" y="42" width="187" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="4_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >145,591명</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL179" x="350" y="42" width="81" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >(전체인구의</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL180" x="431" y="42" width="57" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" halign="1" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >4.94</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL181" x="488" y="42" width="50" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >%)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL182" x="163" y="84" width="125" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >value123</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL183" x="288" y="84" width="90" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >여:</Text>
+</Item>
+<Item classname="UbiImageItem" id="CELL184" x="378" y="84" width="160" height="44" compid="COMP26" forecolorid="" backcolorid="" transparent="0" >
+<Image imageid="CELL184httpwwwubireportcomimageslogojpg" halign="1" valign="1" borderid="0_0" />
+</Item>
+<Item classname="UbiTextItem" id="CELL206" x="177" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL207" x="236" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청각</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL208" x="295" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >언어</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL209" x="354" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL210" x="413" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지적</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL211" x="472" y="186" width="66" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >자폐성</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL212" x="0" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >0037</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL213" x="59" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >202000007</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL214" x="118" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >20201201</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL215" x="177" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >20201203</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL216" x="236" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >3</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL217" x="295" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >수리내역</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL218" x="354" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >수리품목</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL219" x="413" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >100000000</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL220" x="472" y="211" width="66" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >거룡아이티</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL221" x="0" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >신장</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL222" x="59" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >정신</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL223" x="118" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장루요루</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL224" x="177" y="236" width="90" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >간</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL227" x="354" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >뇌전증</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL228" x="413" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심장</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL229" x="472" y="236" width="66" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >안면</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL230" x="0" y="128" width="538" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >유형별 분류 (15개 유형)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL232" x="177" y="161" width="177" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청각 언어</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL233" x="354" y="161" width="184" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >발달장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL234" x="0" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지체</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL235" x="59" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >시각</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL236" x="118" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >뇌병변</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL237" x="267" y="236" width="87" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >호흡기</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL238" x="0" y="290" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장애정도별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL241" x="0" y="322" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심한장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL242" x="269" y="322" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심하지않은장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL243" x="0" y="353" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="53061" >53,061</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL244" x="269" y="353" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="53061" >53,061</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL245" x="0" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >중구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL246" x="107" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >동구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL247" x="214" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >미추홀구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL248" x="321" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >연수구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL249" x="428" y="416" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >남동구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL250" x="0" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL251" x="107" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL252" x="214" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL253" x="321" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL254" x="428" y="452" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL255" x="0" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >부평구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL256" x="107" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계양구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL257" x="214" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >서 구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL258" x="321" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >강화군</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL259" x="428" y="488" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >옹진군</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL260" x="0" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL261" x="107" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL262" x="214" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL263" x="321" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL264" x="428" y="524" width="110" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL271" x="0" y="593" width="136" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >영유아
+(6세 이하)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL272" x="0" y="637" width="136" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL275" x="136" y="593" width="142" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청소년
+(7 ~ 18세)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL276" x="136" y="637" width="142" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL279" x="278" y="593" width="133" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >성인
+(19 ~ 64세)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL280" x="278" y="637" width="133" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL290" x="0" y="561" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >연령별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL291" x="0" y="681" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >보장자격별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL292" x="411" y="593" width="127" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >노인
+(65세이상)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL293" x="411" y="637" width="127" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL297" x="0" y="713" width="179" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >기초생활수급자</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL298" x="179" y="713" width="179" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >차상위계층</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL299" x="358" y="713" width="180" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >일반</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL300" x="0" y="747" width="179" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL301" x="179" y="747" width="179" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL302" x="358" y="747" width="180" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+</Page>
+<DocProperty width="595" height="841" dwidth="595.2755905511812" dheight="841.8897637795277" margintop="29" marginbottom="27" marginleft="29" marginright="28" pagesize="A4" orientation="Portrait" language="Korean" />
+<Fontobj id="0_0" name="맑은 고딕" style="0" size="10" />
+<Fontobj id="1_0" name="맑은 고딕" style="1" size="15" />
+<Fontobj id="2_0" name="맑은 고딕" style="1" size="17" />
+<Fontobj id="3_0" name="맑은 고딕" style="0" size="14" />
+<Fontobj id="4_0" name="맑은 고딕" style="0" size="17" />
+<Fontobj id="5_0" name="맑은 고딕" style="0" size="13" />
+<Fontobj id="6_0" name="맑은 고딕" style="1" size="13" />
+<Fontobj id="7_0" name="맑은 고딕" style="1" size="10" />
+<Lineobj id="0_0" type="-1" thickness="1" colorid="0_0" />
+<Lineobj id="1_0" type="0" thickness="1" colorid="0_0" />
+<Colorobj id="0_0" color="000000" />
+<Colorobj id="1_0" color="ffffff" />
+<Borderobj id="0_0" top="0_0" bottom="0_0" left="0_0" right="0_0" diagonaldown="0_0" diagonalup="0_0" />
+<Borderobj id="1_0" top="1_0" bottom="1_0" left="1_0" right="1_0" diagonaldown="0_0" diagonalup="0_0" />
+<Imageobj id="CELL184httpwwwubireportcomimageslogojpg" width="0" height="0" originalsize="false" fixedrate="0" brightness="0" loadtype="2" loadsrc="http://www.ubireport.com/images/logo.jpg" />
+<Page pagenum="2" masterflag="0" mastertitle="" width="595" height="841" iwidth="538" iheight="785" x="29" y="29" pagesize="A4" orientation="Portrait">
+<Fontid>0_0</Fontid>
+<Fontid>1_0</Fontid>
+<Fontid>2_0</Fontid>
+<Fontid>3_0</Fontid>
+<Fontid>4_0</Fontid>
+<Fontid>5_0</Fontid>
+<Fontid>6_0</Fontid>
+<Fontid>7_0</Fontid>
+<Lineid>0_0</Lineid>
+<Lineid>1_0</Lineid>
+<Colorid>0_0</Colorid>
+<Colorid>1_0</Colorid>
+<Borderid>0_0</Borderid>
+<Borderid>1_0</Borderid>
+<Objectid>CELL184httpwwwubireportcomimageslogojpg</Objectid>
+<Item classname="UbiTextItem" id="CELL162" x="0" y="264" width="538" height="26" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지체 &gt; 청각언어 &gt; 시각 &gt; 뇌병변 &gt; 발달장애 &gt; 신장 &gt; 정신 &gt; 장루요루 &gt; 간 &gt; 호흡기 &gt; 뇌전증 &gt; 심장 &gt; 안면</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL164" x="0" y="384" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >군구별 현황</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL166" x="0" y="0" width="163" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >인천광영식 인구 :</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL168" x="0" y="42" width="163" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장애인 등록인구 :</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL170" x="0" y="84" width="163" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >남:</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL173" x="350" y="0" width="188" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="3_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >(외국인 미포함)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL176" x="163" y="0" width="187" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="4_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >2,945,565명</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL177" x="163" y="42" width="187" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="4_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >145,591명</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL179" x="350" y="42" width="81" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >(전체인구의</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL180" x="431" y="42" width="57" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" halign="1" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >4.94</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL181" x="488" y="42" width="50" height="42" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="5_0" valign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >%)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL182" x="163" y="84" width="125" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="1" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >value123</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL183" x="288" y="84" width="90" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="2_0" halign="2" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >여:</Text>
+</Item>
+<Item classname="UbiImageItem" id="CELL184" x="378" y="84" width="160" height="44" compid="COMP26" forecolorid="" backcolorid="" transparent="0" >
+<Image imageid="CELL184httpwwwubireportcomimageslogojpg" halign="1" valign="1" borderid="0_0" />
+</Item>
+<Item classname="UbiTextItem" id="CELL206" x="177" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL207" x="236" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청각</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL208" x="295" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >언어</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL209" x="354" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL210" x="413" y="186" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지적</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL211" x="472" y="186" width="66" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >자폐성</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL212" x="0" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >0037</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL213" x="59" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >202000007</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL214" x="118" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >20201202</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL215" x="177" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >20201202</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL216" x="236" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >2</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL217" x="295" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >1</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL218" x="354" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >1</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL219" x="413" y="211" width="59" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >1</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL220" x="472" y="211" width="66" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" >1</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL221" x="0" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >신장</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL222" x="59" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >정신</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL223" x="118" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장루요루</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL224" x="177" y="236" width="90" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >간</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL227" x="354" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >뇌전증</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL228" x="413" y="236" width="59" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심장</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL229" x="472" y="236" width="66" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >안면</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL230" x="0" y="128" width="538" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >유형별 분류 (15개 유형)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL232" x="177" y="161" width="177" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청각 언어</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL233" x="354" y="161" width="184" height="25" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >발달장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL234" x="0" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >지체</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL235" x="59" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >시각</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL236" x="118" y="161" width="59" height="50" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="6_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >뇌병변</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL237" x="267" y="236" width="87" height="28" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >호흡기</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL238" x="0" y="290" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >장애정도별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL241" x="0" y="322" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심한장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL242" x="269" y="322" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >심하지않은장애</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL243" x="0" y="353" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="53061" >53,061</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL244" x="269" y="353" width="269" height="31" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="53061" >53,061</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL245" x="0" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >중구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL246" x="107" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >동구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL247" x="214" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >미추홀구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL248" x="321" y="416" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >연수구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL249" x="428" y="416" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >남동구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL250" x="0" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL251" x="107" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL252" x="214" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL253" x="321" y="452" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL254" x="428" y="452" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL255" x="0" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >부평구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL256" x="107" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >계양구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL257" x="214" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >서 구</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL258" x="321" y="488" width="107" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >강화군</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL259" x="428" y="488" width="110" height="36" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >옹진군</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL260" x="0" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL261" x="107" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL262" x="214" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL263" x="321" y="524" width="107" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL264" x="428" y="524" width="110" height="37" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="0_0" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" ></Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL271" x="0" y="593" width="136" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >영유아
+(6세 이하)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL272" x="0" y="637" width="136" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL275" x="136" y="593" width="142" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >청소년
+(7 ~ 18세)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL276" x="136" y="637" width="142" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL279" x="278" y="593" width="133" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >성인
+(19 ~ 64세)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL280" x="278" y="637" width="133" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL290" x="0" y="561" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >연령별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL291" x="0" y="681" width="538" height="32" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" border="0_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >보장자격별 분류</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL292" x="411" y="593" width="127" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >노인
+(65세이상)</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL293" x="411" y="637" width="127" height="44" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="1_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" >846</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL297" x="0" y="713" width="179" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >기초생활수급자</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL298" x="179" y="713" width="179" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >차상위계층</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL299" x="358" y="713" width="180" height="34" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="1" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" >일반</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL300" x="0" y="747" width="179" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL301" x="179" y="747" width="179" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+<Item classname="UbiTextItem" id="CELL302" x="358" y="747" width="180" height="33" compid="COMP26" forecolorid="0_0" backcolorid="1_0" >
+<Text fontid="7_0" halign="2" border="1_0" marginleft="1" marginright="1" margintop="1" marginbottom="1" valuetype="Number" format="#,##0" orgvalue="23928" >23,928</Text>
+</Item>
+</Page>
+<DocInfo startindex="1" pagecount="2" docname="" />
+</Doc>

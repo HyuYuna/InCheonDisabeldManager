@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PgmCategorizeMgmtDAO">
+
+	<select id="searchLclasList" parameterType="egovMap" resultType="egovMap">
+			SELECT 
+		      WFFCLTY_CD
+		    , LCLAS_CD 
+		    , LCLAS_NM
+		    , LCLAS_DETAIL
+		    , USE_FG
+		  FROM WFFCLTY_PROGRAM_LCLAS
+		   WHERE WFFCLTY_CD = #{wffcltyCd}
+	</select>
+	
+	<select id="searchMclasList" parameterType="egovMap" resultType="egovMap">
+		   SELECT 
+		      WFFCLTY_CD
+			, MCLAS_CD
+			, LCLAS_CD
+			, MCLAS_NM
+			, MCLAS_DETAIL
+		    , USE_FG
+		  FROM WFFCLTY_PROGRAM_MCLAS
+		   WHERE WFFCLTY_CD = #{wffcltyCd}
+	</select>
+	
+	<select id="selectClasList" parameterType="egovMap" resultType="egovMap">
+		  SELECT
+		         WFFCLTY_CD
+		        ,CLAS_CD       
+		        ,CLAS_NM
+		        ,'['||CLAS_CD||' '||CLAS_NM||']' AS CLAS
+		        ,CLAS_DETAIL
+		        ,LCLAS_CD
+		        ,MCLAS_CD
+		        ,USE_FG
+                ,CLAS_FG
+		        ,LV
+                ,TO_CHAR(REGIST_DT, 'YYYY-MM-DD HH24:MI:SS')  AS REGIST_DT
+                ,REGISTERER
+                ,TO_CHAR(UPDATE_DT, 'YYYY-MM-DD HH24:MI:SS')  AS UPDATE_DT
+                ,UPDATER
+		      FROM ( SELECT 
+		                  A.WFFCLTY_CD 
+		                , A.LCLAS_CD     AS CLAS_CD
+		                , A.LCLAS_NM     AS CLAS_NM
+		                , A.LCLAS_DETAIL AS CLAS_DETAIL
+		                ,''              AS LCLAS_CD
+		                ,''              AS MCLAS_CD
+		                , A.USE_FG
+                        , 'L'            AS CLAS_FG 
+		                , '1'            AS LV
+                        , A.REGIST_DT
+                        , A.REGISTERER
+                        , A.UPDATE_DT
+                        , A.UPDATER
+		             FROM WFFCLTY_PROGRAM_LCLAS A
+		               WHERE A.WFFCLTY_CD = #{wffcltyCd}
+		            UNION ALL  
+		            SELECT 
+		                  B.WFFCLTY_CD
+		                , A.MCLAS_CD        AS CLAS_CD
+		                , A.MCLAS_NM        AS CLAS_NM
+		                , A.MCLAS_DETAIL    AS CLAS_DETAIL
+		                , A.LCLAS_CD        AS LCLAS_CD
+		                , ''                AS MCLAS_CD
+		                , A.USE_FG
+                        , 'M'            AS CLAS_FG 
+		                , '2'               AS lv
+                        , A.REGIST_DT
+                        , A.REGISTERER
+                        , A.UPDATE_DT
+                        , A.UPDATER
+		              FROM WFFCLTY_PROGRAM_MCLAS A
+		                 , WFFCLTY_PROGRAM_LCLAS B
+		               WHERE A.WFFCLTY_CD  = B.WFFCLTY_CD
+		                 AND A.LCLAS_CD    = B.LCLAS_CD
+		                 AND A.WFFCLTY_CD  = #{wffcltyCd}
+		             UNION ALL  
+		             SELECT 
+		                  B.WFFCLTY_CD
+		                , A.SCLAS_CD        AS CLAS_CD
+		                , A.SCLAS_NM        AS CLAS_NM
+		                , A.SCLAS_DETAIL    AS CLAS_DETAIL
+		                , A.LCLAS_CD        AS LCLAS_CD
+		                , A.MCLAS_CD        AS MCLAS_CD
+		                , A.USE_FG
+                        , 'S'               AS CLAS_FG 
+		                , '3'               AS LV
+                        , A.REGIST_DT
+                        , A.REGISTERER
+                        , A.UPDATE_DT
+                        , A.UPDATER
+		              FROM WFFCLTY_PROGRAM_SCLAS A
+		                 , WFFCLTY_PROGRAM_LCLAS B
+		                 , WFFCLTY_PROGRAM_MCLAS C
+		               WHERE A.WFFCLTY_CD  = B.WFFCLTY_CD
+		                 AND A.WFFCLTY_CD  = C.WFFCLTY_CD
+		                 AND A.LCLAS_CD    = B.LCLAS_CD
+		                 AND A.MCLAS_CD    = C.MCLAS_CD
+		                 AND A.WFFCLTY_CD  = #{wffcltyCd}
+		          ) A
+      </select>
+      
+      <select id="searchMclaCdList" parameterType="egovMap" resultType="egovMap">
+			  SELECT   
+		          MCLAS_CD
+		        , MCLAS_NM
+		      FROM WFFCLTY_PROGRAM_MCLAS
+		       WHERE WFFCLTY_CD = #{wffcltyCd}
+		         AND LCLAS_CD = #{lclasCd}
+      </select>
+      
+      <insert id="insertLclas" parameterType="egovMap">
+      		INSERT INTO WFFCLTY_PROGRAM_LCLAS(
+			         WFFCLTY_CD
+			        ,LCLAS_CD
+			        ,LCLAS_NM
+			        ,LCLAS_DETAIL
+			        ,USE_FG
+			        ,REGIST_DT
+			        ,REGISTERER
+			)VALUES(
+			         #{wffcltyCd  , jdbcType=VARCHAR}
+			        ,(SELECT LPAD(NVL(MAX(LCLAS_CD)+1,1),'2','0') FROM WFFCLTY_PROGRAM_LCLAS WHERE WFFCLTY_CD = #{wffcltyCd})
+			        ,#{clasNm     , jdbcType=VARCHAR}
+			        ,#{clasDetail , jdbcType=VARCHAR}
+			        ,#{useFg      , jdbcType=VARCHAR}
+			        ,SYSDATE
+			        ,#{register   , jdbcType=VARCHAR}
+			)
+      </insert>
+      
+       <insert id="insertMclas" parameterType="egovMap">
+      		INSERT INTO WFFCLTY_PROGRAM_MCLAS(
+			         WFFCLTY_CD
+			        ,MCLAS_CD
+			        ,LCLAS_CD
+			        ,MCLAS_NM
+			        ,MCLAS_DETAIL
+			        ,USE_FG
+			        ,REGIST_DT
+			        ,REGISTERER
+			)VALUES(
+			         #{wffcltyCd  , jdbcType=VARCHAR}
+			        ,(SELECT #{lclasCd}||LPAD(NVL(MAX((SELECT SUBSTR(MAX(MCLAS_CD),3,4) FROM WFFCLTY_PROGRAM_MCLAS WHERE WFFCLTY_CD = #{wffcltyCd}  AND LCLAS_CD = #{lclasCd}))+1,1),'2','0') FROM WFFCLTY_PROGRAM_MCLAS) 
+			        ,#{lclasCd    , jdbcType=VARCHAR}
+			        ,#{clasNm     , jdbcType=VARCHAR}
+			        ,#{clasDetail , jdbcType=VARCHAR}
+			        ,#{useFg      , jdbcType=VARCHAR}
+			        ,SYSDATE
+			        ,#{register   , jdbcType=VARCHAR}
+			)
+      </insert>
+      
+       <insert id="insertSclas" parameterType="egovMap">
+      		INSERT INTO WFFCLTY_PROGRAM_SCLAS(
+			         WFFCLTY_CD
+			        ,SCLAS_CD
+			        ,LCLAS_CD
+			        ,MCLAS_CD
+			        ,SCLAS_NM
+			        ,SCLAS_DETAIL
+			        ,USE_FG
+			        ,REGIST_DT
+			        ,REGISTERER
+			)VALUES(
+			         #{wffcltyCd  , jdbcType=VARCHAR}
+			        ,(SELECT #{lclasCd}||SUBSTR(#{mclasCd},3,4)||LPAD(NVL(MAX((SELECT SUBSTR(MAX(SCLAS_CD),5,6) FROM WFFCLTY_PROGRAM_SCLAS WHERE WFFCLTY_CD = #{wffcltyCd} AND LCLAS_CD = #{lclasCd}  AND MCLAS_CD = #{mclasCd}))+1,1),'2','0') FROM WFFCLTY_PROGRAM_SCLAS) 
+			        ,#{lclasCd    , jdbcType=VARCHAR}
+			        ,#{mclasCd    , jdbcType=VARCHAR}
+			        ,#{clasNm     , jdbcType=VARCHAR}
+			        ,#{clasDetail , jdbcType=VARCHAR}
+			        ,#{useFg      , jdbcType=VARCHAR}
+			        ,SYSDATE
+			        ,#{register   , jdbcType=VARCHAR}
+			)
+      </insert>
+      
+      <update id="updateLclas" parameterType="egovMap">
+      		UPDATE WFFCLTY_PROGRAM_LCLAS
+      		 	SET 
+      		 	  	 LCLAS_NM     = #{clasNm     , jdbcType=VARCHAR}
+					,LCLAS_DETAIL = #{clasDetail , jdbcType=VARCHAR}
+					,USE_FG       = #{useFg      , jdbcType=VARCHAR}
+					,UPDATE_DT    = SYSDATE
+					,UPDATER      = #{register   , jdbcType=VARCHAR}
+				WHERE WFFCLTY_CD  = #{wffcltyCd}
+					AND LCLAS_CD  = #{clasCd}
+      </update>
+      
+      <update id="updateMclas" parameterType="egovMap">
+      		UPDATE WFFCLTY_PROGRAM_MCLAS
+      		 	SET 
+      		 	  	 MCLAS_NM     = #{clasNm     , jdbcType=VARCHAR}
+					,MCLAS_DETAIL = #{clasDetail , jdbcType=VARCHAR}
+					,USE_FG       = #{useFg      , jdbcType=VARCHAR}
+					,UPDATE_DT    = SYSDATE
+					,UPDATER      = #{register   , jdbcType=VARCHAR}
+				WHERE WFFCLTY_CD  = #{wffcltyCd}
+					AND MCLAS_CD  = #{clasCd}
+      </update>
+      
+      <update id="updateSclas" parameterType="egovMap">
+      		UPDATE WFFCLTY_PROGRAM_SCLAS
+      		 	SET 
+      		 	  	 SCLAS_NM     = #{clasNm     , jdbcType=VARCHAR}
+					,SCLAS_DETAIL = #{clasDetail , jdbcType=VARCHAR}
+					,USE_FG       = #{useFg      , jdbcType=VARCHAR}
+					,UPDATE_DT    = SYSDATE
+					,UPDATER      = #{register   , jdbcType=VARCHAR}
+				WHERE WFFCLTY_CD  = #{wffcltyCd}
+					AND SCLAS_CD  = #{clasCd}
+      </update>
+	
+		
+	<!-- 복지시설 자동조회 -->
+	<select id="searchWffcltyCdList" parameterType="egovMap" resultType="egovMap">
+		SELECT 
+             WFFCLTY_CD   
+           , WFFCLTY_NM        
+        FROM WFFCLTY_BASE
+          WHERE (WFFCLTY_CD LIKE '%'||#{wffcltyCd}||'%' OR WFFCLTY_NM LIKE '%'||#{wffcltyCd}||'%')
+	</select>
+	
+	
+	<select id="lclasCount" parameterType="egovMap" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+			FROM  WFFCLTY_PROGRAM_MCLAS
+      	WHERE WFFCLTY_CD = #{wffcltyCd} 
+          AND LCLAS_CD = #{clasCd}	
+	</select>
+	
+	<select id="mclasCount" parameterType="egovMap" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+			FROM  WFFCLTY_PROGRAM_SCLAS
+      	WHERE WFFCLTY_CD = #{wffcltyCd} 
+          AND MCLAS_CD = #{clasCd}	
+	</select>
+	
+	<select id="sclasCount" parameterType="egovMap" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+			FROM  WFFCLTY_PROGRAM
+      	WHERE WFFCLTY_CD = #{wffcltyCd} 
+          AND SCLAS_CD = #{clasCd}	
+	</select>
+	
+	<delete id="deletLclas" parameterType="egovMap">
+		DELETE FROM WFFCLTY_PROGRAM_LCLAS
+		 WHERE WFFCLTY_CD = #{wffcltyCd} 
+		  AND LCLAS_CD = #{clasCd}	
+	</delete>
+	
+	<delete id="deletMclas" parameterType="egovMap">
+		DELETE FROM WFFCLTY_PROGRAM_MCLAS
+		 WHERE WFFCLTY_CD = #{wffcltyCd} 
+		  AND MCLAS_CD = #{clasCd}	
+	</delete>
+	
+	<delete id="deletSclas" parameterType="egovMap">
+		DELETE FROM WFFCLTY_PROGRAM_SCLAS
+		 WHERE WFFCLTY_CD = #{wffcltyCd} 
+		  AND SCLAS_CD = #{clasCd}	
+	</delete>
+	
+	
+</mapper>

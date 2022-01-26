@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasGroupMgmtDAO">
+	<select id="selectGroupList" parameterType="egovMap" resultType="egovMap">
+		SELECT OGNZT_CD,
+		       OGNZT_NM,
+		       OGNZT_FG,
+		       DECODE(OGNZT_FG, 'E', DEC_B64('KEY1', ENC_PRMISN_NO), ENC_PRMISN_NO) ENC_PRMISN_NO,
+		       RPRSNTV_NM,
+		       PHONE_NUM1,
+		       PHONE_NUM2,
+		       FAX_NUM,
+		       ZIP_CD,
+		       ADDR_BASE,
+		       ADDR_DETAIL,
+		       TO_CHAR(TO_DATE(ESTABLISH_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS ESTABLISH_DD,
+		       EXECUTIVE_DETAIL,
+		       CHARGER_NM,
+		       REGEXP_REPLACE(REVERSE(REGEXP_REPLACE(REVERSE(TO_CHAR(ASSETS)), '([0-9]{3})','\1,')), '^,','') ASSETS,
+		       REGEXP_REPLACE(REVERSE(REGEXP_REPLACE(REVERSE(TO_CHAR(MEMBER_CNT)), '([0-9]{3})','\1,')), '^,','') MEMBER_CNT,
+		       WFFCLTY_OPER_FG,
+		       USE_FG
+		  FROM ORGANIZATION
+		  WHERE 1=1
+		  <if test="searchOgnztNm != null and searchOgnztNm != ''">
+		  AND OGNZT_NM like '%'||#{searchOgnztNm}||'%'
+		  </if>
+		   <if test="searchRprsntvNm != null and searchRprsntvNm != ''">
+		  AND RPRSNTV_NM like '%'||#{searchRprsntvNm}||'%'
+		   </if>
+		   <if test="searchOgnztFg != null and searchOgnztFg != ''">
+		  AND OGNZT_FG = #{searchOgnztFg}
+		   </if>
+		   <if test="searchWffcltyOperFg != null and searchWffcltyOperFg != ''">
+		  AND WFFCLTY_OPER_FG = #{searchWffcltyOperFg}
+		   </if>
+	</select>
+	
+	<insert id="insertGroupInfo" parameterType="egovMap">
+		INSERT INTO ORGANIZATION(
+			       OGNZT_CD,
+			       OGNZT_NM,
+			       OGNZT_FG,
+			       ENC_PRMISN_NO,
+			       RPRSNTV_NM,
+			       PHONE_NUM1,
+			       PHONE_NUM2,
+			       FAX_NUM,
+			       ZIP_CD,
+			       ADDR_BASE,
+			       ADDR_DETAIL,
+			       ESTABLISH_DD,
+			       EXECUTIVE_DETAIL,
+			       CHARGER_NM,
+			       ASSETS,
+			       MEMBER_CNT,
+			       WFFCLTY_OPER_FG,
+			       USE_FG,
+			       REGIST_DT,
+			       REGISTERER
+			)VALUES ( 
+    (SELECT SUBSTR(TO_CHAR(NVL(MAX(OGNZT_CD), 0) + 1, 'S0000'), 2, 4)FROM ORGANIZATION),
+               #{ognztNm,      jdbcType=VARCHAR},
+               #{ognztFg,      jdbcType=VARCHAR},
+               <if test = 'ognztFg != "E"'>
+               #{encPrmisnNo,      jdbcType=VARCHAR},
+               </if>
+               <if test = 'ognztFg == "E"'>
+               ENC_B64('KEY1', #{encPrmisnNo,      jdbcType=VARCHAR}),
+               </if>
+               #{rprsntvNm,      jdbcType=VARCHAR},
+               #{phoneNum1,      jdbcType=VARCHAR},
+               #{phoneNum2,      jdbcType=VARCHAR},
+               #{faxNum,      jdbcType=VARCHAR},
+               #{zipCd,      jdbcType=VARCHAR},
+               #{addrBase,      jdbcType=VARCHAR},
+               #{addrDetail,      jdbcType=VARCHAR},
+               replace(#{establishDd,      jdbcType=VARCHAR}, '-'),
+               #{executiveDetail,      jdbcType=VARCHAR},
+               #{chargerNm,      jdbcType=VARCHAR},
+               replace(#{assets,      jdbcType=VARCHAR}, ','),
+               replace(#{memberCnt,      jdbcType=VARCHAR}, ','),
+               #{facOp,      jdbcType=VARCHAR},
+               #{useFg,      jdbcType=VARCHAR},
+               SYSDATE,
+               #{register,      jdbcType=VARCHAR})
+	</insert>
+	<update id="updateGroupInfo">
+	UPDATE ORGANIZATION
+		    SET
+       OGNZT_NM = #{ognztNm},
+       OGNZT_FG = #{ognztFg},
+       <if test = 'ognztFg != "E"'>
+       ENC_PRMISN_NO = #{encPrmisnNo},
+       </if>
+       <if test = 'ognztFg == "E"'>
+       ENC_PRMISN_NO = ENC_B64('KEY1', #{encPrmisnNo}),
+       </if>
+       RPRSNTV_NM= #{rprsntvNm,      jdbcType=VARCHAR},
+       PHONE_NUM1= #{phoneNum1,      jdbcType=VARCHAR},
+       PHONE_NUM2= #{phoneNum2,      jdbcType=VARCHAR},
+       FAX_NUM= #{faxNum,      jdbcType=VARCHAR},
+       ZIP_CD = #{zipCd,      jdbcType=VARCHAR},
+       ADDR_BASE= #{addrBase,      jdbcType=VARCHAR},
+       ADDR_DETAIL= #{addrDetail,      jdbcType=VARCHAR},
+       ESTABLISH_DD = replace(#{establishDd,      jdbcType=VARCHAR}, '-'),
+       EXECUTIVE_DETAIL= #{executiveDetail,      jdbcType=VARCHAR},
+       CHARGER_NM= #{chargerNm,      jdbcType=VARCHAR},
+       ASSETS= replace(#{assets,      jdbcType=VARCHAR}, ','),
+       MEMBER_CNT = replace(#{memberCnt,      jdbcType=VARCHAR}, ','),
+       WFFCLTY_OPER_FG = #{facOp,      jdbcType=VARCHAR},
+       USE_FG = #{useFg,      jdbcType=VARCHAR},
+       UPDATE_DT = SYSDATE,
+       UPDATER = #{register,      jdbcType=VARCHAR}
+ WHERE OGNZT_CD = #{ognztCd,      jdbcType=VARCHAR}
+	</update>
+	
+	<select id="encChk" parameterType="egovMap" resultType="Integer">
+	SELECT count(*)
+	  FROM ORGANIZATION
+	  WHERE ENC_PRMISN_NO = DECODE(#{ognztFg}, 'E', ENC_B64('KEY1', #{encPrmisnNo}), #{encPrmisnNo})
+	  <if test = 'rprsntvNm != "" and rprsntvNm != null'>
+	    AND RPRSNTV_NM = #{rprsntvNm}
+	  </if>
+	</select>
+	
+	<select id="selectWffcltyBaseOgnztCd" parameterType="egovMap" resultType="Integer">
+	SELECT COUNT(*) FROM WFFCLTY_BASE /* selectWffcltyBaseOgnztCd */
+      WHERE OGNZT_CD = #{ognztCd} 
+	</select>
+	
+	<delete id="deleteBasGroup">
+		DELETE 
+			FROM ORGANIZATION 
+		WHERE OGNZT_CD = #{ognztCd};
+	</delete>
+</mapper>

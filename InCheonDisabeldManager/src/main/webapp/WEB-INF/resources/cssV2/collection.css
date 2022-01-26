@@ -1,0 +1,9 @@
+/* WEB 전체 공통 적용 */
+
+@import url("global.css");
+
+/* 공통 Frame, components */
+
+@import url("common.css");
+
+@import url("grit_ext.css");

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commonLoginDAO">
+
+    <!-- 회원정보 조회 -->
+	<select id="selectUserInfo" parameterType="egovMap" resultType="egovMap">
+		SELECT /*commonLoginDAO."selectUserInfo" */
+	      USER_ID          
+	    , USER_NM          
+	    , ENC_PASSWORD     AS pwd 
+	    , USER_GROUP_CD
+	    , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = USER_GROUP_CD AND COMMCD_FG = 'TP01'AND USE_FG = '1') AS USER_GROUP_NM    
+	    , LINK_CD
+	    , LINK_NM
+	    , USE_FG 
+	    , ACCESS_FG
+        , PASSWORD_MOD_DD
+  FROM(
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD   
+               ,'' 
+               ,A.LINK_CD
+               ,B.WFFCLTY_NM      AS LINK_NM
+               ,A.USE_FG 
+               ,A.ACCESS_FG
+               ,A.PASSWORD_MOD_DD
+          FROM USERS A ,
+               WFFCLTY_BASE B
+         WHERE USER_GROUP_CD = 'C'
+           AND a.LINK_CD = b.WFFCLTY_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''
+               ,A.LINK_CD
+               ,B.OGNZT_NM        AS LINK_NM
+               ,A.USE_FG
+               ,A.ACCESS_FG
+               ,A.PASSWORD_MOD_DD 
+          FROM USERS A ,
+               ORGANIZATION B
+         WHERE USER_GROUP_CD = 'D'
+           AND a.LINK_CD = b.OGNZT_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''    
+               ,A.LINK_CD
+               ,''
+               ,A.USE_FG 
+               ,A.ACCESS_FG
+               ,A.PASSWORD_MOD_DD
+          FROM USERS A
+	         WHERE USER_GROUP_CD NOT IN ('C','D')
+		  )A
+	    WHERE USER_ID = #{userId}
+	
+	</select>
+	
+	<select id="selectUserPassword" parameterType="String" resultType="String">
+		SELECT HASH_STR('71',#{chkPwd}) FROM DUAL
+	</select>
+	
+	
+	<!-- 로그인 이력 등록 -->
+	<insert id="insertSysLoginLog" parameterType="egovMap">
+		INSERT
+		  INTO USERS_HISTORY
+		     ( LOG_DT
+			 , USER_ID
+			 , IP_ADDRESS
+			 , STATUS
+			 , LOG_FG
+		     )
+		VALUES
+		     ( SYSDATE
+			 , #{loginId}
+			 , #{ip}
+			 , #{succYn}
+			 , #{jobFgCd}
+		     )
+	</insert>
+	
+	<!-- 유저 최근 접속 IP, 시간 조회 -->
+	<select id="selectRecentSysLoginLog" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			IP_ADDRESS AS IP
+			, LOG_DT AS JOB_DTM
+		FROM (
+			SELECT * FROM USERS_HISTORY
+			WHERE USER_ID = #{userId}
+			ORDER BY LOG_DT DESC
+		)
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+
+	<!-- SESSION용 사용자 정보 조회 -->
+	<select id="getUserInfo"  parameterType="egovMap" resultType="egovMap">
+		SELECT /*commonLoginDAO."getUserInfo" */
+	      USER_ID          
+	    , USER_NM
+	    , SUBSTR(ENC_PASSWORD,0,10) AS ENC_PASSWORD
+	    , ENC_PASSWORD  AS HIDDEN_ENC_PASSWORD   
+	    , USER_GROUP_CD
+	    , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = USER_GROUP_CD AND COMMCD_FG = 'TP01'AND USE_FG = '1') AS USER_GROUP_NM    
+	    , LINK_CD
+	    , LINK_NM
+	    , USE_FG 
+	    , WFFCLTY_CD
+  FROM(
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD   
+               ,'' 
+               ,A.LINK_CD
+               ,B.WFFCLTY_NM      AS LINK_NM
+               ,A.USE_FG 
+               ,B.WFFCLTY_CD
+          FROM USERS A ,
+               WFFCLTY_BASE B
+         WHERE USER_GROUP_CD = 'C'
+           AND a.LINK_CD = b.WFFCLTY_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''
+               ,A.LINK_CD
+               ,B.OGNZT_NM        AS LINK_NM
+               ,A.USE_FG 
+               ,'' WFFCLTY_CD
+          FROM USERS A ,
+               ORGANIZATION B
+         WHERE USER_GROUP_CD = 'D'
+           AND a.LINK_CD = b.OGNZT_CD(+)
+         UNION ALL
+        SELECT  A.USER_ID
+               ,A.USER_NM
+               ,A.ENC_PASSWORD     
+               ,A.USER_GROUP_CD
+               ,''    
+               ,A.LINK_CD
+               ,''
+               ,A.USE_FG 
+               ,'' WFFCLTY_CD
+          FROM USERS A
+	         WHERE USER_GROUP_CD NOT IN ('C','D')
+		  )A
+	    WHERE USER_ID = #{userId}	
+	</select>
+
+	
+	<!-- SESSION용 사용자 메뉴 권한 리스트 -->
+	<select id="selectSysGroupMenu"  parameterType="egovMap" resultType="egovMap">
+		  SELECT /*commonLoginDAO.selectSysGroupMenu */
+			   B.MENU_CD          /* 사용자 메뉴 권한 리스트 */
+		FROM USERS A, PROGRAM_GROUP_AUTHORITY B
+		WHERE A.USER_GROUP_CD   = #{userGroupCd}
+		  AND A.USER_GROUP_CD   = B.USER_GROUP_CD
+		  AND A.USER_ID   = #{userId}
+	</select>
+	
+    <!-- SESSION용 사용자 메뉴 버튼 권한 리스트 -->
+	<select id="selectSysGroupMenuBtn"  parameterType="egovMap" resultType="egovMap">
+		  	SELECT /*commonLoginDAO.selectSysGroupMenuBtn */
+			   GM.MENU_CD,
+			   GM.VIEW_AUTH 
+			|| GM.NEW_AUTH
+			|| GM.SAVE_AUTH
+			|| GM.DELETE_AUTH
+			|| GM.EXCEL_AUTH
+			|| GM.PRINT_AUTH AS AUTH
+		FROM PROGRAM_GROUP_AUTHORITY GM
+		WHERE GM.USER_GROUP_CD   = #{userGroupCd}
+	</select>
+	
+	<!-- home 장애인 현황 -->
+	<select id="searchDisableStatusList"  resultType="egovMap">
+		WITH CITY_DISABILITY AS(
+		   SELECT 
+		          SUBSTR(YYYYMM,0,4)||'.'||SUBSTR(YYYYMM,5,6) AS YYYYMM
+		         ,GB
+		         ,TOTALSUM  AS TOTALSUM
+		   FROM(		    
+		        
+		     -- 장애정도별 분류(15개유형)
+		     SELECT  YYYYMM 
+		            ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP)    AS GB
+		            ,SUM(MALE_SERIOUS_CNT) + SUM(MALE_MODERATE_CNT)+SUM(FEMALE_SERIOUS_CNT) + SUM(FEMALE_MODERATE_CNT) AS totalSum 
+		      FROM CITY_DISABILITY_DEGREE_STATE 
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		      GROUP BY  YYYYMM,DISABLE_TP
+		      
+		      UNION ALL
+		      
+		      -- 군구별 현황(10개)
+		      SELECT YYYYMM
+		            ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = GU_CD)   AS GB
+		            ,SUM(MALE_SERIOUS_CNT)+ SUM(MALE_MODERATE_CNT)+SUM(FEMALE_SERIOUS_CNT)+SUM(FEMALE_MODERATE_CNT) as totalSum    
+		      FROM CITY_DISABILITY_DEGREE_STATE
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		      GROUP BY  YYYYMM, GU_CD
+		      
+		      UNION ALL
+		      
+		      -- 장애정도별분류(심한장애)   
+		      SELECT YYYYMM 
+		            ,'seriousCnt'   AS GB
+		            ,SUM(MALE_SERIOUS_CNT) + SUM(FEMALE_SERIOUS_CNT)    AS totalSum
+		      FROM CITY_DISABILITY_DEGREE_STATE  
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		        GROUP BY  YYYYMM
+		      
+		      UNION ALL
+		      
+		      -- 장애정도별분류(심하지않는장애)
+		      SELECT YYYYMM 
+		            ,'moderateCnt'   AS GB
+		            ,SUM(MALE_MODERATE_CNT) + SUM(FEMALE_MODERATE_CNT)  AS totalSum
+		      FROM CITY_DISABILITY_DEGREE_STATE  
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		        GROUP BY  YYYYMM
+		
+		      UNION ALL
+			  
+			  -- 장애정도별분류(영유아)
+		      SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') AS YYYYMM
+		             ,'A'       AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		         AND AGE BETWEEN '0' AND '6'
+		      
+		      UNION ALL
+		     
+		     -- 연령별 현황(청소년)
+		     SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') AS YYYYMM
+		            ,'B'      AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		         AND AGE BETWEEN '7' AND '18'
+		         
+		      UNION ALL
+		      
+		      -- 연령별 현황(성인) 
+		      SELECT
+		            TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') AS YYYYMM  
+		             ,'C'     AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		         AND AGE BETWEEN '19' AND '64'
+		       
+		      UNION ALL
+		      
+		      -- 연령별 현황(노인) 
+		      SELECT 
+		            TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') AS YYYYMM
+		             ,'D'     AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+		         AND AGE >= '65'
+		       
+		      UNION ALL
+              
+             -- 기초생활수급자
+             SELECT YYYYMM
+                  ,'dspsnSlybslfCnt'  AS GB
+                  ,DSPSN_SLYBSLF_CNT  AS totalSum
+              FROM CITY_DSPSN_POPLTN
+                WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') 
+           
+              UNION ALL
+                
+             -- 차상위계층
+             SELECT YYYYMM
+                    ,'dspsnSehighCnt'  AS GB
+                    ,DSPSN_SEHIGH_CNT  AS totalSum
+                FROM CITY_DSPSN_POPLTN
+                  WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') 
+               
+             UNION ALL
+                
+             -- 일반
+             SELECT YYYYMM
+                  ,'dspsnGnrlCnt'  AS GB
+                  ,DSPSN_GNRL_CNT  AS totalSum
+               FROM CITY_DSPSN_POPLTN
+                WHERE YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM')
+       
+             
+		      ) A   
+		)
+		SELECT 
+				YYYYMM       
+                ,NVL(DISABLE_TP01,0) DISABLE_TP01
+                ,NVL(DISABLE_TP02,0) DISABLE_TP02
+                ,NVL(DISABLE_TP03,0) DISABLE_TP03
+                ,NVL(DISABLE_TP04,0) DISABLE_TP04
+                ,NVL(DISABLE_TP05,0) DISABLE_TP05
+                ,NVL(DISABLE_TP06,0) DISABLE_TP06
+                ,NVL(DISABLE_TP07,0) DISABLE_TP07
+                ,NVL(DISABLE_TP08,0) DISABLE_TP08
+                ,NVL(DISABLE_TP09,0) DISABLE_TP09
+                ,NVL(DISABLE_TP10,0) DISABLE_TP10
+                ,NVL(DISABLE_TP11,0) DISABLE_TP11
+                ,NVL(DISABLE_TP12,0) DISABLE_TP12
+                ,NVL(DISABLE_TP13,0) DISABLE_TP13
+                ,NVL(DISABLE_TP14,0) DISABLE_TP14
+                ,NVL(DISABLE_TP15,0) DISABLE_TP15
+                
+                ,NVL(SERIOUSCNT, 0) SERIOUS_CNT
+                ,NVL(MODERATECNT,0) MODERATE_CNT
+                ,NVL(GU_CD01,0) GU_CD01
+                ,NVL(GU_CD02,0) GU_CD02
+                ,NVL(GU_CD03,0) GU_CD03
+                ,NVL(GU_CD04,0) GU_CD04
+                ,NVL(GU_CD05,0) GU_CD05
+                ,NVL(GU_CD06,0) GU_CD06
+                ,NVL(GU_CD07,0) GU_CD07
+                ,NVL(GU_CD08,0) GU_CD08
+                ,NVL(GU_CD09,0) GU_CD09
+                ,NVL(GU_CD10,0) GU_CD10
+                ,NVL(AGE1,0) AGE1
+                ,NVL(AGE2,0) AGE2            
+                ,NVL(AGE3,0) AGE3
+                ,NVL(AGE4,0) AGE4 
+                ,NVL(DSPSNSLYBSLFCNT,0) DSPSN_SLYBSLF_CNT
+                ,NVL(DSPSNSEHIGHCNT,0)  DSPSN_SEHIGH_CNT
+                ,NVL(DSPSNGNRLCNT,0)    DSPSN_GNRL_CNT
+		FROM CITY_DISABILITY
+		PIVOT( MAX(totalSum)
+		  FOR GB IN( 
+		            
+                    '지체' AS DISABLE_TP01, '시각'   AS DISABLE_TP02 , '뇌병변'    AS DISABLE_TP03, '청각'   AS DISABLE_TP04, '언어'      AS DISABLE_TP05
+                   ,'지적' AS DISABLE_TP06, '자폐성' AS DISABLE_TP07 , '신장'      AS DISABLE_TP08, '정신'   AS DISABLE_TP09, '장루.요루' AS DISABLE_TP10
+                   ,'간'   AS DISABLE_TP11, '호흡기' AS DISABLE_TP12 , '뇌전증'    AS DISABLE_TP13, '심장'   AS DISABLE_TP14, '안면'      AS DISABLE_TP15
+		           ,'seriousCnt' AS seriousCnt , 'moderateCnt' AS moderateCnt
+		           ,'중구'   AS GU_CD01, '동구'   AS GU_CD02, '미추홀구' AS GU_CD03, '연수구' AS GU_CD04, '남동구' AS GU_CD05
+		           ,'부평구' AS GU_CD06, '계양구' AS GU_CD07, '서구'     AS GU_CD08, '강화군' AS GU_CD09, '옹진군' AS GU_CD10
+		           ,'A' AS age1,  'B' AS age2, 'C' AS age3,  'D' AS age4
+		           ,'dspsnSlybslfCnt' AS dspsnSlybslfCnt,'dspsnSehighCnt' AS dspsnSehighCnt, 'dspsnGnrlCnt' AS dspsnGnrlCnt
+		           )
+		)
+	</select>
+	
+	<!-- 비밀번호 채번 -->
+	<select id="getNewPwd" parameterType="String" resultType="String">
+		SELECT HASH_STR('71',#{chgPwd}) FROM DUAL
+	</select>
+	
+	<!-- 사용자 비밀번호 변경 -->
+	<update id="updatePassword" parameterType="egovMap">
+		UPDATE USERS
+		  SET
+		     ENC_PASSWORD    = #{pwd}
+		    ,PASSWORD_MOD_DD = (SELECT TO_CHAR(SYSDATE, 'yyyymmdd') FROM DUAL)
+		    ,UPDATE_DT       = SYSDATE
+		    ,UPDATER         = #{userId}
+		   WHERE USER_ID = #{userId}
+	</update>
+	
+	<!-- 로그인 비밀번호 오류회수 수정 -->
+	<update id="updatePwdErrCnt" parameterType="egovMap">
+		UPDATE	USERS 
+		   	SET	ACCESS_FG = #{accessFg}
+		WHERE
+			USER_ID = #{userId}
+
+	</update>
+</mapper>

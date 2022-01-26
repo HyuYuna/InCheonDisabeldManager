@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcSpclRecordDAO">
+<select id="selectWfcSpclRecord" parameterType="egovMap" resultType="egovMap">
+	 SELECT 
+        D.DSPSN_ID /* 이용장애인 ID */
+       ,A.DSPSN_NM /* 장애인이름 */
+       ,DEC_B64('KEY1', A.ENC_BIRTH_DD) ENC_BIRTH_DD /* 생년월일 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP03' AND Z.COMMCD = A.GENDER AND Z.USE_FG = '1') GENDER /* 성별 */
+       ,A.PICTURE_PATH /* 장애인 사진파일path */
+       ,A.PICTURE_NM   /* 장애인  사진파일 이름 */
+       ,B.HEALTH_STS01 /* 시각문제 */
+       ,B.HEALTH_STS02 /* 언어문제 */
+       ,B.HEALTH_STS03 /* 청각문제 */
+       ,B.HEALTH_STS06 /* 질환 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP05'AND Z.COMMCD = C.DISABLE_TP AND Z.USE_FG = '1') DISABLE_TP  /* 장애유형 */
+       
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12'AND Z.COMMCD = C.DISABLE_DGREE_FG AND Z.USE_FG = '1') DISABLE_DGREE_FG /* 장애정도구분 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01'AND Z.COMMCD = C.OUTBREAK_TIME_FG AND Z.USE_FG = '1') OUTBREAK_TIME_FG /* 장애발생시기 */
+       ,D.RECORD_DD /* 기록일자(yyyymmdd) */
+       ,TO_CHAR(TO_DATE(D.RECORD_TT, 'HH24:MI:SS'), 'HH24:MI:SS') RECORD_TT
+       ,D.UNUSAL_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP15'AND Z.COMMCD = D.UNUSAL_FG AND Z.USE_FG = '1') UNUSAL_FG_NM /* 특이사례구분 */
+       ,D.ACT_TP /* 행동유형 */
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG LIKE '%'||D.UNUSAL_FG AND z.COMMCD = D.ACT_TP AND Z.USE_FG='1') ACT_TP_NM
+       ,D.ACT_TP_DETAIL /* 행동유형기타상세 */
+       ,D.MEASURE_DETAIL /* 조치내역 */
+ 				from 
+ 					 DSPSN A
+             ,DSPSN_HEALTH B
+         ,DSPSN_DISABILITY C
+             ,DSPSN_UNUSAL D
+            
+            WHERE D.DSPSN_ID = A.DSPSN_ID
+            AND   D.DSPSN_ID = B.DSPSN_ID(+)
+            AND   D.DSPSN_ID = C.DSPSN_ID
+            <if test="searchDspsnId != '' and searchDspsnId != null">
+            AND D.DSPSN_ID LIKE '%'||#{searchDspsnId}||'%'
+            </if>
+            <if test="sDate != '' and sDate != null">
+            AND D.RECORD_DD &gt;= replace(#{sDate},'-')
+            </if>
+            <if test="eDate != '' and eDate != null">
+            AND D.RECORD_DD &lt;= replace(#{eDate},'-')
+            </if>
+            <if test="searchUnusalFg != '' and searchUnusalFg != null">
+            AND D.UNUSAL_FG = #{searchUnusalFg}
+            </if>
+            <if test="linkCd != '' and linkCd != null">
+            AND D.WFFCLTY_CD = #{linkCd}
+            </if>
+            ORDER BY D.RECORD_DD, D.RECORD_TT ASC
+	</select>
+	
+	<select id="selectTypeBehavior" parameterType="egovMap" resultType="egovMap">
+	SELECT COMMCD AS TYPE_BEHAVIOR_CD
+       	   ,COMMCD_VALUE AS TYPE_BEHAVIOR_NM
+       	   FROM COMMON_CODE
+ 		WHERE COMMCD_FG like '%'||#{unusalFg}
+	</select>
+	
+	<select id="selectSpcDspsnId" parameterType="egovMap" resultType="egovMap">
+	SELECT A.DSPSN_ID /*DpsSpclRecordDAO.selectSpcDspsnId */
+	       ,A.DSPSN_NM
+	       ,DEC_B64('KEY1', A.ENC_BIRTH_DD) ENC_BIRTH_DD
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP03' AND C.COMMCD = A.GENDER AND C.USE_FG = '1') AS GENDER
+           ,B.DISABLE_TP
+           ,C.HEALTH_STS01 /* 시각문제 */
+      	   ,C.HEALTH_STS02 /* 언어문제 */
+           ,C.HEALTH_STS03 /* 청각문제 */
+           ,C.HEALTH_STS06 /* 질환 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12'AND Z.COMMCD = B.DISABLE_DGREE_FG AND Z.USE_FG = '1') DISABLE_DGREE_FG /* 장애정도구분 */
+           ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'DT01'AND Z.COMMCD = B.OUTBREAK_TIME_FG AND Z.USE_FG = '1') OUTBREAK_TIME_FG /* 장애발생시기 */
+           ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'TP05' AND C.COMMCD = DISABLE_TP AND C.USE_FG = '1') AS DISABLE_TP_NM
+	       ,DISABLE_GRADE 
+	       ,(SELECT C.COMMCD_VALUE FROM COMMON_CODE C WHERE C.COMMCD_FG = 'FG12' AND C.COMMCD = B.DISABLE_DGREE_FG) AS DISABLE_DGREE_FG
+	       ,ENC_BIRTH_DD
+	       ,PICTURE_PATH
+           ,PICTURE_NM
+           ,A.USE_FG
+ 				FROM DSPSN A
+ 				,DSPSN_DISABILITY B
+ 				,DSPSN_HEALTH C
+ 		WHERE A.DSPSN_ID = B.DSPSN_ID
+ 		  AND A.DSPSN_ID = C.DSPSN_ID(+)
+          AND (A.DSPSN_ID LIKE '%'||#{spcDspsnId}|| '%'
+                 OR A.DSPSN_NM LIKE '%'||#{spcDspsnId}|| '%')
+	</select>
+	
+	<select id="selectAjaxDspsnList" parameterType="egovMap" resultType="egovMap">
+		  SELECT A.DSPSN_ID
+       			,A.DSPSN_NM
+  				FROM DSPSN A
+ 		  WHERE DSPSN_ID LIKE '%'||#{dspsnId} ||'%' ;
+	</select>
+	
+	<insert id = "insertWfcSpclRecord" parameterType="egovMap">
+	INSERT
+  INTO DSPSN_UNUSAL(WFFCLTY_CD
+                  , DSPSN_ID
+                  , RECORD_DD
+                  , RECORD_TT
+                  , UNUSAL_FG
+                  , ACT_TP
+                  , ACT_TP_DETAIL
+                  , MEASURE_DETAIL
+                  , REGIST_DT
+                  , REGISTERER)
+			VALUES(#{linkCd,      jdbcType=VARCHAR}
+               ,#{dspsnId,      jdbcType=VARCHAR}
+               ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+               ,TO_CHAR(SYSDATE, 'HH24MISS')
+               ,#{unusalFg,      jdbcType=VARCHAR}
+               ,#{actTp,      jdbcType=VARCHAR}
+               ,#{actTpDetail,      jdbcType=VARCHAR}
+               ,#{measureDetail,      jdbcType=VARCHAR}
+               ,SYSDATE
+               ,#{register,      jdbcType=VARCHAR})
+	</insert>
+	
+	<update id = "updateWfcSpclRecord" parameterType="egovMap">
+		UPDATE DSPSN_UNUSAL
+			SET
+			DSPSN_ID = #{dspsnId,      jdbcType=VARCHAR}
+			,RECORD_DD = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			,RECORD_TT = TO_CHAR(SYSDATE, 'HH24MISS')
+			,UNUSAL_FG = #{unusalFg,      jdbcType=VARCHAR}
+			,ACT_TP = #{actTp,      jdbcType=VARCHAR}
+			,ACT_TP_DETAIL = #{actTpDetail,      jdbcType=VARCHAR}
+			,MEASURE_DETAIL = #{measureDetail,      jdbcType=VARCHAR}
+			,UPDATE_DT = SYSDATE
+			,UPDATER = #{register,      jdbcType=VARCHAR}
+			 WHERE WFFCLTY_CD = #{linkCd,      jdbcType=VARCHAR}
+			   AND DSPSN_ID = #{hdnDspsnId,      jdbcType=VARCHAR}
+			   AND RECORD_DD = #{hdnRecordDd,      jdbcType=VARCHAR}
+			   AND RECORD_TT = replace(#{hdnRecordTt,      jdbcType=VARCHAR},':')
+	 </update>
+</mapper>

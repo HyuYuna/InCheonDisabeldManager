@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.7.0.201506251244-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+	</configs>
+	<autoconfigs>
+		<config>src/main/resources/grit/spring/context-idgen.xml</config>
+		<config>src/main/resources-local/grit/spring/context-datasource.xml</config>
+		<config>src/main/resources/grit/spring/context-common.xml</config>
+		<config>src/main/resources/grit/spring/context-transaction.xml</config>
+		<config>src/main/resources/grit/spring/context-aspect.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/urlfilename-servlet.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>
+		<config>src/main/resources/grit/spring/context-mybatis.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/aspect-servlet.xml</config>
+		<config>src/main/resources/grit/spring/context-properties.xml</config>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

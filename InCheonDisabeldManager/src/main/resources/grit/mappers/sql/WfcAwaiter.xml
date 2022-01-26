@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcAwaiterDAO">
+	<select id="selectWfcAwaiterList" parameterType="egovMap" resultType="egovMap">
+	SELECT RECEIVE_DD /* 예약접수일자(YYYYMMDD) */
+               ,RECEIVE_SEQNO /* 예약접수순번(일자별 순번) */
+               ,TO_CHAR(TO_DATE(RECEIVE_DD||RECEIVE_TM, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS REGIST_DT
+               ,RECEIVE_TM /* 예약접수시간*/
+               ,RSVCTM  /* 예약자*/
+               ,DEC_B64('KEY1',ENC_PHONE_NUM) AS ENC_PHONE_NUM /* 연락처 */
+               ,EMAIL /* 이메일 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP05' AND DISABLE_TP = Z.COMMCD) AS DISABLE_TP_NM /* 시설이용대상자장애유형 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG12' AND DISABLE_DGREE_FG = Z.COMMCD) AS DISABLE_DGREE_FG_NM /* 시설이용대상자장애정도 */
+               ,DISABLE_TP/* 시설이용대상자장애유형 */
+               ,DISABLE_DGREE_FG /* 시설이용대상자장애정도 */
+               ,NOTE /*  비고 */
+               ,PROGRESS_STS /* 진행상태 */
+               ,(SELECT COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'PS01' AND PROGRESS_STS = Z.COMMCD) AS PROGRESS_STS_NM /* 진행상태 */
+               ,PROCESS_DT /* 처리일자 */
+               ,(select USER_NM from users where USER_ID = DISPOSER AND USE_FG = '1') AS DISPOSER /* 작업자 */
+               ,WFFCLTY_CD /* 복지시설코드 */
+               ,USE_FG /*  사용여부 */ 
+               ,REGIST_DT/* 등록일 */  
+               ,REGISTERER /* 등록자 */
+    		FROM WFFCLTY_AWAITER
+    		WHERE WFFCLTY_CD = #{wffcltyCd}
+      <if test ="searchprogressSts != '' and searchprogressSts != null">
+      AND PROGRESS_STS = #{searchprogressSts}
+      </if>
+      <if test ="sDate != '' and sDate != null">
+      AND TO_CHAR(REGIST_DT, 'YYYY-MM-DD') &gt;= #{sDate}
+      </if>
+      <if test ="eDate != '' and eDate != null">
+      AND TO_CHAR(REGIST_DT, 'YYYY-MM-DD') &lt;= #{eDate}
+      </if>
+      <if test ="searchMemberNm != '' and searchMemberNm != null">
+      AND RSVCTM LIKE '%'||#{searchMemberNm}||'%'
+      </if>
+	</select>
+	
+	<update id="wfcReceipt" parameterType="egovMap">
+	UPDATE WFFCLTY_AWAITER
+    	SET PROGRESS_STS = '2'
+    	,UPDATE_DT = SYSDATE
+    	,UPDATER =#{register}
+        ,DISPOSER =#{register}
+        ,PROCESS_DT = SYSDATE
+ 	WHERE RECEIVE_SEQNO = #{receiveSeqno}
+ 	 AND WFFCLTY_CD    = #{wffcltyCd}
+	</update>
+	
+	<update id="wfcWatingCancel" parameterType="egovMap">
+	UPDATE WFFCLTY_AWAITER
+   		SET PROGRESS_STS = '3'
+   		,UPDATE_DT = SYSDATE
+   		,UPDATER =#{register}
+        ,DISPOSER =#{register}
+        ,PROCESS_DT = SYSDATE
+ 	WHERE RECEIVE_SEQNO = #{receiveSeqno}
+ 	  AND WFFCLTY_CD    = #{wffcltyCd}
+	</update>
+</mapper>

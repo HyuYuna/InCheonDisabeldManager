@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasDisabiltyPrintDAO">
+
+	<!-- 출력 리스트  -->
+	<select id="disablePrintList" parameterType="egovMap" resultType="egovMap">
+	WITH CITY_DISABILITY AS(
+		   SELECT 
+		          SUBSTR(YYYYMM,0,4)||'.'||SUBSTR(YYYYMM,5,6) AS YYYYMM
+		         ,GB
+		         ,TOTALSUM  AS TOTALSUM
+		   FROM(
+		    --인천광역시 인구 
+		    SELECT #{yyyymm} AS YYYYMM
+		        ,'totalPopLtnCnt'  AS GB
+		        ,TOTAL_POPLTN_CNT  AS totalSum
+		    FROM CITY_DSPSN_POPLTN
+		      WHERE YYYYMM = #{yyyymm} 
+		   
+		    UNION ALL
+		    
+		    -- 기초생활수급자
+		    SELECT YYYYMM
+		        ,'dspsnSlybslfCnt'  AS GB
+		        ,DSPSN_SLYBSLF_CNT  AS totalSum
+		    FROM CITY_DSPSN_POPLTN
+		      WHERE YYYYMM = #{yyyymm} 
+		   
+		    UNION ALL
+		    
+		    -- 차상위계층
+		    SELECT YYYYMM
+		        ,'dspsnSehighCnt'  AS GB
+		        ,DSPSN_SEHIGH_CNT  AS totalSum
+		    FROM CITY_DSPSN_POPLTN
+		      WHERE YYYYMM = #{yyyymm} 
+		   
+		    UNION ALL
+		    
+		    -- 일반
+		    SELECT YYYYMM
+		        ,'dspsnGnrlCnt'  AS GB
+		        ,DSPSN_GNRL_CNT  AS totalSum
+		    FROM CITY_DSPSN_POPLTN
+		      WHERE YYYYMM = #{yyyymm} 
+		   
+		    UNION ALL
+		    
+		    -- 장애인 등록인구
+		    SELECT YYYYMM
+		          ,'disbleCount'  AS GB
+		          ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		     FROM  CITY_DISABILITY_AGE_STATE
+		      WHERE YYYYMM = #{yyyymm}
+		      GROUP BY  YYYYMM
+		   
+		    UNION ALL		   
+		     
+		     -- 남자 합
+		     SELECT YYYYMM
+		          ,'maleCount'  AS GB
+		          ,SUM(MALE_SERIOUS_CNT) + SUM(MALE_MODERATE_CNT) AS totalSum
+		     FROM  CITY_DISABILITY_DEGREE_STATE
+		      WHERE YYYYMM = #{yyyymm}
+		      GROUP BY  YYYYMM
+		     
+		     UNION ALL
+		     
+		     -- 여자 합 
+		     SELECT YYYYMM
+		          ,'femaleCount'  AS GB
+		          ,SUM(FEMALE_SERIOUS_CNT) + SUM(FEMALE_MODERATE_CNT) AS totalSum
+		     FROM  CITY_DISABILITY_DEGREE_STATE
+		      WHERE YYYYMM = #{yyyymm}
+		      GROUP BY  YYYYMM
+		     
+		     UNION ALL
+		        
+		     -- 장애정도별 분류(15개유형)
+		     SELECT  YYYYMM 
+		            ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP)    AS GB
+		            ,SUM(MALE_SERIOUS_CNT) + SUM(MALE_MODERATE_CNT)+SUM(FEMALE_SERIOUS_CNT) + SUM(FEMALE_MODERATE_CNT) AS totalSum 
+		      FROM CITY_DISABILITY_DEGREE_STATE 
+		       WHERE YYYYMM = #{yyyymm}
+		      GROUP BY  YYYYMM,DISABLE_TP
+		      
+		      UNION ALL
+		      
+		      -- 군구별 현황(10개)
+		      SELECT YYYYMM
+		            ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = GU_CD)   AS GB
+		            ,SUM(MALE_SERIOUS_CNT)+ SUM(MALE_MODERATE_CNT)+SUM(FEMALE_SERIOUS_CNT)+SUM(FEMALE_MODERATE_CNT) as totalSum    
+		      FROM CITY_DISABILITY_DEGREE_STATE
+		       WHERE YYYYMM = #{yyyymm}
+		      GROUP BY  YYYYMM, GU_CD
+		      
+		      UNION ALL
+		      
+		      -- 장애정도별분류(심한장애)   
+		      SELECT YYYYMM 
+		            ,'seriousCnt'   AS GB
+		            ,SUM(MALE_SERIOUS_CNT) + SUM(FEMALE_SERIOUS_CNT)    AS totalSum
+		      FROM CITY_DISABILITY_DEGREE_STATE  
+		       WHERE YYYYMM = #{yyyymm}
+		        GROUP BY  YYYYMM
+		      
+		      UNION ALL
+		      
+		      -- 장애정도별분류(심하지않는장애)
+		      SELECT YYYYMM 
+		            ,'moderateCnt'   AS GB
+		            ,SUM(MALE_MODERATE_CNT) + SUM(FEMALE_MODERATE_CNT)  AS totalSum
+		      FROM CITY_DISABILITY_DEGREE_STATE  
+		       WHERE YYYYMM = #{yyyymm}
+		        GROUP BY  YYYYMM
+		
+		      UNION ALL
+			  
+			  -- 장애정도별분류(영유아)
+		      SELECT #{yyyymm} AS YYYYMM
+		             ,'A'       AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = #{yyyymm}
+		         AND AGE BETWEEN '0' AND '6'
+		      
+		      UNION ALL
+		     
+		     -- 연령별 현황(청소년)
+		     SELECT #{yyyymm} AS YYYYMM
+		            ,'B'      AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = #{yyyymm}
+		         AND AGE BETWEEN '7' AND '18'
+		         
+		      UNION ALL
+		      
+		      -- 연령별 현황(성인) 
+		      SELECT
+		            #{yyyymm} AS YYYYMM  
+		             ,'C'     AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = #{yyyymm}
+		         AND AGE BETWEEN '19' AND '64'
+		       
+		      UNION ALL
+		      
+		      -- 연령별 현황(노인) 
+		      SELECT 
+		            #{yyyymm} AS YYYYMM
+		             ,'D'     AS GB
+		            ,SUM(MALE_DISABLE_CNT) + SUM(FEMALE_DISABLE_CNT) AS totalSum
+		      FROM CITY_DISABILITY_AGE_STATE
+		       WHERE YYYYMM = #{yyyymm}
+		         AND AGE >= '65'
+		       
+		      UNION ALL
+              
+              -- 시장애인 인구(해당 날짜)
+              SELECT #{yyyymm}
+                   ,'saveMode' AS GB
+                   ,count(*)   AS totalCount
+              FROM CITY_DSPSN_POPLTN
+                 WHERE YYYYMM = #{yyyymm}    
+		         
+		      ) A   
+		)
+		SELECT 
+				YYYYMM
+                ,NVL(TOTALPOPLTNCNT,0)  TOTAL_POPLTN_CNT
+                ,NVL(DSPSNSLYBSLFCNT,0) DSPSN_SLYBSLF_CNT
+                ,NVL(DSPSNSEHIGHCNT,0)  DSPSN_SEHIGH_CNT
+                ,NVL(DSPSNGNRLCNT,0)    DSPSN_GNRL_CNT
+                ,NVL(ROUND((DISABLE_COUNT*100)/TOTALPOPLTNCNT,2),0) PERCENT 
+                ,NVL(DISABLE_COUNT,0)   DISABLE_COUNT
+                ,NVL(MALE_COUNT,0)      MALE_COUNT
+                ,NVL(FEMALE_COUNT,0)    FEMALE_COUNT
+                ,NVL(DISABLE_TP01,0) DISABLE_TP01
+                ,NVL(DISABLE_TP02,0) DISABLE_TP02
+                ,NVL(DISABLE_TP03,0) DISABLE_TP03
+                ,NVL(DISABLE_TP04,0) DISABLE_TP04
+                ,NVL(DISABLE_TP05,0) DISABLE_TP05
+                ,NVL(DISABLE_TP06,0) DISABLE_TP06
+                ,NVL(DISABLE_TP07,0) DISABLE_TP07
+                ,NVL(DISABLE_TP08,0) DISABLE_TP08
+                ,NVL(DISABLE_TP09,0) DISABLE_TP09
+                ,NVL(DISABLE_TP10,0) DISABLE_TP10
+                ,NVL(DISABLE_TP11,0) DISABLE_TP11
+                ,NVL(DISABLE_TP12,0) DISABLE_TP12
+                ,NVL(DISABLE_TP13,0) DISABLE_TP13
+                ,NVL(DISABLE_TP14,0) DISABLE_TP14
+                ,NVL(DISABLE_TP15,0) DISABLE_TP15
+                ,NVL(SERIOUSCNT, 0) SERIOUS_CNT
+                ,NVL(MODERATECNT,0) MODERATE_CNT
+                ,NVL(GU_CD01,0) GU_CD01
+                ,NVL(GU_CD02,0) GU_CD02
+                ,NVL(GU_CD03,0) GU_CD03
+                ,NVL(GU_CD04,0) GU_CD04
+                ,NVL(GU_CD05,0) GU_CD05
+                ,NVL(GU_CD06,0) GU_CD06
+                ,NVL(GU_CD07,0) GU_CD07
+                ,NVL(GU_CD08,0) GU_CD08
+                ,NVL(GU_CD09,0) GU_CD09
+                ,NVL(GU_CD10,0) GU_CD10
+                ,NVL(AGE1,0) AGE1
+                ,NVL(AGE2,0) AGE2            
+                ,NVL(AGE3,0) AGE3
+                ,NVL(AGE4,0) AGE4 
+                ,NVL(saveMode,0) saveMode
+		FROM CITY_DISABILITY
+		PIVOT( MAX(totalSum)
+		  FOR GB IN(
+		            'totalPopLtnCnt' AS totalPopLtnCnt, 'dspsnSlybslfCnt' AS dspsnSlybslfCnt
+		           ,'dspsnSehighCnt' AS dspsnSehighCnt, 'dspsnGnrlCnt'    AS dspsnGnrlCnt,   'percent'  AS percent
+		           ,'disbleCount' AS DISABLE_COUNT, 'maleCount' AS MALE_COUNT, 'femaleCount' AS FEMALE_COUNT
+		           ,'지체' AS DISABLE_TP01, '시각'   AS DISABLE_TP02 , '뇌병변'    AS DISABLE_TP03, '청각'   AS DISABLE_TP04, '언어'      AS DISABLE_TP05
+                   ,'지적' AS DISABLE_TP06, '자폐성' AS DISABLE_TP07 , '신장'      AS DISABLE_TP08, '정신'   AS DISABLE_TP09, '장루.요루' AS DISABLE_TP10
+                   ,'간'   AS DISABLE_TP11, '호흡기' AS DISABLE_TP12 , '뇌전증'    AS DISABLE_TP13, '심장'   AS DISABLE_TP14, '안면'      AS DISABLE_TP15
+		           ,'seriousCnt' AS seriousCnt , 'moderateCnt' AS moderateCnt
+		           ,'중구'   AS GU_CD01, '동구'   AS GU_CD02, '미추홀구' AS GU_CD03, '연수구' AS GU_CD04, '남동구' AS GU_CD05
+		           ,'부평구' AS GU_CD06, '계양구' AS GU_CD07, '서구'     AS GU_CD08, '강화군' AS GU_CD09, '옹진군' AS GU_CD10
+		           ,'A' AS age1,  'B' AS age2, 'C' AS age3,  'D' AS age4
+		           ,'saveMode' AS saveMode
+		           )
+		)
+	</select>
+	
+	<select id="selectSysDateList" resultType="egovMap">
+		SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-LEVEL),'YYYY-MM') AS YYYYMM 
+		  FROM DUAL
+		   CONNECT BY LEVEL <![CDATA[<=]]> 24;
+	</select>
+	
+	
+	<insert id="insertDspsnPopltn" parameterType="egovMap">
+		INSERT INTO CITY_DSPSN_POPLTN(
+				YYYYMM
+				,TOTAL_POPLTN_CNT
+				,DSPSN_SLYBSLF_CNT
+				,DSPSN_SEHIGH_CNT
+				,DSPSN_GNRL_CNT
+				,REGIST_DT
+				,REGISTERER
+		)VALUES(
+				#{yyyymm          , jdbcType=VARCHAR}
+			   ,replace(#{totalPopLtnCnt  , jdbcType=VARCHAR}, ',')
+			   ,replace(#{dspsnSlybslfCnt , jdbcType=VARCHAR}, ',')
+			   ,replace(#{dspsnSehighCnt  , jdbcType=VARCHAR}, ',')
+			   ,replace(#{dspsnGnrlCnt    , jdbcType=VARCHAR}, ',')
+			   ,SYSDATE
+			   ,#{register        , jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateDspsnPopltn" parameterType="egovMap">
+		UPDATE CITY_DSPSN_POPLTN
+		  SET
+		      TOTAL_POPLTN_CNT  = replace(#{totalPopLtnCnt  , jdbcType=VARCHAR}, ',')
+		     ,DSPSN_SLYBSLF_CNT = replace(#{dspsnSlybslfCnt , jdbcType=VARCHAR}, ',')
+			 ,DSPSN_SEHIGH_CNT  = replace(#{dspsnSehighCnt  , jdbcType=VARCHAR}, ',')
+			 ,DSPSN_GNRL_CNT    = replace(#{dspsnGnrlCnt    , jdbcType=VARCHAR}, ',')
+			 ,UPDATE_DT         = SYSDATE
+			 ,UPDATER           = #{register        , jdbcType=VARCHAR}
+		WHERE YYYYMM = #{yyyymm}	 
+	</update>
+	
+	
+</mapper>

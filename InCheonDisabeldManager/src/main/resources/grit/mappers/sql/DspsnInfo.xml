@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DspsnInfoDAO">
+
+	<select id="selectDspsnInfo" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT
+		    A.DSPSN_ID, A.DSPSN_NM, A.GENDER, DECODE(A.GENDER,'M','남자','F','여자') GENDER_NM,
+		    (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG='TP05' AND COMMCD=B.DISABLE_TP) DISABLE_TP_NM, 
+		    (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG='FG12' AND COMMCD=B.DISABLE_DGREE_FG) DISABLE_DGREE_FG_NM, 
+		    (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG='DT01' AND COMMCD=B.OUTBREAK_TIME_FG) OUTBREAK_TIME_FG_NM, 
+		    (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG='FG13' AND COMMCD=B.OUTBREAK_RSN_FG) OUTBREAK_RSN_FG_NM, 
+			B.DISABLE_TP, B.DISABLE_DGREE_FG, B.OUTBREAK_TIME_FG, B.OUTBREAK_RSN_FG, 
+		    A.DSPSN_JOB, A.ACADEMIC_DETAIL, A.ADDR_BASE,
+		    A.PRTCTOR_NM, A.PRTCTOR_RELATION, DEC_B64('KEY1', A.ENC_PRTCTOR_PHONE_NUM) ENC_PRTCTOR_PHONE_NUM, A.PRTCTOR_JOB,
+		    C.HEALTH_STS01, C.HEALTH_STS02, C.HEALTH_STS06, C.HEALTH_STS03, C.HEALTH_STS06,
+		    DEC_B64('KEY1', A.ENC_BIRTH_DD) ENC_BIRTH_DD
+		    /*REGEXP_REPLACE(REPLACE(DECRYPT_AES256(A.ENC_BIRTH_DD),'-'),'[[:digit:]]','*',REGEXP_INSTR(REPLACE(DECRYPT_AES256(A.ENC_BIRTH_DD),'-'),'[[:digit:]]')+6) ENC_JUMIN_NO*/
+		FROM 
+		    DSPSN A
+		    LEFT OUTER JOIN DSPSN_DISABILITY B ON A.DSPSN_ID = B.DSPSN_ID
+		    LEFT OUTER JOIN DSPSN_HEALTH C ON A.DSPSN_ID = C.DSPSN_ID
+		    
+		WHERE
+		    1=1
+		]]>
+		<if test="schDspsnNm != null and schDspsnNm != ''.toString() ">
+		    AND INSTR(A.DSPSN_NM,#{schDspsnNm}) > 0
+		</if>
+		<if test="schDisableTp != null and schDisableTp != ''.toString() ">
+		    AND B.DISABLE_TP=#{schDisableTp}
+		</if>
+		<if test="schGuaranteeFg != null and schGuaranteeFg != ''.toString() ">
+		    AND A.GUARANTEE_FG=#{schGuaranteeFg}
+		</if>
+		<if test="wffcltyCd != null and wffcltyCd != ''.toString() ">
+                AND A.DSPSN_ID IN(SELECT DISTINCT D.DSPSN_ID FROM WFFCLTY_ENTER D 
+              	 WHERE D.WFFCLTY_CD = #{wffcltyCd} 
+                 AND D.LVHS_DD IS NULL)
+                 
+                 OR A.DSPSN_ID IN(SELECT DISTINCT F.DSPSN_ID FROM ASSIST_DVC_REPAIR F
+              		WHERE F.WFFCLTY_CD = #{wffcltyCd}  
+                AND F.RECEIPT_DD IS NOT NULL)
+		</if>
+		ORDER BY A.DSPSN_ID
+	</select>
+	
+</mapper>

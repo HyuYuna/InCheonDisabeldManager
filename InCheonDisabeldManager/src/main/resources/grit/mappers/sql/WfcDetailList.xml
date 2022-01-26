@@ -1,0 +1,1251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcDetailDAO">
+	
+	
+	<!-- 기본시설 정보 -->
+	<select id="selectWffcltyBaseList" parameterType="egovMap" resultType="egovMap">
+		SELECT  A.WFFCLTY_CD
+		      , A.WFFCLTY_NM
+		      , A.WFFCLTY_TP
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = A.WFFCLTY_TP AND COMMCD_FG = C.COMMCD_FG AND USE_FG = '1') AS WFFCLTY_TP_NM
+		      , B.OGNZT_NM
+		      , A.UNIQUE_NO
+		      , (SELECT WFFCLTY_NM FROM WFFCLTY_BASE F WHERE A.HIGH_WFFCLTY_CD = F.WFFCLTY_CD) AS HIGH_WFFCLTY_NM
+		      , DECODE(A.OPERATE_FG,'0','미운영','운영') AS OPERATE_FG
+		      , DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+	    FROM WFFCLTY_BASE A
+	       , ORGANIZATION B
+           , (SELECT  COMMCD 
+                    , DECODE(COMMCD,'A','WF02','B','WF03','C','WF04','D','WF05','E','WF06') AS COMMCD_FG
+               FROM COMMON_CODE
+                WHERE COMMCD_FG = 'WF01'
+                  AND USE_FG = '1') C
+	      WHERE A.OGNZT_CD     = B.OGNZT_CD
+            AND A.WFFCLTY_CLAS = C.COMMCD
+	        AND A.WFFCLTY_CD = #{wffcltyCd}
+	</select>
+	
+	<!-- 시설상세 정보 -->
+	<select id="selectWffcltyDetailList" parameterType="egovMap" resultType="egovMap">
+		SELECT  A.WFFCLTY_CD
+		      , B.ZIP_CD
+		      , B.ADDR_BASE  
+		      , B.ADDR_DETAIL
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = B.GU_CD)  AS GU_CD 
+		      , B.PHONE_NUM
+		      , B.FAX_NUM
+		      , B.INTENDANT_NM
+		      , TO_CHAR(TO_DATE(B.ESTABLISH_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS ESTABLISH_DD
+		      , B.WORKER_CNT
+		      , B.WORKER_DETAIL
+		      , B.HOMEPAGE_URL
+		      , B.GOVSUBY_FG
+		      , B.CITSUBY_FG
+		      , B.GUSUBY_FG
+		      , NVL(TRIM(B.OWNERSHIP_TP),'')        AS OWNERSHIP_TP
+		      , B.OWNERSHIP_ETC_DETAIL
+		      , NVL(TRIM(B.REVENUE_SOURCE_TP),'')   AS REVENUE_SOURCE_TP
+		      , B.REVENUE_ETC_DETAIL
+		      , NVL(TRIM(B.LUNCH_TP),'')            AS LUNCH_TP
+		      , B.LUNCH_ETC_DETAIL
+		      , B.CAPACITY
+		      , B.AREA
+		      , B.ETC_DETAIL1
+		      , B.ETC_DETAIL2
+		      , B.ETC_DETAIL3
+		      , B.ETC_DETAIL4
+		      , B.ETC_DETAIL5
+		      , (SELECT COUNT(*) FROM WFFCLTY_ENTER D WHERE A.WFFCLTY_CD = D.WFFCLTY_CD AND D.LVHS_DD IS NULL) AS NOW_CAPACITY
+	    FROM WFFCLTY_BASE A
+	       , WFFCLTY_DETAIL B
+	      WHERE A.WFFCLTY_CD = B.WFFCLTY_CD(+)
+	        AND B.WFFCLTY_CD = #{wffcltyCd}
+	</select>
+	
+	
+	<!-- 시설 서비스장애 -->
+	<select id="selectwffcltyDisableTpList" parameterType="egovMap" resultType="egovMap"> 
+		SELECT WFFCLTY_CD
+		      ,DISABLE_TP
+		      ,DISABLE_DETAIL
+		  FROM SERVICE_DISABLE_TYPE  
+		    WHERE WFFCLTY_CD = #{wffcltyCd}
+	</select>
+		
+	
+	<!-- 시설 서비스장애 -->
+	<select id="selectwffcltyPictureList" parameterType="egovMap" resultType="egovMap"> 
+		   SELECT A.WFFCLTY_CD||ROWNUM AS ID
+             , A.*  
+         FROM(SELECT 
+			   WFFCLTY_CD
+		      ,PICTURE_NM
+		      ,PICTURE_NM      AS PICTURE_REAL_NM
+		      ,PICTURE_PATH
+		  FROM WFFCLTY_PICTURE
+		   	WHERE WFFCLTY_CD = #{wffcltyCd}
+           ) A
+		    
+	</select>	
+	
+	<!-- 장애인거주시설, 단기거주시설, 공동생활가정, 개인운영시설 상세정보 신규입력 -->
+	<insert id="insertWfcDetail" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,AREA
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{area, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인거주시설, 단기거주시설, 공동생활가정, 개인운영시설 상세정보 수정-->
+	<update id="updateWfcDetail" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,AREA                 = #{area, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인근로사업장, 장애인보호작업장, 장애인직업적응훈련 상세정보 신규입력  -->
+	<insert id="insertWfcDetail2" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,AREA
+				,ETC_DETAIL1
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{area, jdbcType=VARCHAR}
+				  , replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!--  장애인근로사업장, 장애인보호작업장, 장애인직업적응훈련 상세정보 수정  -->
+	<update id="updateWfcDetail2" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,AREA                 = #{area, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	
+	<!-- 장애인복지관 상세정보 신규입력 -->
+	<insert id="insertWfcDetail3" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,ETC_DETAIL1
+				,ETC_DETAIL2
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+				  , replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인복지관  상세정보 수정  -->
+	<update id="updateWfcDetail3" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+			,ETC_DETAIL2          = replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인복지관  상세정보 신규입력 -->
+	<insert id="insertWfcDetail4" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,AREA
+				,ETC_DETAIL1
+				,ETC_DETAIL2
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{area, jdbcType=VARCHAR}
+				  , #{etcDetail1, jdbcType=VARCHAR}
+				  , replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인복지관  상세정보 수정 -->
+	<update id="updateWfcDetail4" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,AREA                 = #{area, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = #{etcDetail1, jdbcType=VARCHAR}
+			,ETC_DETAIL2          = replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+			,UPDATE_DT            = SYSDATE      
+		  ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인자립생활센터  상세정보 신규입력 -->
+	<insert id="insertWfcDetail5" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,ETC_DETAIL1
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{etcDetail1, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인자립생활센터  상세정보 수정 -->
+	<update id="updateWfcDetail5" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,ETC_DETAIL1          = #{etcDetail1, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		  ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인 생활이동지원센터  상세정보 신규입력 -->
+	<insert id="insertWfcDetail6" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,ETC_DETAIL1
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{etcDetail1, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인 생활이동지원센터  상세정보 수정 -->
+	<update id="updateWfcDetail6" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,ETC_DETAIL1          = #{etcDetail1, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		  ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인 재활지원센터,지적장애인 자립지원센터  상세정보 신규입력 -->
+	<insert id="insertWfcDetail7" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,LUNCH_TP
+				,LUNCH_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,CAPACITY
+				,ETC_DETAIL1
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{lunchTp, jdbcType=VARCHAR}
+				  , #{lunchEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{capacity, jdbcType=VARCHAR}, ',')
+				  , #{etcDetail1, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인 재활지원센터,지적장애인 자립지원센터  상세정보 수정 -->
+	<update id="updateWfcDetail7" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,LUNCH_TP             = #{lunchTp, jdbcType=VARCHAR}
+			,LUNCH_ETC_DETAIL     = #{lunchEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,CAPACITY             = replace(#{capacity, jdbcType=VARCHAR}, ',')
+			,ETC_DETAIL1          = #{etcDetail1, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 점지도서관  상세정보 신규입력 -->
+	<insert id="insertWfcDetail8" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,ETC_DETAIL1
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 점지도서관  상세정보 수정 -->
+	<update id="updateWfcDetail8" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 수어통역센터  상세정보 신규입력 -->
+	<insert id="insertWfcDetail9" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,ETC_DETAIL1
+				,ETC_DETAIL2
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+				  , replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 점지도서관  상세정보 수정 -->
+	<update id="updateWfcDetail9" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = replace(#{etcDetail1, jdbcType=VARCHAR}, ',')
+			,ETC_DETAIL2          = replace(#{etcDetail2, jdbcType=VARCHAR}, ',')
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인 보조기구 AS센터  상세정보 신규입력 -->
+	<insert id="insertWfcDetail10" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,ETC_DETAIL1
+				,ETC_DETAIL2
+				,ETC_DETAIL3
+				,ETC_DETAIL4
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , #{etcDetail1, jdbcType=VARCHAR}
+				  , #{etcDetail2, jdbcType=VARCHAR}
+				  , #{etcDetail3, jdbcType=VARCHAR}
+				  , #{etcDetail4, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인 보조기구 AS센터  상세정보 수정 -->
+	<update id="updateWfcDetail10" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,ETC_DETAIL1          = #{etcDetail1, jdbcType=VARCHAR}
+			,ETC_DETAIL2          = #{etcDetail2, jdbcType=VARCHAR}
+			,ETC_DETAIL3          = #{etcDetail3, jdbcType=VARCHAR}
+			,ETC_DETAIL4          = #{etcDetail4, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인 편의증진 기술지원센터 상세정보 신규입력 -->
+	<insert id="insertWfcDetail11" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인 편의증진 기술지원센터 상세정보 수정 -->
+	<update id="updateWfcDetail11" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		  ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 장애인 편의시설설치 상세정보 신규입력 -->
+	<insert id="insertWfcDetail12" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 장애인 편의증진 기술지원센터 상세정보 수정 -->
+	<update id="updateWfcDetail12" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		  ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!--  -->
+	<insert id="insertWfcDetail13" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_DETAIL(
+				 WFFCLTY_CD
+				,INTENDANT_NM
+				,WORKER_CNT
+				,WORKER_DETAIL
+				,PHONE_NUM
+				,FAX_NUM
+				,ZIP_CD
+				,ADDR_BASE
+				,ADDR_DETAIL
+				,GU_CD
+				,ESTABLISH_DD
+				,OWNERSHIP_TP
+				,OWNERSHIP_ETC_DETAIL
+				,REVENUE_SOURCE_TP
+				,REVENUE_ETC_DETAIL
+				,GOVSUBY_FG
+				,CITSUBY_FG
+				,GUSUBY_FG
+				,HOMEPAGE_URL
+				,REGIST_DT
+				,REGISTERER  
+			)values(
+				    #{wffcltyCd , jdbcType=VARCHAR}
+				  , #{intendantNm , jdbcType=VARCHAR}
+				  , replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+				  , #{workerDetail, jdbcType=VARCHAR}
+				  , replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+				  , #{faxNum, jdbcType=VARCHAR}
+				  , #{zipCd, jdbcType=VARCHAR}
+				  , #{addrBase, jdbcType=VARCHAR}
+				  , #{addrDetail, jdbcType=VARCHAR}
+				  , (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				  , replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+				  , #{ownershipTp,jdbcType=VARCHAR}
+				  , #{ownershipEtcDetail, jdbcType=VARCHAR}
+				  , #{revenueSourceTp, jdbcType=VARCHAR}
+				  , #{revenueEtcDetail, jdbcType=VARCHAR}
+				  , #{checkGovsubyFg, jdbcType=VARCHAR}
+				  , #{checkCitsubyFg, jdbcType=VARCHAR}
+				  , #{checkGusubyFg, jdbcType=VARCHAR}
+				  , #{homepageUrl, jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<update id="updateWfcDetail13" parameterType="egovMap">
+		UPDATE WFFCLTY_DETAIL 
+		  SET
+		     INTENDANT_NM         = #{intendantNm , jdbcType=VARCHAR}
+			,WORKER_CNT           = replace(#{workerCnt, jdbcType=VARCHAR}, ',')
+			,WORKER_DETAIL        = #{workerDetail, jdbcType=VARCHAR}
+			,PHONE_NUM            = replace(#{phoneNum, jdbcType=VARCHAR}, '-')
+			,FAX_NUM              = #{faxNum, jdbcType=VARCHAR}
+			,ZIP_CD               = #{zipCd, jdbcType=VARCHAR}
+			,ADDR_BASE            = #{addrBase, jdbcType=VARCHAR}
+			,ADDR_DETAIL          = #{addrDetail, jdbcType=VARCHAR}
+			,GU_CD                = (SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+			,ESTABLISH_DD         = replace(#{establishDd,      jdbcType=VARCHAR}, '-')
+			,OWNERSHIP_TP         = #{ownershipTp,jdbcType=VARCHAR}
+			,OWNERSHIP_ETC_DETAIL = #{ownershipEtcDetail, jdbcType=VARCHAR}
+			,REVENUE_SOURCE_TP    = #{revenueSourceTp, jdbcType=VARCHAR}
+			,REVENUE_ETC_DETAIL   = #{revenueEtcDetail, jdbcType=VARCHAR}
+			,GOVSUBY_FG           = #{checkGovsubyFg, jdbcType=VARCHAR}
+			,CITSUBY_FG           = #{checkCitsubyFg, jdbcType=VARCHAR}
+			,GUSUBY_FG            = #{checkGusubyFg, jdbcType=VARCHAR}
+			,HOMEPAGE_URL         = #{homepageUrl, jdbcType=VARCHAR}
+			,UPDATE_DT            = SYSDATE      
+		    ,UPDATER              = #{register , jdbcType=VARCHAR}
+		   WHERE WFFCLTY_CD       = #{wffcltyCd}
+	</update>
+	
+	<!-- 서비스장애 신규입력  -->
+	<insert id="insertDisableTp" parameterType="egovMap" >
+		INSERT INTO SERVICE_DISABLE_TYPE(
+				 WFFCLTY_CD
+				,DISABLE_TP
+				,DISABLE_DETAIL
+				,REGIST_DT
+				,REGISTERER
+			)values(
+				    #{wffcltyCd     , jdbcType=VARCHAR}
+				  , #{disableTp     , jdbcType=VARCHAR}
+				  , #{disableDetail , jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register      , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<update id="updateDisableTp" parameterType="egovMap" >
+		UPDATE SERVICE_DISABLE_TYPE
+			SET
+				 DISABLE_DETAIL  = #{disableDetail , jdbcType=VARCHAR}
+				,UPDATE_DT       = SYSDATE
+				,UPDATER         = #{register , jdbcType=VARCHAR}
+			WHERE WFFCLTY_CD = #{wffcltyCd}
+			  AND DISABLE_TP = #{disableTp}
+	</update>
+	
+	
+	<!-- 서비스장애 삭제  -->
+	<delete id="deleteDisableTp" parameterType="egovMap">
+		DELETE FROM SERVICE_DISABLE_TYPE
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+	       AND  DISABLE_TP = #{disableTp}
+	</delete>
+	
+	
+	
+	<!-- 이미지 신규입력  -->
+	<insert id="insertImg" parameterType="egovMap" >
+		INSERT INTO WFFCLTY_PICTURE(
+				 WFFCLTY_CD
+				,PICTURE_NM
+				,PICTURE_PATH
+				,REGIST_DT
+				,REGISTERER
+			)values(
+				    #{wffcltyCd    , jdbcType=VARCHAR}
+				  , #{pictureNm    , jdbcType=VARCHAR}
+				  , #{picturePath  , jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{register     , jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<!-- 서비스장애 수정 -->
+	<update id="updateImg" parameterType="egovMap" >
+		UPDATE WFFCLTY_PICTURE
+			SET
+				 PICTURE_NM  = #{pictureNm    , jdbcType=VARCHAR}
+				,UPDATE_DT   = SYSDATE
+				,UPDATER     = #{register , jdbcType=VARCHAR}
+			WHERE WFFCLTY_CD = #{wffcltyCd}
+			  AND PICTURE_NM = #{pictureRealNm, jdbcType=VARCHAR}
+	</update>
+	
+	
+	<!-- 서비스장애 삭제  -->
+	<delete id="deleteImg" parameterType="egovMap">
+		DELETE FROM WFFCLTY_PICTURE
+		  WHERE WFFCLTY_CD = #{wffcltyCd}
+	       AND  PICTURE_NM = #{pictureRealNm}
+	</delete>
+	
+	<!-- 복지시설코드 조회  -->
+	<select id="selectWffcltyList" parameterType="egovMap" resultType="egovMap">
+		 SELECT  
+                A.WFFCLTY_CD
+		      , A.WFFCLTY_NM
+		      , A.WFFCLTY_TP
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = WFFCLTY_CLAS AND COMMCD_FG = 'WF01'AND USE_FG = '1' ) AS WFFCLTY_CLAS 
+		      , (SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD = A.WFFCLTY_TP AND COMMCD_FG = C.COMMCD_FG AND USE_FG = '1') AS WFFCLTY_TP_NM
+		      , B.OGNZT_NM
+		      , A.UNIQUE_NO
+		      , (SELECT WFFCLTY_NM FROM WFFCLTY_BASE F WHERE A.HIGH_WFFCLTY_CD = F.WFFCLTY_CD) AS HIGH_WFFCLTY_NM
+		      , DECODE(A.OPERATE_FG,'0','미운영','운영') AS OPERATE_FG
+		      , DECODE(A.USE_FG,'0','미사용','사용')     AS USE_FG
+	    FROM WFFCLTY_BASE A
+	       , ORGANIZATION B
+           , (SELECT  COMMCD 
+                    , DECODE(COMMCD,'A','WF02','B','WF03','C','WF04','D','WF05','E','WF06') AS COMMCD_FG
+               FROM COMMON_CODE
+                WHERE COMMCD_FG = 'WF01'
+                  AND USE_FG = '1') C
+	      WHERE A.OGNZT_CD     = B.OGNZT_CD
+            AND A.WFFCLTY_CLAS = C.COMMCD
+             AND (A.WFFCLTY_CD LIKE '%'||#{wffcltyCd}||'%' OR A.WFFCLTY_NM LIKE '%'||#{wffcltyCd}||'%')
+	</select>
+	
+	
+</mapper>

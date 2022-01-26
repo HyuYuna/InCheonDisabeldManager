@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcInfoDAO">
+	
+	<select id="selectWfcInfo" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT  
+			A.WFFCLTY_CD, /*시설코드*/
+			A.WFFCLTY_NM, /*시설명*/
+			A.WFFCLTY_CLAS, /*복지시설분류*/
+			A.WFFCLTY_TP, /*복지시설유형*/
+			(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG IN ('WF01','WF02','WF03','WF04','WF05','WF06') AND COMMCD=A.WFFCLTY_TP) WFFCLTY_TP_NM,
+			A.OGNZT_CD, /*운영단체*/
+			(SELECT OGNZT_NM FROM ORGANIZATION WHERE OGNZT_CD=A.OGNZT_CD) OGNZT_NM,
+			A.UNIQUE_NO, /*고유번호(사업자번호?)*/
+			A.OPERATE_FG, /*운영여부*/
+            DECODE(A.OPERATE_FG,'1','운영','미운영') OPERATE_FG_NM,
+			A.USE_FG, /*사용여부*/
+            DECODE(A.USE_FG,'1','사용','미사용') USE_FG_NM,
+            (SELECT WFFCLTY_NM FROM WFFCLTY_BASE WHERE WFFCLTY_CD=A.HIGH_WFFCLTY_CD) HIGH_WFFCLTY_CD_NM, /*본부/센터 - 있는경우만*/
+			B.ZIP_CD, /*우편번호*/
+			B.ADDR_BASE ||' '|| B.ADDR_DETAIL ADDR, /*주소*/
+			REGEXP_REPLACE(B.PHONE_NUM, '(.{3})(.+)(.{4})','\1-\2-\3') AS PHONE_NUM, /*연락처*/
+            REGEXP_REPLACE(B.FAX_NUM, '(.{3})(.+)(.{4})','\1-\2-\3')  AS FAX_NUM, /*백스번호*/
+			B.INTENDANT_NM, /*관장,시설장,센터장,도서관장*/
+			TO_CHAR(TO_DATE(B.ESTABLISH_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS ESTABLISH_DD, /*설립일자*/
+			B.WORKER_CNT, /*종사자 : 종사자인원*/
+			B.WORKER_DETAIL, /*종사자 : 종사자내역*/
+			B.HOMEPAGE_URL, /*웹사이트*/
+			B.GOVSUBY_FG, /*보조금 : 국비보조금여뷰*/
+			B.CITSUBY_FG, /*보조금 : 시비보조금여부*/
+			B.GUSUBY_FG, /*보조금 : 군구보조금여부*/
+			B.REVENUE_SOURCE_TP, /*수입제원 : 자체수입 재원 구분*/
+            DECODE(B.REVENUE_SOURCE_TP,'E',B.REVENUE_ETC_DETAIL,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP08' AND COMMCD=B.REVENUE_SOURCE_TP)) REVENUE_SOURCE_TP_NM,
+			B.OWNERSHIP_TP, /*시설소유 : 시설소유형태*/
+            DECODE(B.OWNERSHIP_TP,'E',B.OWNERSHIP_ETC_DETAIL,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP09' AND COMMCD=B.OWNERSHIP_TP)) OWNERSHIP_TP_NM,
+			B.LUNCH_TP, /*중식제공 : 이용자중식제공형태*/
+            DECODE(B.LUNCH_TP,'E',B.LUNCH_ETC_DETAIL,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP10' AND COMMCD=B.LUNCH_TP)) LUNCH_TP_NM,
+			TO_CHAR(B.CAPACITY,'999,999,999,999,999') AS CAPACITY, /*입소자 정원 : */
+			TO_CHAR((SELECT COUNT(*) FROM WFFCLTY_ENTER WHERE WFFCLTY_CD=A.WFFCLTY_CD AND LVHS_DD IS NULL),'999,999,999,999,999') NOW_CAPACITY, /*입소자 현원*/
+			B.AREA, /*면적*/  
+			DECODE((CASE 
+                    
+                    WHEN NOT REGEXP_INSTR(B.ETC_DETAIL1,'[^0-9]') = 0 THEN '1'
+                    ELSE '0'      
+             END   
+            ),'1',B.ETC_DETAIL1,'0',TO_CHAR(B.ETC_DETAIL1,'999,999,999,999,999')) AS ETC_DETAIL1,
+			 DECODE((CASE 
+                    
+                    WHEN NOT REGEXP_INSTR(B.ETC_DETAIL2,'[^0-9]') = 0 THEN '1'
+                    ELSE '0'      
+             END   
+            ),'1',B.ETC_DETAIL1,'0',TO_CHAR(B.ETC_DETAIL2,'999,999,999,999,999')) AS ETC_DETAIL2,
+			B.ETC_DETAIL3,
+			B.ETC_DETAIL4,
+			B.ETC_DETAIL5
+		FROM 
+			WFFCLTY_BASE A
+			LEFT OUTER JOIN WFFCLTY_DETAIL B ON A.WFFCLTY_CD = B.WFFCLTY_CD
+		WHERE 1=1
+		]]>
+		<if test="schOgnztCd != null and schOgnztCd != ''.toString() ">
+            AND OGNZT_CD=#{schOgnztCd} /*운영단체*/
+		</if>
+		<if test="schWffcltyNm != null and schWffcltyNm != ''.toString() ">
+			AND INSTR(A.WFFCLTY_NM,#{schWffcltyNm}) > 0 /*시설명*/
+		</if>
+		<if test="schIntendantNm != null and schIntendantNm != ''.toString() ">
+            AND INSTR(B.INTENDANT_NM,#{schIntendantNm}) > 0 /*시설장*/
+        </if>
+        <if test="schGucd != null and schGucd != ''.toString() ">
+            AND B.GU_CD = #{schGucd} /*시군구*/
+        </if>
+        <if test="schWffcltyClas != null and schWffcltyClas != ''.toString() ">
+            AND A.WFFCLTY_CLAS = #{schWffcltyClas} /*시설분류*/
+        </if>
+        <if test="schWffcltyTp != null and schWffcltyTp != ''.toString() ">
+            AND A.WFFCLTY_TP = #{schWffcltyTp} /*시설유형*/
+        </if>
+        <choose>
+	        <when test="fgArr.isEmpty()">
+			AND B.GOVSUBY_FG=0
+			AND B.CITSUBY_FG=0
+			AND B.GUSUBY_FG=0
+	        </when>
+	        <otherwise>
+	        	AND (
+	        	<foreach collection="fgArr" item="fg"  separator=" OR ">
+	        	${fg}
+	        	</foreach>
+	        	)
+	        </otherwise>
+        </choose>
+        <if test="schRevenueSourceTp != null and schRevenueSourceTp != ''.toString() ">
+            AND B.REVENUE_SOURCE_TP = #{schRevenueSourceTp}
+        </if>
+        <if test="schOwnershipTp != null and schOwnershipTp != ''.toString() ">
+            AND B.OWNERSHIP_TP = #{schOwnershipTp}
+        </if>
+	</select>
+	
+	<select id="selectWfcInfoDis" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT 
+		    B.COMMCD_VALUE DIS_TITLE, A.DISABLE_DETAIL DIS_DETAIL
+		FROM 
+		    SERVICE_DISABLE_TYPE A
+		    INNER JOIN COMMON_CODE B ON A.DISABLE_TP=B.COMMCD AND B.COMMCD_FG='TP05'
+		WHERE   
+		    B.USE_FG=1 AND A.WFFCLTY_CD=#{wffcltyCd}
+		]]>
+	</select>
+	
+</mapper>

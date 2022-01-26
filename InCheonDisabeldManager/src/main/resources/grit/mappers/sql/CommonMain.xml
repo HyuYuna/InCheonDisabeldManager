@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commonMainDAO">
+	<!-- 권한에 따른 메뉴 리스트 -->
+	<select id="selectUserMenuList" parameterType="egovMap" resultType="egovMap">
+		SELECT 
+		      A.MENU_CD
+		    , A.MENU_NM
+		    , A.HIGH_MENU_CD
+		    , A.LVL          AS LV
+		    , A.PROGRAM_PATH AS PATH_NM
+		    , A.SORT_ORD
+		    , A.VIEW_AUTH
+		    , A.NEW_AUTH
+		    , A.SAVE_AUTH
+		    , A.DELETE_AUTH
+		    , A.EXCEL_AUTH
+		    , A.PRINT_AUTH
+		    , A.USE_FG
+		    , LPAD(A.SORT_ORD, 3, '0') || '00' AS SORT_KEY
+		    , (SELECT B.WFFCLTY_TP FROM USERS A ,WFFCLTY_BASE B WHERE A.LINK_CD = B.WFFCLTY_CD AND A.USER_ID = #{userId}) AS WFFCLTY_TP
+		    , #{userGroupCd} AS USER_GROUP_CD
+		FROM PROGRAM_MENU A
+		   , PROGRAM_GROUP_AUTHORITY B
+		  WHERE A.MENU_CD =  B.MENU_CD
+		    AND USER_GROUP_CD = #{userGroupCd}
+		  ORDER BY SORT_KEY 
+	</select>
+	
+
+	<!--  메뉴 작업 로그 등록  -->
+	<insert id="insertUserMenuLog" parameterType="egovMap">
+		INSERT INTO MENU_HISTORY (
+			LOG_DT
+			, USER_ID
+			, IP_ADDRESS
+			, MENU_CD
+			, LOG_FG
+		) VALUES (
+			SYSDATE
+			, #{userId}
+			, #{userIp}
+			, #{menuCd}
+			, #{jobFgCd}
+		)
+	</insert>
+	
+	<!--  삭제 로그 작업 등록  -->
+	<insert id="deleteLogInsert" parameterType="egovMap">
+	INSERT INTO PROGRAM_HISTORY( /* commonMainDAO.insertDeleteLog */
+		MENU_CD
+		, JOB_DT
+		, USER_ID
+		, JOB_FG
+		, JOB_DETAIL)
+        	VALUES(
+        #{menuCd}
+		,SYSDATE
+		,#{register}
+		,#{jobFg}
+		,#{jobDetail});
+	</insert>
+
+	
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sysUserAuthMgmtDAO">
+
+	<select id="searchList" parameterType="egovMap" resultType="egovMap">
+		SELECT GRP_CD,
+		       GRP_NM,
+		       SORT_SEQ,
+		       GRP_FG_CD,
+		       FN_CD_NM('GRP000', GRP_FG_CD) AS GRP_FG_NM
+		  FROM SYS_GROUP
+		 ORDER BY SORT_SEQ
+	</select>
+
+	<select id="searchList2" parameterType="egovMap" resultType="egovMap">
+		SELECT #{grpCd} AS GRP_CD,
+		       (SELECT MENU_NM FROM SYS_MENU WHERE MENU_CD = A.P_MENU_CD) AS P_MENU_NM,
+		       DECODE(A.LV, 1, 'FolderOpen', 2, 'Node', 'Minus') AS ICON,
+        	   A.MENU_CD,
+        	   DECODE(A.LV, 2, '&#160;&#160;', '') || A.MENU_NM AS MENU_NM,
+        	   A.P_MENU_CD,
+        	   A.LV,
+        	   A.SORT_SEQ,
+        	   A.IMG_FILE_NM,
+        	   NVL(B.INQ_AUTH_YN, '0') AS INQ_AUTH_YN,
+        	   NVL(B.NEW_AUTH_YN, '0') AS NEW_AUTH_YN,
+        	   NVL(B.SAV_AUTH_YN, '0') AS SAV_AUTH_YN,
+        	   NVL(B.DEL_AUTH_YN, '0') AS DEL_AUTH_YN,
+        	   NVL(B.EXL_AUTH_YN, '0') AS EXL_AUTH_YN,
+        	   A.USE_YN,
+        	   A.REG_DTM,
+        	   A.REGR_ID,
+        	   A.MOD_DTM,
+        	   A.MODR_ID
+          FROM SYS_MENU A, SYS_GROUP_MENU B
+         WHERE A.MENU_CD = B.MENU_CD (+)
+           AND B.GRP_CD (+) = #{grpCd}
+         START WITH A.LV = 1
+       CONNECT BY PRIOR A.MENU_CD = A.P_MENU_CD
+         ORDER SIBLINGS BY A.SORT_SEQ
+	</select>
+
+
+	<select id="getInfo" parameterType="egovMap" resultType="egovMap">
+		SELECT COUNT(*) AS CNT
+		  FROM SYS_USER
+         WHERE GRP_CD = #{grpCd}
+	</select>
+
+
+	<insert id="insert" parameterType="egovMap">
+		MERGE INTO SYS_GROUP
+		USING DUAL
+		   ON (GRP_CD = #{grpCd})
+		WHEN MATCHED THEN
+			UPDATE SET GRP_NM = #{grpNm},
+			           GRP_FG_CD = #{grpFgCd},
+					   MOD_DTM = SYSTIMESTAMP,
+					   MODR_ID = #{loginId}
+		WHEN NOT MATCHED THEN
+			INSERT (
+				GRP_CD,  GRP_NM,   SORT_SEQ,
+				REG_DTM, REGR_ID,  MOD_DTM,
+				MODR_ID, GRP_FG_CD
+			)
+			VALUES (
+				#{grpCd},   #{grpNm},   (SELECT NVL(MAX(SORT_SEQ), 0) + 1 FROM SYS_GROUP),
+				SYSTIMESTAMP,    #{loginId}, SYSTIMESTAMP,
+				#{loginId}, #{grpFgCd}
+			)
+	</insert>
+
+
+	<insert id="insert2" parameterType="egovMap">
+		MERGE INTO SYS_GROUP_MENU
+		USING DUAL
+		   ON (GRP_CD = #{grpCd} AND MENU_CD = #{menuCd})
+		WHEN MATCHED THEN
+			UPDATE SET INQ_AUTH_YN = #{inqAuthYn},
+					   NEW_AUTH_YN = #{newAuthYn},
+					   SAV_AUTH_YN = #{savAuthYn},
+					   DEL_AUTH_YN = #{delAuthYn},
+					   EXL_AUTH_YN = #{exlAuthYn},
+					   MOD_DTM = SYSTIMESTAMP,
+					   MODR_ID = #{loginId}
+		WHEN NOT MATCHED THEN
+			INSERT (
+				GRP_CD,      MENU_CD,     INQ_AUTH_YN, NEW_AUTH_YN,
+				SAV_AUTH_YN, DEL_AUTH_YN, EXL_AUTH_YN, REG_DTM,
+				REGR_ID,     MOD_DTM,     MODR_ID
+			)
+			VALUES (
+				#{grpCd},     #{menuCd},    #{inqAuthYn}, #{newAuthYn},
+				#{savAuthYn}, #{delAuthYn}, #{exlAuthYn},  SYSTIMESTAMP,
+				#{loginId},   SYSTIMESTAMP, #{loginId}
+			)
+	</insert>
+
+
+	<delete id="delete" parameterType="egovMap">
+		DELETE
+		  FROM SYS_GROUP
+		 WHERE GRP_CD = #{grpCd}
+	</delete>
+
+	<delete id="delete2" parameterType="egovMap">
+		DELETE
+		  FROM SYS_GROUP_MENU
+		 WHERE GRP_CD = #{grpCd}
+	</delete>
+
+
+</mapper>

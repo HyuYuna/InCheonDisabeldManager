@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WlfpyMgmtDAO">
+	<select id="selectWlfpyMgmt" parameterType="egovMap" resultType="egovMap">
+	SELECT 
+       A.RCPMNY_SEQNO
+       ,A.WFFCLTY_CD
+       ,(SELECT B.WFFCLTY_NM FROM WFFCLTY_BASE B WHERE B.WFFCLTY_CD = A.WFFCLTY_CD) WFFCLTY_NM
+       ,A.RCPMNY_DD
+       ,A.SUBSIDY_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP06' AND Z.USE_FG = '1' AND COMMCD = A.SUBSIDY_FG) AS SUBSIDY_FG_NM 
+       ,A.SUBSIDY_TP
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'TP07' AND Z.USE_FG = '1' AND COMMCD = A.SUBSIDY_TP) AS SUBSIDY_TP_NM
+       ,A.RCPMNY_AMT
+       ,A.NOTE
+       ,A.USE_FG
+       ,(SELECT Z.COMMCD_VALUE FROM COMMON_CODE Z WHERE Z.COMMCD_FG = 'FG02' AND Z.USE_FG = '1' AND COMMCD = A.USE_FG) AS USE_FG_NM
+  FROM SUBSIDY_GIVE A
+  
+	  WHERE WFFCLTY_CD = #{linkCd}
+	  	<if test ="fDate != '' and fDate != null">
+	    AND RCPMNY_DD &gt;= replace(#{fDate}, '-')
+	    </if>
+	    
+	    <if test ="eDate != '' and eDate != null">
+	    AND RCPMNY_DD &lt;= replace(#{eDate}, '-')
+	    </if>
+	    
+	    <if test ="searchSubsidyFg != '' and searchSubsidyFg != null">
+	    AND SUBSIDY_FG = #{searchSubsidyFg}
+	    </if>
+	    
+	    <if test ="searchSubsidyTp != '' and searchSubsidyTp != null">
+	    AND SUBSIDY_TP = #{searchSubsidyTp}
+	    </if>
+	    ORDER BY RCPMNY_DD ASC
+	</select>
+	
+	<insert id="insertWlfpyMgmt" parameterType="egovMap">
+	
+INSERT INTO SUBSIDY_GIVE
+			(RCPMNY_SEQNO
+               ,WFFCLTY_CD
+               ,RCPMNY_DD
+               ,SUBSIDY_FG
+               ,SUBSIDY_TP
+               ,RCPMNY_AMT
+               ,NOTE
+               ,USE_FG
+               ,REGIST_DT
+               ,REGISTERER)
+               		VALUES(
+               		   (SELECT NVL(MAX(RCPMNY_SEQNO), 0)+1 FROM SUBSIDY_GIVE WHERE WFFCLTY_CD = #{linkCd})
+                      ,#{linkCd}
+                      ,replace(#{rcpmnyDd}, '-')
+                      ,#{subsidyFg}
+                      ,#{subsidyTp}
+                      ,replace(#{rcpmnyAmt}, ',')
+                      ,#{note}
+                      ,#{useFg}
+                      ,SYSDATE
+                      ,#{register})
+	</insert>
+	
+	<update id="updateWlfpyMgmt" parameterType="egovMap">
+		update SUBSIDY_GIVE set
+    RCPMNY_DD = replace(#{rcpmnyDd}, '-')
+    ,SUBSIDY_FG = #{subsidyFg}
+    ,SUBSIDY_TP = #{subsidyTp}
+    ,RCPMNY_AMT = replace(#{rcpmnyAmt}, ',')
+    ,NOTE = #{note}
+    ,USE_FG = #{useFg}
+    ,UPDATE_DT = SYSDATE
+    ,UPDATER = #{register}
+        where RCPMNY_SEQNO = #{rcpmnySeqno}
+          AND WFFCLTY_CD = #{linkCd}
+	</update>
+	
+	<select id="selectWffcltyNm" parameterType="egovMap" resultType="egovMap">
+	SELECT
+	 WFFCLTY_NM
+  	FROM WFFCLTY_BASE
+  	<if test= "linkCd != null and linkCd != ''">
+ 	WHERE WFFCLTY_CD = #{linkCd}
+ 	</if>
+	</select>
+</mapper>

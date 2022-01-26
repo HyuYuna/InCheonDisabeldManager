@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sysAuthMgmtDAO">
+
+	<select id="searchList" parameterType="egovMap" resultType="egovMap">
+		 SELECT COMMCD        AS GRP_CD
+		       ,COMMCD_VALUE  AS GRP_NM
+		FROM COMMON_CODE 
+		  WHERE COMMCD_FG = 'TP01'
+		   AND USE_FG = '1'
+		   ORDER BY SORT_ORD
+	</select>
+
+	<select id="searchList2" parameterType="egovMap" resultType="egovMap">
+         SELECT 
+              #{grpCd}       AS USER_GROUP_CD 
+	          ,A.MENU_CD
+	          ,DECODE(A.LVL, 2, '&#160;&#160;&#160;&#160;', '&#160;') || A.MENU_NM AS MENU_NM
+	          ,A.HIGH_MENU_CD
+	          ,A.LVL
+	          ,A.SORT_ORD
+	          ,NVL(B.VIEW_AUTH, '0')   AS INQ_AUTH_YN
+	          ,NVL(B.NEW_AUTH, '0')    AS NEW_AUTH_YN
+	          ,NVL(B.SAVE_AUTH, '0')   AS SAV_AUTH_YN
+	          ,NVL(B.DELETE_AUTH, '0') AS DEL_AUTH_YN
+	          ,NVL(B.EXCEL_AUTH, '0')  AS EXL_AUTH_YN
+	          ,NVL(B.PRINT_AUTH, '0')  AS PRI_AUTH_YN
+     FROM PROGRAM_MENU A
+          ,PROGRAM_GROUP_AUTHORITY B
+       WHERE A.MENU_CD = B.MENU_CD(+)
+        AND B.USER_GROUP_CD(+) = #{grpCd}
+         START WITH A.LVL = 1
+         CONNECT BY PRIOR A.MENU_CD = A.HIGH_MENU_CD
+          ORDER SIBLINGS BY A.SORT_ORD
+	</select>
+
+
+	<insert id="updateSysAuthMgmt" parameterType="egovMap">
+	MERGE INTO PROGRAM_GROUP_AUTHORITY
+		USING DUAL
+		   ON (USER_GROUP_CD = #{userGroupCd} AND MENU_CD = #{menuCd})
+		WHEN MATCHED THEN
+			UPDATE SET VIEW_AUTH   = #{inqAuthYn},
+					   NEW_AUTH    = #{newAuthYn},
+					   SAVE_AUTH   = #{savAuthYn},
+					   DELETE_AUTH = #{delAuthYn},
+					   EXCEL_AUTH  = #{exlAuthYn},
+					   PRINT_AUTH  = #{priAuthYn},
+					   UPDATE_DT   = SYSDATE,
+					   UPDATER     = #{register}
+		WHEN NOT MATCHED THEN
+			INSERT (
+				USER_GROUP_CD,      MENU_CD,     VIEW_AUTH, NEW_AUTH,
+				SAVE_AUTH, DELETE_AUTH, EXCEL_AUTH, PRINT_AUTH, REGIST_DT,
+				REGISTERER
+			)
+			VALUES (
+				#{userGroupCd},  #{menuCd},    #{inqAuthYn}, #{newAuthYn},
+				#{savAuthYn}, #{delAuthYn}, #{exlAuthYn}, #{priAuthYn},  SYSDATE,
+				#{register}
+			) 	
+	</insert>
+
+	<delete id="deleteSysAuthMgmt" parameterType="egovMap">
+		DELETE FROM PROGRAM_GROUP_AUTHORITY
+		 WHERE USER_GROUP_CD = #{userGroupCd}
+		  AND MENU_CD = #{menuCd}
+	</delete>
+
+</mapper>

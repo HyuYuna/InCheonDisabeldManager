@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- 마이바티스의 작동 규칙정의 -->
+	<settings>
+	  <setting name="cacheEnabled" value="false"/>
+	  <setting name="useGeneratedKeys" value="false"/>
+	  <setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		
+		<typeAlias alias="hashMap" type="java.util.HashMap" />
+		
+		<typeAlias alias="CommonGritCmmVO" type="kr.co.grit.common.vo.CommonGritCmmVO"/>
+		<typeAlias alias="CommonUserInfoVO" type="kr.co.grit.common.vo.CommonUserInfoVO"/>
+		<typeAlias alias="CommonUserSessionVO" type="kr.co.grit.common.vo.CommonUserSessionVO"/>
+		
+		<typeAlias alias="basDisabiltyPreSaveVO" type="kr.co.grit.bas.vo.BasDisabiltyPreSaveVO"/>
+		<typeAlias alias="basDisabiltyAgeSaveVO" type="kr.co.grit.bas.vo.BasDisabiltyAgeSaveVO"/>
+		<typeAlias alias="PgmLbrryBookExcelVO" type="kr.co.grit.pgm.vo.PgmLbrryBookExcelVO"/>
+	
+	</typeAliases>
+</configuration>

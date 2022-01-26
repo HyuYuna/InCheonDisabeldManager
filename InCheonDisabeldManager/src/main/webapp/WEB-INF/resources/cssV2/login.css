@@ -1,0 +1,83 @@
+.loginFrame{
+    margin: auto;
+    width: 500px;
+    padding: 150px 30px 200px 30px;
+}
+
+.logoIncheonLogin{
+    width:110px;
+}
+
+.appTitleBoldLogin{
+    font-size: 48px;
+    font-weight: 700;
+    color:#4e5a72;
+    letter-spacing: -3px;
+}
+
+.appTitleLightLogin{
+    font-size: 48px;
+    font-weight: 100;
+    color:#4e5a72;
+    letter-spacing: -3px;
+}
+
+.formIDWrap{
+    margin-top: 50px;
+}
+
+.loginID,
+.loginPW {
+    display: inline-block;
+    width:150px;
+    text-align: right;
+    padding-right: 30px;
+    font-weight: 700;
+}
+
+.loginIDInput[type="text"],
+.loginPWInput[type="password"]{
+    width: 200px;
+    height: 35px;
+    border-radius: 50px;
+    padding: 0px 15px;
+    border: 1px solid #ddd;
+    letter-spacing: 1px;
+}
+
+.formPwWrap{
+    margin-top:30px;
+}
+
+.loginBtnWrap{
+    margin-top:50px;
+    padding-left: 150px;
+}
+
+.loginBtn{
+    background-color: #4e5a72;
+    border:none;
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    width: 200px;
+    height:45px;
+    border-radius: 60px;
+}
+
+.securityPolicyWrap{
+    margin-top:40px;
+    text-align: center;
+    padding-left:60px;
+}
+
+.iconFooterArrowRight{
+    vertical-align: -0.8px;
+}
+
+.copyrightWrap{
+    margin-top:100px;
+    text-align: center;
+    padding-left:60px;
+    font-size: 12px;
+}

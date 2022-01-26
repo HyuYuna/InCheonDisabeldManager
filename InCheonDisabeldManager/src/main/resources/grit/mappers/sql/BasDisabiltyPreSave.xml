@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BasDisabiltyPreSaveDAO">
+
+	<insert id="insertDisalblePre" parameterType="basDisabiltyPreSaveVO">
+		INSERT INTO CITY_DISABILITY_DEGREE_STATE_TEMP(
+				YYYYMM
+				,GU_CD
+				,DISABLE_TP
+				,MALE_SERIOUS_CNT
+				,MALE_MODERATE_CNT
+				,FEMALE_SERIOUS_CNT
+				,FEMALE_MODERATE_CNT
+			)values(
+				 #{yyyymm ,jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guNm,jdbcType=VARCHAR})
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp ,jdbcType=VARCHAR})
+				,#{maleSeriousCnt    ,jdbcType=VARCHAR}
+				,#{maleModerateCnt   ,jdbcType=VARCHAR}
+				,#{femaleSeriousCnt  ,jdbcType=VARCHAR}
+				,#{femaleModerateCnt ,jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteTempDisablePre" >
+		DELETE FROM CITY_DISABILITY_DEGREE_STATE_TEMP
+	</delete>
+	
+	
+	<select id="selectErrorList"  resultType="egovMap">
+		SELECT 
+                YYYYMM
+		       ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = GU_CD)   AS GU_CD
+		       ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP) AS DISABLE_TP
+		       ,MALE_SERIOUS_CNT
+		       ,MALE_MODERATE_CNT
+		       ,FEMALE_SERIOUS_CNT
+		       ,FEMALE_MODERATE_CNT 
+               ,(CASE 
+                    WHEN NOT REGEXP_LIKE(YYYYMM||'01', '^[0-9]{4}(((0[13578]|(10|12))(0[1-9]|[1-2][0-9]|3[0-1]))|(02(0[1-9]|[1-2][0-9]))|((0[469]|11)(0[1-9]|[1-2][0-9]|30)))$')  THEN '날짜 형식이 잘못 됐습니다.'
+                    WHEN GU_CD IS  NULL                                     THEN '군구를 정확히 입력하세요.'  
+                    WHEN DISABLE_TP IS NULL                                 THEN '장애유형을 정확히 입력하세요.' 
+                    WHEN NOT REGEXP_INSTR(MALE_SERIOUS_CNT   ,'[^0-9]') = 0 THEN '[심한장애 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(MALE_MODERATE_CNT  ,'[^0-9]') = 0 THEN '[심하지않는장애 남성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE_SERIOUS_CNT ,'[^0-9]') = 0 THEN '[심한장애 여성] 숫자가 들어가야 합니다'
+                    WHEN NOT REGEXP_INSTR(FEMALE_MODERATE_CNT,'[^0-9]') = 0 THEN '[심하지않는장애 여성] 숫자가 들어가야 합니다'
+                    ELSE '정상'
+                END) AS CHECK_ERROR
+		FROM CITY_DISABILITY_DEGREE_STATE_TEMP 
+		  WHERE (CASE 
+		            WHEN NOT REGEXP_LIKE(YYYYMM||'01', '^[0-9]{4}(((0[13578]|(10|12))(0[1-9]|[1-2][0-9]|3[0-1]))|(02(0[1-9]|[1-2][0-9]))|((0[469]|11)(0[1-9]|[1-2][0-9]|30)))$')  THEN 1
+		            WHEN GU_CD IS  NULL                                     THEN  2  
+		            WHEN DISABLE_TP IS NULL                                 THEN  3 
+		            WHEN NOT REGEXP_INSTR(MALE_SERIOUS_CNT   ,'[^0-9]') = 0 THEN  4
+		            WHEN NOT REGEXP_INSTR(MALE_MODERATE_CNT  ,'[^0-9]') = 0 THEN  5
+		            WHEN NOT REGEXP_INSTR(FEMALE_SERIOUS_CNT ,'[^0-9]') = 0 THEN  6
+		            WHEN NOT REGEXP_INSTR(FEMALE_MODERATE_CNT,'[^0-9]') = 0 THEN  7
+		            ELSE 0
+		          END)  <![CDATA[<>]]> 0
+  
+	</select>
+	
+	<select id="selectExcelTempList"  resultType="egovMap">
+		 SELECT
+	          YYYYMM
+	         ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD = GU_CD)   AS GU_CD
+             ,(SELECT COMMCD_VALUE FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD = DISABLE_TP) AS DISABLE_TP
+	         ,DISABLE_TP
+	         ,MALE_SERIOUS_CNT
+	         ,MALE_MODERATE_CNT
+	         ,FEMALE_SERIOUS_CNT
+	         ,FEMALE_MODERATE_CNT
+	      FROM CITY_DISABILITY_DEGREE_STATE_TEMP 
+              
+	</select>
+	
+	
+	<insert id="confirmDisablePre" parameterType="egovMap">
+		INSERT INTO CITY_DISABILITY_DEGREE_STATE(
+				YYYYMM
+				,GU_CD
+				,DISABLE_TP
+				,MALE_SERIOUS_CNT
+				,MALE_MODERATE_CNT
+				,FEMALE_SERIOUS_CNT
+				,FEMALE_MODERATE_CNT
+				,REGIST_DT
+				,REGISTERER
+			)values(
+				 #{yyyymm ,jdbcType=VARCHAR}
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'CG01' AND USE_FG = '1' AND COMMCD_VALUE = #{guCd,jdbcType=VARCHAR})
+				,(SELECT COMMCD FROM COMMON_CODE WHERE COMMCD_FG = 'TP05' AND USE_FG = '1' AND COMMCD_VALUE = #{disableTp ,jdbcType=VARCHAR})
+				,#{maleSeriousCnt    ,jdbcType=VARCHAR}
+				,#{maleModerateCnt   ,jdbcType=VARCHAR}
+				,#{femaleSeriousCnt  ,jdbcType=VARCHAR}
+				,#{femaleModerateCnt ,jdbcType=VARCHAR}
+				,SYSDATE
+				,#{register          ,jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteDisablePre" parameterType="String">
+		DELETE 
+		   FROM 
+		    CITY_DISABILITY_DEGREE_STATE 
+		  WHERE YYYYMM      = #{delyyyymm}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EmpWorkerListVwDAO">
+	<select id="selectWorkerList" parameterType="egovMap" resultType="egovMap">
+	SELECT A.WORKER_ID
+       ,A.WORKER_NM
+       ,(select X.WFFCLTY_NM from WFFCLTY_base X WHERE X.WFFCLTY_CD = A.WFFCLTY_CD) AS WFFCLTY_NM
+       ,(select COMMCD_VALUE from COMMON_CODE Z where Z.COMMCD_FG = SUBSTR(A.POSITION_CD,1,4) AND Z.COMMCD = SUBSTR(A.POSITION_CD,5,6) AND Z.USE_FG='1') AS POSITION_CD_NM
+       ,A.SALARY_CLASS
+       ,A.ADDR_BASE||' '|| DEC_B64('KEY1', A.ENC_ADDR_DETAIL) AS FULL_ADDR
+       ,A.JOIN_DD
+       ,A.RETIRE_DD
+       ,(select Z.COMMCD_VALUE from COMMON_CODE Z where Z.COMMCD_FG = 'FG11' AND Z.COMMCD = A.DISABLE_HAVE_FG AND Z.USE_FG='1') AS DISABLE_HAVE_NM
+       ,(select Z.COMMCD_VALUE from COMMON_CODE Z where Z.COMMCD_FG = 'FG02' AND Z.COMMCD = A.USE_FG AND Z.USE_FG='1') AS USE_FG
+       ,A.WORK_RECORD
+  FROM WFFCLTY_WORKER A
+ 		WHERE 1=1 
+  		<if test ="linkCd != '' and linkCd != null">
+  		AND A.WFFCLTY_CD = #{linkCd}
+  		</if>
+  		  		 
+        <if test ="searchWffcltyNm != '' and searchWffcltyNm != null"> 
+         AND WORKER_NM LIKE '%'||#{searchWffcltyNm}||'%'
+         </if>
+         
+         <if test ="searchDisability != '' and searchDisability != null">
+         AND DISABLE_HAVE_FG = #{searchDisability}
+         </if>
+  		ORDER BY A.WORKER_ID ASC
+	</select>
+	
+	<select id="selectWorkerHistory" parameterType="egovMap" resultType="egovMap">
+	SELECT 
+       TO_CHAR(REGIST_DT, 'YYYY-MM-DD') REGIST_DT
+       ,(select X.WFFCLTY_NM from WFFCLTY_base X WHERE X.WFFCLTY_CD = A.WFFCLTY_CD) AS WFFCLTY_NM
+       ,(select COMMCD_VALUE from COMMON_CODE Z where Z.COMMCD_FG = SUBSTR(A.POSITION_TP,1,4) AND Z.COMMCD = SUBSTR(A.POSITION_TP,5,6) AND Z.USE_FG='1') AS POSITION_TP
+       ,(select Z.COMMCD_VALUE from COMMON_CODE Z where Z.COMMCD_FG = 'FG08' AND Z.COMMCD = A.INOUT_FG AND Z.USE_FG='1') AS INOUT_FG
+       ,INOUT_DD
+  from WFFCLTY_WORKER_HISTORY A
+  WHERE WORKER_ID = #{workerId}
+  AND USE_FG = '1'
+  ORDER BY REGIST_SEQNO DESC
+	</select>
+	
+	<select id="selectOrgnzCodeD" parameterType="egovMap" resultType="egovMap">
+	SELECT A.WFFCLTY_CD AS GROUP_CD
+          ,A.WFFCLTY_NM AS GROUP_NM
+     FROM WFFCLTY_BASE A
+    	WHERE A.USE_FG = '1' 
+       <if test ="linkCd != '' and linkCd != null">
+       AND A.OGNZT_CD = #{linkCd}
+       </if>
+	</select>
+</mapper>

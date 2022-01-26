@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WfcEnextMgmtDAO">
+	<select id="selectWfcEnextMgmtList" parameterType="egovMap" resultType="egovMap">
+		  /*이용장애인 ID*/
+		  SELECT WFFCLTY_CD/* WfcEnextMgmtDAO.selectWfcEnextMgmtList */
+		   ,A.DSPSN_ID 
+           ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'TP05'AND D.COMMCD = B.DISABLE_TP AND D.USE_FG = '1') AS DISABLE_TP
+           ,C.DSPSN_NM   /* 장애인명 */
+           ,DEC_B64('KEY1', C.ENC_BIRTH_DD) ENC_BIRTH_DD
+           ,DEC_B64('KEY1', C.ENC_PHONE_NUM) ENC_PHONE_NUM
+           ,(select WFFCLTY_TP from WFFCLTY_base Y where A.WFFCLTY_CD = Y.WFFCLTY_CD(+) AND Y.USE_FG = '1') AS WFFCLTY_TP
+	       ,TO_CHAR(TO_DATE(A.ENTRNC_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS ENTRNC_DD/* 입소일 */
+	       ,A.ENTER_RSN/* 입소사유 */
+	       ,TO_CHAR(TO_DATE(A.LVHS_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS LVHS_DD/* 퇴소일 */
+	       ,A.LVHS_RSN_FG/* 퇴소사유 */
+	       ,(SELECT D.COMMCD_VALUE FROM COMMON_CODE D WHERE D.COMMCD_FG = 'RS01'AND D.COMMCD = A.LVHS_RSN_FG AND D.USE_FG = '1') AS LVHS_RSN_NM
+	       ,A.LVHS_RSN_ETC_DETAIL/* 퇴소사유 기타내역 */
+	       ,A.BEFORE_ZIP_CD/* 입소전우편번호 */
+	       ,A.BEFORE_ADDR_BASE/* 입소전기본주소 */
+	       ,A.BEFORE_ADDR_BASE ||' '|| DEC_B64('KEY1', A.ENC_BEFORE_ADDR_DETAIL) AS FULL_ADDR /* Grid 입소전 주소 */
+	       ,DEC_B64('KEY1', A.ENC_BEFORE_ADDR_DETAIL) AS ENC_BEFORE_ADDR_DETAIL/* 입소전상세주소 */
+	       ,A.DAYTIME_USE_FACILITY/* daytime_use_facility */
+	       ,A.ENTER_PRPRTY/* 입소시 개인소유재산 */
+	       ,A.LVHS_PRPRTY/* 퇴소시 개인소유재산 */
+	       ,A.TFCMN_TP/* 교통수단(셔틀버스, 전철, 버스, 장애인콜택시,기타) */
+	       ,A.TFCMN_ETC_DETAIL/* 교통수단 기타내역 */
+	       ,A.PARTCPTN_TP/* 참여유형(장애인 직업재활관련 시설에서만 적용) */
+	       ,TO_CHAR(A.LY_MLY_WAGE, '999,999,999') AS LY_MLY_WAGE
+           ,TO_CHAR(A.LY_HLY_WAGE, '999,999,999') AS LY_HLY_WAGE
+           ,TO_CHAR(A.TY_MLY_WAGE, '999,999,999') AS  TY_MLY_WAGE
+           ,TO_CHAR(A.TY_HLY_WAGE, '999,999,999') TY_HLY_WAGE
+           ,TO_CHAR(A.FEE, '999,999,999') FEE
+	       ,TO_CHAR(TO_DATE(A.CONTRACT_START_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CONTRACT_START_DD/* 이용계약서시작일(장애인 주간보호시설에서만 적용) */
+	       ,TO_CHAR(TO_DATE(A.CONTRACT_END_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CONTRACT_END_DD/* 이용계약서종료일(장애인 주간보호시설에서만 적용) */
+	       ,DECODE(A.CONTRACT_START_DD||A.CONTRACT_END_DD, '', '', TO_CHAR(TO_DATE(A.CONTRACT_START_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD') ||' ~ '|| TO_CHAR(TO_DATE(A.CONTRACT_END_DD, 'YYYY-MM-DD'), 'YYYY-MM-DD')) AS FULL_CONTRACT_DD /* 이용 계약서 시작일부터 종료일까지*/
+	       ,A.USE_FG /* 사용여부 */
+			  FROM WFFCLTY_ENTER A, 
+			    DSPSN_DISABILITY B,
+			    DSPSN            C
+		 WHERE A.DSPSN_ID = B.DSPSN_ID(+)
+		   AND A.DSPSN_ID = C.DSPSN_ID(+)
+		   <if test ="searchDspsnNm != '' and searchDspsnNm != null">
+		   AND C.DSPSN_NM LIKE '%'||#{searchDspsnNm}||'%'
+		   </if>
+		   <if test ="encPhoneNum != '' and encPhoneNum != null">
+           AND WFFCLTY_CD = #{encPhoneNum}
+           </if>
+		   <if test ="sDate != '' and sDate != null">
+		   AND ENTRNC_DD &gt;= replace(#{sDate}, '-')
+		   </if>
+		   <if test ="eDate != '' and eDate != null">
+           AND ENTRNC_DD &lt;= replace(#{eDate}, '-')
+           </if>
+           <if test ="groupType != '' and groupType != null">
+           AND (select WFFCLTY_TP from WFFCLTY_BASE Y WHERE A.WFFCLTY_CD = Y.WFFCLTY_CD(+) AND Y.USE_FG = '1') = #{groupType}
+           </if>
+           <if test ="linkCd != '' and linkCd != null">
+           AND WFFCLTY_CD = #{linkCd}
+           </if>
+           ORDER BY A.WFFCLTY_CD, C.DSPSN_NM, A.ENTRNC_DD  ASC
+	</select>
+	
+	<insert id="insertEnextMgmt" parameterType="egovMap">
+INSERT INTO WFFCLTY_ENTER(
+  WFFCLTY_CD
+  , DSPSN_ID
+  , ENTRNC_DD
+  , ENTER_RSN
+  , LVHS_DD
+  , LVHS_RSN_FG
+  , LVHS_RSN_ETC_DETAIL
+  , BEFORE_ZIP_CD
+  , BEFORE_ADDR_BASE
+  , ENC_BEFORE_ADDR_DETAIL
+  , DAYTIME_USE_FACILITY
+  , ENTER_PRPRTY
+  , LVHS_PRPRTY
+  , TFCMN_TP
+  , TFCMN_ETC_DETAIL
+  , PARTCPTN_TP
+  , LY_MLY_WAGE
+  , LY_HLY_WAGE
+  , TY_MLY_WAGE
+  , TY_HLY_WAGE
+  , FEE
+  , CONTRACT_START_DD
+  , CONTRACT_END_DD
+  , USE_FG
+  , REGIST_DT
+  , REGISTERER)
+VALUES(
+		       #{linkCd, jdbcType=VARCHAR}
+              , #{dspsnId,      jdbcType=VARCHAR}
+              ,  replace(#{entrncDd,      jdbcType=VARCHAR}, '-')
+              , #{enterRsn,      jdbcType=VARCHAR}
+              ,  replace(#{lvhsDd,      jdbcType=VARCHAR}, '-')
+              , #{lvhsRsnFg,      jdbcType=VARCHAR}
+              , #{lvhsRsnEtcDetail,      jdbcType=VARCHAR}
+              , #{beforeZipCd,      jdbcType=VARCHAR}
+              , #{beforeAddrBase,      jdbcType=VARCHAR}
+              , ENC_B64('KEY1', #{encBeforeAddrDetail,      jdbcType=VARCHAR})
+              , #{daytimeUseFacility,      jdbcType=VARCHAR}
+              , replace(#{enterPrprty,      jdbcType=VARCHAR}, ',')
+              , replace(#{lvhsPrprty,      jdbcType=VARCHAR},  ',')
+              , #{tfcmnTp,      jdbcType=VARCHAR}
+              , #{tfcmnEtcDetail,      jdbcType=VARCHAR}
+              , #{partcptnTp,      jdbcType=VARCHAR}
+              , replace(#{lyMlyWage,      jdbcType=VARCHAR}, ',')
+              , replace(#{lyHlyWage,      jdbcType=VARCHAR}, ',')
+              , replace(#{tyMlyWage,      jdbcType=VARCHAR}, ',')
+              , replace(#{tyHlyWage,      jdbcType=VARCHAR}, ',')
+              , replace(#{enextFee,      jdbcType=VARCHAR}, ',')
+              , replace(#{contractStartDd,      jdbcType=VARCHAR}, '-')
+              , replace(#{contractEndDd,      jdbcType=VARCHAR}, '-')
+              , #{useFg,      jdbcType=VARCHAR}
+              , SYSDATE 
+              ,#{register} )
+	</insert>
+	
+	<update id="updateEnextMgmtA" parameterType="egovMap">
+		UPDATE WFFCLTY_ENTER
+    SET DSPSN_ID = #{dspsnId,      jdbcType=VARCHAR}
+       ,ENTRNC_DD =  replace(#{entrncDd,      jdbcType=VARCHAR}, '-')
+       ,ENTER_RSN = #{enterRsn,      jdbcType=VARCHAR}
+       ,LVHS_DD =  replace(#{lvhsDd,      jdbcType=VARCHAR}, '-')
+       ,LVHS_RSN_FG = #{lvhsRsnFg,      jdbcType=VARCHAR}
+       ,LVHS_RSN_ETC_DETAIL = #{lvhsRsnEtcDetail,      jdbcType=VARCHAR}
+       ,BEFORE_ZIP_CD = #{beforeZipCd,      jdbcType=VARCHAR}
+       ,BEFORE_ADDR_BASE = #{beforeAddrBase,      jdbcType=VARCHAR}
+       ,ENC_BEFORE_ADDR_DETAIL = ENC_B64('KEY1', #{encBeforeAddrDetail,      jdbcType=VARCHAR})
+       ,DAYTIME_USE_FACILITY = #{daytimeUseFacility,      jdbcType=VARCHAR}
+       ,ENTER_PRPRTY = replace(#{enterPrprty,      jdbcType=VARCHAR}, ',')
+       ,LVHS_PRPRTY = replace(#{lvhsPrprty,      jdbcType=VARCHAR}, ',')
+       ,TFCMN_TP = #{tfcmnTp,      jdbcType=VARCHAR}
+       ,TFCMN_ETC_DETAIL = #{tfcmnEtcDetail,      jdbcType=VARCHAR}
+       ,PARTCPTN_TP = #{partcptnTp,      jdbcType=VARCHAR}
+       ,LY_MLY_WAGE = replace(#{lyMlyWage,      jdbcType=VARCHAR}, ',')
+       ,LY_HLY_WAGE = replace(#{lyHlyWage,      jdbcType=VARCHAR}, ',')
+       ,TY_MLY_WAGE = replace(#{tyMlyWage,      jdbcType=VARCHAR}, ',')
+       ,TY_HLY_WAGE = replace(#{tyHlyWage,      jdbcType=VARCHAR}, ',')
+       ,FEE = replace(#{enextFee,      jdbcType=VARCHAR}, ',')
+       ,CONTRACT_START_DD =  replace(#{contractStartDd,      jdbcType=VARCHAR}, '-')
+       ,CONTRACT_END_DD =  replace(#{contractEndDd,      jdbcType=VARCHAR}, '-')
+       ,USE_FG = #{useFg,      jdbcType=VARCHAR}
+       ,UPDATE_DT = SYSDATE
+       ,UPDATER = #{register}
+       where WFFCLTY_CD = #{wffcltyCd}
+       AND DSPSN_ID = #{hdenDspsnId}
+       AND ENTRNC_DD = replace(#{hdenEntrncDd}, '-')
+	</update>
+	<select id="selectAjaxDspsnList" parameterType="egovMap" resultType="egovMap">
+		  SELECT DSPSN_ID
+       			,DSPSN_NM
+     			,DEC_B64('KEY1', ENC_BIRTH_DD) ENC_BIRTH_DD
+       			,DEC_B64('KEY1', ENC_PHONE_NUM) ENC_PHONE_NUM
+  		  	FROM DSPSN
+  		  WHERE (DSPSN_ID LIKE '%'||#{dspsnNm}||'%' OR DSPSN_NM LIKE '%'||#{dspsnNm}||'%')
+    	  AND ENC_BIRTH_DD = ENC_B64('KEY1', replace(#{encBirthDd},'-'));
+	</select>
+	
+	<select id="selectFcltyList" resultType="egovMap">
+		  SELECT A.WFFCLTY_NM
+       			,(SELECT COMMCD_VALUE FROM COMMON_CODE B WHERE A.WFFCLTY_TP = B.COMMCD AND COMMCD_FG LIKE 'WF%' AND B.USE_FG = '1') WFFCLTY_NM_TP
+ 				,(SELECT COMMCD_FG FROM COMMON_CODE B WHERE A.WFFCLTY_TP = B.COMMCD AND COMMCD_FG LIKE 'WF%' AND B.USE_FG = '1') WFFCLTY_TP_CD
+ 				 FROM WFFCLTY_BASE A
+ 		  WHERE A.WFFCLTY_CD = #{linkCd};
+	</select>
+	
+	<select id="selectGroupType" resultType="String">
+		  SELECT 
+ 				WFFCLTY_TP
+ 				 FROM WFFCLTY_BASE A
+ 		  WHERE A.WFFCLTY_CD = #{linkCd};
+	</select>
+	
+	<select id="selectCheckDspsn" resultType="egovMap" parameterType="egovMap">
+	    SELECT A.DSPSN_ID AS DSPSN_ID
+       ,A.DSPSN_NM AS DSPSN_NM
+       ,DEC_B64 ('KEY1', A.ENC_BIRTH_DD) AS ENC_BIRTH_DD
+       ,DEC_B64 ('KEY1', A.ENC_PHONE_NUM) AS ENC_PHONE_NUM
+       ,B.ENTRNC_DD AS ENTRNC_DD
+       ,B.LVHS_DD AS LVHS_DD
+       ,A.USE_FG
+       FROM DSPSN A
+       ,(SELECT *
+          FROM (SELECT DSPSN_ID
+                       ,ENTRNC_DD
+                       ,LVHS_DD
+                       ,RANK() OVER (PARTITION BY DSPSN_ID
+                         ORDER BY NVL(LVHS_DD, '00000000') ASC) RK
+                  FROM WFFCLTY_ENTER
+                 WHERE WFFCLTY_CD = #{wffcltyCd} ) AA
+         WHERE AA.RK = 1 ) B
+ WHERE A.DSPSN_ID = B.DSPSN_ID(+)
+   <if test ="dspsnId != '' and dspsnId != null">
+   AND A.DSPSN_ID = #{dspsnId}
+   </if>
+   AND A.DSPSN_NM = #{dspsnNm}
+   AND A.ENC_BIRTH_DD = ENC_B64('KEY1', replace(#{encBirthDd},'-'))
+   <if test ="encPhoneNum != '' and encPhoneNum != null">
+   AND A.ENC_PHONE_NUM = ENC_B64('KEY1', replace(#{encPhoneNum},'-'))
+   </if>
+   </select>
+   
+   <insert id="quickSaveDspsn" parameterType="egovMap">
+   INSERT INTO DSPSN
+            (DSPSN_ID
+            ,DSPSN_NM
+            ,ENC_PHONE_NUM
+            ,ENC_BIRTH_DD
+            ,USE_FG
+            ,REGIST_DT
+            ,REGISTERER)
+            
+            VALUES(
+            #{dspsnId}
+            ,#{dspsnNm}
+            ,ENC_B64('KEY1', replace(#{encPhoneNum},'-'))
+            ,ENC_B64('KEY1', replace(#{encBirthDd},'-'))
+            ,'1'
+            ,SYSDATE
+            ,#{register})
+   </insert>
+   
+   <select id ="saveLvHsCheck" resultType="String" parameterType="egovMap">
+   SELECT COUNT(*)
+  	FROM WFFCLTY_ENTER A
+  		,DSPSN B
+        WHERE A.DSPSN_ID = B.DSPSN_ID 
+        AND A.WFFCLTY_CD = #{wffcltyCd}
+   		AND A.DSPSN_ID = #{dspsnId}
+   		AND A.LVHS_DD IS NULL
+   </select>
+   
+   <select id ="insertCnstr" resultType="String" parameterType="egovMap">
+     SELECT COUNT(*)
+	  	FROM WFFCLTY_ENTER
+	  WHERE WFFCLTY_CD = #{wffcltyCd}
+	    AND DSPSN_ID   = #{dspsnId}
+	    AND ENTRNC_DD  = replace(#{entrncDd}, '-')
+	    AND LVHS_DD IS NOT NULL;
+   </select>
+   
+   <select id ="insertCmprs" resultType="int" parameterType="egovMap">
+     SELECT COUNT(*)
+	  	FROM WFFCLTY_ENTER
+	  WHERE WFFCLTY_CD = #{wffcltyCd}
+	    AND DSPSN_ID   = #{dspsnId}
+	    AND ENTRNC_DD  = replace(#{entrncDd}, '-')
+   </select>
+   
+   <select id ="admCmp" resultType="int" parameterType="egovMap">
+     SELECT COUNT(*)
+	  	FROM WFFCLTY_ENTER
+	  WHERE WFFCLTY_CD = #{wffcltyCd}
+	    AND DSPSN_ID   = #{dspsnId}
+	    AND ENTRNC_DD    != replace(#{entrncDd}, '-')
+	    AND LVHS_DD    &gt; replace(#{entrncDd}, '-')
+   </select>
+   
+   <select id ="blindHandling" resultType="int" parameterType="egovMap">
+     SELECT COUNT(*)
+	  	FROM WFFCLTY_ENTER
+	  WHERE WFFCLTY_CD = #{wffcltyCd}
+	    AND DSPSN_ID   = #{dspsnId}
+	    <if test="lvhsDd != '' and lvhsDd != null">
+	    AND ENTRNC_DD &gt; replace(#{lvhsDd}, '-')
+		</if>   
+		
+		<if test="lvhsDd == '' and lvhsDd == null">
+		AND ENTRNC_DD IS NULL
+		</if>
+   </select>
+</mapper>
