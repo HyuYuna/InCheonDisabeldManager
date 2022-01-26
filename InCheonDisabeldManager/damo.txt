@@ -1,0 +1,27 @@
+commonLoing.xml 68
+
+commonLoing.xml 363
+
+
+
+
+BasSysInfoMgmt.xml 90
+BasSysInfoMgmt.xml 116
+BasSysInfoMgmt.xml 121
+BasSysInfoMgmt.xml 143
+
+
+
+EmpWorkerListVw.xml 10
+
+
+
+
+관리자 아이디
+
+개발 db서버 
+A2000001 / a@123456789
+
+
+로컬 db서버
+E2000001 / a@123456789
